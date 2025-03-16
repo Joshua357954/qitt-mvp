@@ -34,7 +34,8 @@ const HomeScreen = () => {
   const year = userData?.level ? String(userData.level)[0] : undefined;
 
   const currentDay = getCurrentDay();
-
+  const DEFAULT_IMAGE_SIZE = 120; // Default size for all images
+  const DEFAULT_ICON_SIZE = 40; // Default size for icons
   const currentDateTime = new Date();
 
   const currentTime =
@@ -42,17 +43,21 @@ const HomeScreen = () => {
 
   // UseEffect To Fetch Timetable
   useEffect(() => {
-    fetchTimetable('computer_science',2);
+    fetchTimetable("computer_science", 2);
   }, []);
 
   const timetableData = (timetable) => {
     if (!Array.isArray(timetable) || timetable.length === 0) return []; // Handle edge cases
 
-    const currentDayKey = currentDay.toUpperCase();
+    // const currentDayKey = currentDay.toUpperCase(); // Old logic (commented out)
+
     const foundDay = timetable.find(
-      (item) => Object.keys(item)[0].toLowerCase() === currentDay
+      (item) => Object.keys(item)[0].toLowerCase() === "monday"
     );
-    return foundDay ? foundDay[currentDayKey] || [] : [];
+
+    return foundDay ? foundDay["MONDAY"] || [] : []; // Always pointing to Monday
+
+    // return foundDay ? foundDay[currentDayKey] || [] : []; // Old logic (commented out)
   };
 
   const adData = [
@@ -103,20 +108,20 @@ const HomeScreen = () => {
           </div>
 
           {/* Quick Links */}
+
           <div className="h-32 w-full py-2 mt-6 flex gap-10">
             {sections?.map((item, idx) => {
               return (
                 <div
                   key={idx}
-                  className={`${item?.color} w-1/3 rounded h-full relative`}
+                  className={`${item?.color} w-1/3 rounded h-full relative`} // ✅ Fixed template literal
                 >
                   <Image
                     src={item?.image}
                     width={40}
                     height={40}
                     alt="bg-image"
-                    className="z-10 rounded 
-                h-full w-1/3 absolute right-0 top-0"
+                    className="z-10 rounded h-full w-1/3 absolute right-0 top-0"
                     unoptimized
                   />
                   <div className="p-3">
@@ -126,6 +131,7 @@ const HomeScreen = () => {
                       height={20}
                       alt="icon"
                       className=""
+                      unoptimized
                     />
                   </div>
                   <p className="text-right text-white mr-3 z-50 absolute right-0 bottom-4">
@@ -144,7 +150,6 @@ const HomeScreen = () => {
               </span>
             )}
           </h2>
-
           {/* Timetable List */}
           <TimetableList
             timetable={timetable}

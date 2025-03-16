@@ -18,8 +18,8 @@ function page() {
   ];
 
   return (
-    <MainLayout route={"⚡More"}>
-      <div className="bg-gray-1000 rounded-lg p-6 h-full w-[80%] sm:w-[50%] mx-auto">
+    <MainLayout route={"More"}>
+      <div className="bg-gray-1000 rounded-lg p-6 h-full w-[95%] sm:w-[50%] mx-auto">
         <ul className="space-y-4">
           {features.map((feature, index) => (
             <li

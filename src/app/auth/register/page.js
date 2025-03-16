@@ -71,7 +71,7 @@ const Register = () => {
       const { data } = await Axios.post(`/api/auth/register`, formData);
       
       toast.success(data.message);
-      // navigate("/dashboard"); Corrected navigation
+      navigate("/dashboard"); // Corrected navigation
     } catch (error) {
       toast.error(error?.response?.data?.error);
       console.error(error);

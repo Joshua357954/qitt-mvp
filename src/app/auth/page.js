@@ -28,7 +28,7 @@ import useAuthStore from "../store/authStore.js";
 const AuthScreen = () => {
   const [email, setEmail] = useState("");
   const [pin, setPin] = useState("");
-  const { setUser } = useAuthStore();
+  const { setUser} = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useRouter();
   const auth = getAuth();
@@ -78,7 +78,7 @@ const AuthScreen = () => {
   return (
     <AuthLayout>
       <div className="flex justify-center font-aeonik items-center w-full h-full bg-white">
-        {/* <Loader open={authData?.status === "loading" || isLoading} /> */}
+      <Loader open={isLoading} />
 
         <main className="max-w-md w-full p-8 ">
           <header className="text-center mb-10">

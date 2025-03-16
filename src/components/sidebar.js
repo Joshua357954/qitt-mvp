@@ -57,7 +57,7 @@ const SideBar = ({ route }) => {
   return (
     <aside className="z-20 fixed sm:static sm:shadow-lg bottom-0 left-0 flex justify-center sm:flex-col sm:items-center bg-white py-1 sm:py-0 font-aeonik h-[70px] sm:h-screen w-full sm:w-[30%]">
       <div className="hidden sm:flex my-6 w-full justify-center sm:mr-14  items-end">
-        <Image src={"/Qitt-Text-Logo.png"} width={100} height={100} />
+        <Image src={"/Qitt-Text-Logo.png"} width={100} height={100} unoptimized/>
       </div>
 
       <div className="flex border-t-2 border-t-gray-100 mx-auto sm:border-0 sm:flex-col w-screen sm:w-full h-full justify-between bg-red-5000 sm:justify-around py-1 items-start sm:overflow-y-auto sm:min-h-0">
