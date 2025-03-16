@@ -18,6 +18,7 @@ import { app } from "../../../firebase";
 import useAuthStore from "@/app/store/authStore";
 
 const Register = () => {
+  const {setUser} = useAuthStore()
   const [loading, setLoading] = useState(false);
   const navigate = useRouter();
   const [formData, setFormData] = useState({
