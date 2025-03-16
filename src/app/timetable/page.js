@@ -117,7 +117,7 @@ const TimetableScreen = ({ className }) => {
                       //     </div>
                       //   </div>
                       <div
-                        className="p-4 border items-center rounded-sm min-w-40  border-gray-300 flex flex-col gap-1"
+                        className="p-4 border items-center rounded-sm sm:min-w-40 min-w-36 border-gray-300 flex flex-col gap-1"
                         key={idx}
                       >
                         <Image

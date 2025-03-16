@@ -28,6 +28,8 @@ const Register = () => {
     phone: "",
     name: "", // Store Google email
     email: "", // Store Google email
+    imageURL:"",
+    uid:""
   });
 
   const handleChange = (name, value) => {
@@ -50,6 +52,7 @@ const Register = () => {
         email: user.email,
         imageURL: user.photoURL,
         name: user.displayName,
+        uid: user.uid
       }));
 
       return;
