@@ -1,0 +1,1226 @@
+{
+  "questions": [
+    {
+      "question": ".......... is not part of the status bar",
+      "options": [
+        "a. page number",
+        "b. line",
+        "c. column",
+        "d. section",
+        "e. drop cap"
+      ],
+      "correct_answer": "e. drop cap",
+      "id": 1
+    },
+    {
+      "question": "Convert 10610 to base 2",
+      "options": [
+        "a. 01010112",
+        "b. 1101012",
+        "c. 1010102",
+        "d. 011010102",
+        "e. 010110102"
+      ],
+      "correct_answer": "e. 010110102",
+      "id": 2
+    },
+    {
+      "question": "Hierarchical model, network model and relational model are all parts of",
+      "options": [
+        "a. system model",
+        "b. network model",
+        "c. database model",
+        "d. data structure",
+        "e. data architecture"
+      ],
+      "correct_answer": "c. database model",
+      "id": 3
+    },
+    {
+      "question": "The Drag and Drop feature can be turn on or off in the Tools command",
+      "options": [
+        "a. false",
+        "b. true",
+        "c. not correct",
+        "d. not true",
+        "e. none of the above"
+      ],
+      "correct_answer": "b. true",
+      "id": 4
+    },
+    {
+      "question": "The control buttons on the title bar include all except",
+      "options": [
+        "a. restore",
+        "b. minimise",
+        "c. maximise",
+        "d. close",
+        "e. none of the above"
+      ],
+      "correct_answer": "e. none of the above",
+      "id": 5
+    },
+    {
+      "question": "----------- provides a list of toggle options",
+      "options": [
+        "a. list boxes",
+        "b. text boxes",
+        "c. check boxes",
+        "d. option button",
+        "e. drop down list"
+      ],
+      "correct_answer": "c. check boxes",
+      "id": 6
+    },
+    {
+      "question": "The F4 command in DOS will",
+      "options": [
+        "a. redisplay buffer",
+        "b. delete all",
+        "c. delete all characters in buffer to the last command",
+        "d. redisplay all characters",
+        "e. do nothing"
+      ],
+      "correct_answer": "c. delete all characters in buffer to the last command",
+      "id": 7
+    },
+    {
+      "question": "The area that first appear on the screen after the system boots is",
+      "options": [
+        "a. wallpaper",
+        "b. screen saver",
+        "c. background",
+        "d. desktop",
+        "e. windows OS"
+      ],
+      "correct_answer": "d. desktop",
+      "id": 8
+    },
+    {
+      "question": "Convert 111101012 to base 8",
+      "options": [
+        "a. 1748",
+        "b. 7128",
+        "c. 7218",
+        "d. 2718",
+        "e. 1728"
+      ],
+      "correct_answer": "e. 1728",
+      "id": 9
+    },
+    {
+      "question": "The formula for subtraction in Excel is",
+      "options": [
+        "a. no minus in excel",
+        "b. =A4-B4",
+        "c. =SUBTRACT(A4:B4)",
+        "d. =(A4-B4)SUBTRACT",
+        "e. none of the above"
+      ],
+      "correct_answer": "b. =A4-B4",
+      "id": 10
+    },
+    {
+      "question": "The splitting of text to fit in a cell is called",
+      "options": [
+        "a. word wrap",
+        "b. insertion point",
+        "c. text wrap",
+        "d. name boxing",
+        "e. auto fill"
+      ],
+      "correct_answer": "a. word wrap",
+      "id": 11
+    },
+    {
+      "question": "The command VOL in command prompt is",
+      "options": [
+        "a. increase the system volume",
+        "b. display a disk volume label and serial number",
+        "c. display the disk volume level",
+        "d. display all files in the volume",
+        "e. display nothing"
+      ],
+      "correct_answer": "b. display a disk volume label and serial number",
+      "id": 12
+    },
+    {
+      "question": "Pick the odd one out",
+      "options": [
+        "a. drawing toolbar",
+        "b. status bar",
+        "c. formula bar",
+        "d. formatting toolbar",
+        "e. standard tool"
+      ],
+      "correct_answer": "e. standard tool",
+      "id": 13
+    },
+    {
+      "question": "Advantage of electronic data processing is",
+      "options": [
+        "a. faster processing speed",
+        "b. automatic data processing as it enters the system",
+        "c. accurate data output",
+        "d. timely availability of result",
+        "e. All of the above"
+      ],
+      "correct_answer": "e. All of the above",
+      "id": 14
+    },
+    {
+      "question": "Games, web browsers, and application programs are written in",
+      "options": [
+        "a. low-level language",
+        "b. high-level language",
+        "c. computer software translators",
+        "d. binary codes",
+        "e. Computer compilers"
+      ],
+      "correct_answer": "b. high-level language",
+      "id": 15
+    },
+    {
+      "question": "A machine language is in 0 and 1",
+      "options": [
+        "a. true",
+        "b. false",
+        "c. ASCII language",
+        "d. all of the above",
+        "e. none of the above"
+      ],
+      "correct_answer": "a. true",
+      "id": 16
+    },
+    {
+      "question": "Which is not part of a standard keyboard",
+      "options": [
+        "a. numeric keys",
+        "b. alphanumeric keys",
+        "c. text keys",
+        "d. function keys",
+        "e. none of the above"
+      ],
+      "correct_answer": "c. text keys",
+      "id": 17
+    },
+    {
+      "question": "Deleting the original item does not automatically delete the shortcut",
+      "options": [
+        "a. true",
+        "b. false",
+        "c. not true",
+        "d. probably",
+        "e. none of the above"
+      ],
+      "correct_answer": "a. true",
+      "id": 18
+    },
+    {
+      "question": "The data capture technique best suitable for examinations and questionnaires is",
+      "options": [
+        "a. optical character recognition",
+        "b. magnetic character recognition",
+        "c. mark sensing device",
+        "d. Kimball tags",
+        "e. magnetic tags"
+      ],
+      "correct_answer": "c. mark sensing device",
+      "id": 19
+    },
+    {
+      "question": "The processing of data by consisting of a keyboard actuated by a machine operator is called",
+      "options": [
+        "a. electronic data processing",
+        "b. manual data processing",
+        "c. human data processing",
+        "d. machine data processing",
+        "e. mechanical data processing"
+      ],
+      "correct_answer": "e. mechanical data processing",
+      "id": 20
+    },
+    {
+      "question": "file handler, formatter, and sort/list utility are all examples of",
+      "options": [
+        "a. translators",
+        "b. applications",
+        "c. OS",
+        "d. utilities",
+        "e. computer tools"
+      ],
+      "correct_answer": "d. utilities",
+      "id": 21
+    },
+    {
+      "question": "Classification of computers by types includes",
+      "options": [
+        "a. microcomputer and minicomputer",
+        "b. digital and analog computer",
+        "c. special and general computer",
+        "d. mainframe and supercomputer",
+        "e. wearable and special computers"
+      ],
+      "correct_answer": "a. microcomputer and minicomputer",
+      "id": 22
+    },
+    {
+      "question": "--------------- is not a feature of an operating system",
+      "options": [
+        "a. sharing",
+        "b. long term storage",
+        "c. efficiency",
+        "d. redundancy",
+        "e. reliability"
+      ],
+      "correct_answer": "d. redundancy",
+      "id": 23
+    },
+    {
+      "question": "The keyboard command to close a window is",
+      "options": [
+        "a. CTRL + X",
+        "b. CTRL + W",
+        "c. CTRL + Y",
+        "d. CTRL + SHIFT + DELETE",
+        "e. CTRL + END"
+      ],
+      "correct_answer": "b. CTRL + W",
+      "id": 24
+    },
+    {
+      "question": "The move through a cell is achieved through",
+      "options": [
+        "a. use of the arrow keys",
+        "b. selecting with the mouse",
+        "c. use of the tab key",
+        "d. a, b and c are correct",
+        "e. none of the above"
+      ],
+      "correct_answer": "d. a, b and c are correct",
+      "id": 25
+    },
+    {
+      "question": "The formula bar in excel display",
+      "options": [
+        "a. the content of an active cell",
+        "b. the formula in a cell",
+        "c. the name of the active cell",
+        "d. a and b is correct",
+        "e. a, b, c are correct"
+      ],
+      "correct_answer": "e. a, b, c are correct",
+      "id": 26
+    },
+    {
+      "question": "A temporary storage area in computer memory is called",
+      "options": [
+        "a. RAM",
+        "b. ROM",
+        "c. primary memory",
+        "d. secondary storage",
+        "e. buffer"
+      ],
+      "correct_answer": "e. buffer",
+      "id": 27
+    },
+    {
+      "question": "What formula should be used to add the values in cells A2 and A4?",
+      "options": [
+        "a. =Sum (A1:A3)",
+        "b. Sum (A2:A4)",
+        "c. =SUM(A2;A4)",
+        "d. =A1:A3",
+        "e. None of the above"
+      ],
+      "correct_answer": "b. Sum (A2:A4)",
+      "id": 28
+    },
+    {
+      "question": "The command dir t*.* will",
+      "options": [
+        "a. display s*.* is not an internal or external command",
+        "b. display an error message",
+        "c. display all dir and files that start with letter t",
+        "d. display t*.* is a file",
+        "e. display t*.* does not exist"
+      ],
+      "correct_answer": "c. display all dir and files that start with letter t",
+      "id": 29
+    },
+    {
+      "question": "The cls command in DOS",
+      "options": [
+        "a. increase the system volume",
+        "b. display a disk volume label and serial number",
+        "c. display the disk volume level",
+        "d. display all files in the volume",
+        "e. display nothing"
+      ],
+      "correct_answer": "e. clear the screen",
+      "id": 30
+    },
+    {
+      "question": "The roller on a PS2 mouse enables the user to",
+      "options": [
+        "a. scroll up and down",
+        "b. saves 35% of the time spent scrolling a document",
+        "c. zoom in and out a graphic application",
+        "d. a, b and c is correct",
+        "e. only b and c is correct"
+      ],
+      "correct_answer": "d. a, b and c is correct",
+      "id": 31
+    },
+    {
+      "question": "Triple click on a mouse selects",
+      "options": [
+        "a. a text",
+        "b. a line or paragraph",
+        "c. a word",
+        "d. all",
+        "e. a letter"
+      ],
+      "correct_answer": "b. a line or paragraph",
+      "id": 32
+    },
+    {
+      "question": "To expand the length of a column",
+      "options": [
+        "a. move the mouse pointer to the line between the columns, left click holding down and drag to either left or right directions",
+        "b. move the mouse pointer to the line between the rows, left click holding down and drag to either left or right directions",
+        "c. move the mouse pointer away from the line between the columns, left click holding down and drag to either left or right directions",
+        "d. move the mouse pointer to the line away from columns, left click holding down and drag to either left or right directions",
+        "e. none of the above"
+      ],
+      "correct_answer": "a. move the mouse pointer to the line between the columns, left click holding down and drag to either left or right directions",
+      "id": 33
+    },
+    {
+      "question": "The pick tool in CorelDraw is used to",
+      "options": [
+        "a. cut an image",
+        "b. move an image",
+        "c. resize an image",
+        "d. rotate an image",
+        "e. reshape an image"
+      ],
+      "correct_answer": "b. move an image",
+      "id": 34
+    },
+    {
+      "question": "Which of the following is not a programming language",
+      "options": [
+        "a. Python",
+        "b. Java",
+        "c. HTML",
+        "d. C++",
+        "e. COBOL"
+      ],
+      "correct_answer": "c. HTML",
+      "id": 35
+    },
+    {
+      "question": "What is the full form of CPU",
+      "options": [
+        "a. Computer Processing Unit",
+        "b. Central Processing Unit",
+        "c. Central Printed Unit",
+        "d. Computer Printed Unit",
+        "e. Central Processor Unit"
+      ],
+      "correct_answer": "b. Central Processing Unit",
+      "id": 36
+    },
+    {
+      "question": "In Microsoft Excel, the intersection of a column and row is called",
+      "options": [
+        "a. cell",
+        "b. box",
+        "c. slot",
+        "d. grid",
+        "e. spreadsheet"
+      ],
+      "correct_answer": "a. cell",
+      "id": 37
+    },
+    {
+      "question": "What is the purpose of the INDEX function in Excel",
+      "options": [
+        "a. To return the relative position of an item in a range",
+        "b. To create an index for the worksheet",
+        "c. To return the average value in a range",
+        "d. To identify the maximum value in a range",
+        "e. To count the number of cells in a range"
+      ],
+      "correct_answer": "a. To return the relative position of an item in a range",
+      "id": 38
+    },
+    {
+      "question": "Which of the following is not a type of computer memory",
+      "options": [
+        "a. RAM",
+        "b. ROM",
+        "c. Cache",
+        "d. CPU",
+        "e. Virtual Memory"
+      ],
+      "correct_answer": "d. CPU",
+      "id": 39
+    },
+    {
+      "question": "What does the acronym HTML stand for",
+      "options": [
+        "a. Hyperlink and Text Markup Language",
+        "b. HyperText Markup Language",
+        "c. High-Level Text Management Language",
+        "d. Hyperlink and Table Markup Language",
+        "e. High-Level Table Management Language"
+      ],
+      "correct_answer": "b. HyperText Markup Language",
+      "id": 40
+    },
+    {
+      "question": "Which of the following is not a web browser",
+      "options": [
+        "a. Chrome",
+        "b. Firefox",
+        "c. Safari",
+        "d. Python",
+        "e. Edge"
+      ],
+      "correct_answer": "d. Python",
+      "id": 41
+    },
+    {
+      "question": "What is the purpose of a firewall",
+      "options": [
+        "a. To protect against viruses",
+        "b. To filter network traffic",
+        "c. To enhance internet speed",
+        "d. To improve computer performance",
+        "e. To create a secure Wi-Fi connection"
+      ],
+      "correct_answer": "b. To filter network traffic",
+      "id": 42
+    },
+    {
+      "question": "Which programming language is known as the 'mother of all languages'",
+      "options": [
+        "a. Python",
+        "b. Java",
+        "c. C++",
+        "d. Assembly Language",
+        "e. COBOL"
+      ],
+      "correct_answer": "d. Assembly Language",
+      "id": 43
+    },
+    {
+      "question": "What does the acronym URL stand for",
+      "options": [
+        "a. Uniform Resource Locator",
+        "b. Universal Resource Locator",
+        "c. Unified Resource Locator",
+        "d. Unique Resource Locator",
+        "e. User-friendly Resource Locator"
+      ],
+      "correct_answer": "a. Uniform Resource Locator",
+      "id": 44
+    },
+    {
+      "question": "Which of the following is a data structure",
+      "options": [
+        "a. Algorithm",
+        "b. Variable",
+        "c. Pointer",
+        "d. Array",
+        "e. Operator"
+      ],
+      "correct_answer": "d. Array",
+      "id": 45
+    },
+    {
+      "question": "What is the purpose of the command 'chmod' in Unix-based operating systems",
+      "options": [
+        "a. Change mode of a file or directory",
+        "b. Change motherboard settings",
+        "c. Change computer hostname",
+        "d. Change display resolution",
+        "e. Change network configuration"
+      ],
+      "correct_answer": "a. Change mode of a file or directory",
+      "id": 46
+    },
+    {
+      "question": "What is the primary function of the CPU",
+      "options": [
+        "a. Store data permanently",
+        "b. Execute instructions",
+        "c. Manage network connections",
+        "d. Create graphics",
+        "e. Control input devices"
+      ],
+      "correct_answer": "b. Execute instructions",
+      "id": 47
+    },
+    {
+      "question": "Which of the following is a relational database management system",
+      "options": [
+        "a. MongoDB",
+        "b. MySQL",
+        "c. Redis",
+        "d. Cassandra",
+        "e. CouchDB"
+      ],
+      "correct_answer": "b. MySQL",
+      "id": 48
+    },
+    {
+      "question": "What does LAN stand for",
+      "options": [
+        "a. Local Area Network",
+        "b. Large Area Network",
+        "c. Linked Access Network",
+        "d. Longitudinal Array Network",
+        "e. Low-latency Audio Network"
+      ],
+      "correct_answer": "a. Local Area Network",
+      "id": 49
+    },
+    {
+      "question": "In programming, what does the acronym API stand for",
+      "options": [
+        "a. Application Programming Interface",
+        "b. Advanced Programming Interface",
+        "c. Automated Programming Interface",
+        "d. Array Programming Interface",
+        "e. Algorithmic Programming Interface"
+      ],
+      "correct_answer": "a. Application Programming Interface",
+      "id": 50
+    },
+    {
+      "question": "What is the purpose of DNS in computer networks",
+      "options": [
+        "a. Direct Network Security",
+        "b. Domain Name System",
+        "c. Data Network Services",
+        "d. Digital Network Storage",
+        "e. Dynamic Network Solutions"
+      ],
+      "correct_answer": "b. Domain Name System",
+      "id": 51
+    },
+    {
+      "question": "Which programming language is often used for artificial intelligence",
+      "options": [
+        "a. Java",
+        "b. Python",
+        "c. C++",
+        "d. Ruby",
+        "e. PHP"
+      ],
+      "correct_answer": "b. Python",
+      "id": 52
+    },
+    {
+      "question": "Optic coaxial cable is to local area network as micro wave is to",
+      "options": [
+        "a. LAN",
+        "b. WAN",
+        "c. GAN",
+        "d. Large Area Network",
+        "e. Wide Aperture Network"
+      ],
+      "correct_answer": "d. Large Area Network",
+      "id": 53
+    },
+    {
+      "question": "The use of very large scale integrated circuits is common in",
+      "options": [
+        "a. Fourth Generation Computers",
+        "b. Third Generation Computers",
+        "c. Second Generation Computers",
+        "d. First Generation Computers",
+        "e. Fifth Generation Computers"
+      ],
+      "correct_answer": "a. Fourth Generation Computers",
+      "id": 54
+    },
+    {
+      "question": "The main purpose of storing data is for",
+      "options": [
+        "a. Creating a database",
+        "b. Processing",
+        "c. Data Usage",
+        "d. None of the above",
+        "e. All of the above"
+      ],
+      "correct_answer": "e. All of the above",
+      "id": 55
+    },
+    {
+      "question": "Which of these is not a common use of the internet",
+      "options": [
+        "a. File Sharing",
+        "b. Voice Telephony",
+        "c. Electronic Fund Transfer",
+        "d. Electronic Mail",
+        "e. Manual Filing"
+      ],
+      "correct_answer": "e. Manual Filing",
+      "id": 56
+    },
+    {
+      "question": "The first page a user logged on to is called",
+      "options": [
+        "a. Welcome Page",
+        "b. Web Site",
+        "c. Internet Page",
+        "d. Home Page",
+        "e. Web Page"
+      ],
+      "correct_answer": "d. Home Page",
+      "id": 57
+    },
+    {
+      "question": "The total number of columns in Microsoft Office Excel 2003 is",
+      "options": [
+        "a. 18834",
+        "b. 18845",
+        "c. 168435",
+        "d. 164853",
+        "e. None of the above"
+      ],
+      "correct_answer": "e. None of the above",
+      "id": 58
+    },
+    {
+      "question": "The work area in Microsoft Word is known as",
+      "options": [
+        "a. Document Area",
+        "b. Work Space",
+        "c. Document Space",
+        "d. Space Area",
+        "e. None of the above"
+      ],
+      "correct_answer": "a. Document Area",
+      "id": 59
+    },
+    {
+      "question": "The maximum number of worksheets in a workbook is",
+      "options": [
+        "a. 257",
+        "b. 256",
+        "c. 266",
+        "d. 265",
+        "e. 267"
+      ],
+      "correct_answer": "b. 256",
+      "id": 60
+    },
+    {
+      "question": "Common domain names include",
+      "options": [
+        "a. .com",
+        "b. .edu",
+        "c. .gov",
+        "d. .org",
+        "e. All of the above"
+      ],
+      "correct_answer": "e. All of the above",
+      "id": 61
+    },
+    {
+      "question": "The right button on the mouse is used to",
+      "options": [
+        "a. Execute a command",
+        "b. Call for options",
+        "c. Open an application",
+        "d. Format a document",
+        "e. All of the above"
+      ],
+      "correct_answer": "e. All of the above",
+      "id": 62
+    },
+    {
+      "question": "Charts are used to view data in Microsoft Office Excel",
+      "options": [
+        "a. False",
+        "b. True",
+        "c. Not True",
+        "d. All of the above",
+        "e. None of the above"
+      ],
+      "correct_answer": "b. True",
+      "id": 63
+    },
+    {
+      "question": "The Fill Handle is used to generate a formula sequence to adjacent cells",
+      "options": [
+        "a. True",
+        "b. False",
+        "c. All of the above",
+        "d. None of the above"
+      ],
+      "correct_answer": "a. True",
+      "id": 64
+    },
+    {
+      "question": "The AutoText feature of Microsoft Word helps in the automatic insertion of images",
+      "options": [
+        "a. True",
+        "b. False",
+        "c. Not of the above",
+        "d. All of the above"
+      ],
+      "correct_answer": "b. False",
+      "id": 65
+    },
+    {
+      "question": "Procedure-oriented languages are common to",
+      "options": [
+        "a. High-Level Language",
+        "b. Low-Level Language",
+        "c. Foreign Language",
+        "d. List Logic Processing Language",
+        "e. All of the above"
+      ],
+      "correct_answer": "a. High-Level Language",
+      "id": 66
+    },
+    {
+      "question": "Which of these is not a data element of a database",
+      "options": [
+        "a. Field",
+        "b. File",
+        "c. Records",
+        "d. Character",
+        "e. Directory"
+      ],
+      "correct_answer": "e. Directory",
+      "id": 67
+    },
+    {
+      "question": "Database architecture can be viewed in respect to the organization of data",
+      "options": [
+        "a. Not True",
+        "b. Not Entirely True",
+        "c. True",
+        "d. False",
+        "e. None of the above"
+      ],
+      "correct_answer": "c. True",
+      "id": 68
+    },
+    {
+      "question": "Commercial facilities of WAN include",
+      "options": [
+        "a. E-Governance",
+        "b. Viewdata",
+        "c. E-Banking",
+        "d. E-Solutions",
+        "e. E-Travel"
+      ],
+      "correct_answer": "b. Viewdata",
+      "id": 69
+    },
+    {
+      "question": "CTRL+ALT+DELETE will perform what action",
+      "options": [
+        "a. Shutdown the system",
+        "b. Calls up the task manager",
+        "c. Restart the system",
+        "d. B and C are correct",
+        "e. All of the above"
+      ],
+      "correct_answer": "d. B and C are correct",
+      "id": 70
+    },
+    {
+      "question": "FTP is an acronym for",
+      "options": [
+        "a. File Translate Process",
+        "b. File Transfer Process",
+        "c. File Transfer Protocol",
+        "d. File Translate Protocol",
+        "e. File Transfer Partition"
+      ],
+      "correct_answer": "b. File Transfer Process",
+      "id": 71
+    },
+    {
+      "question": "... is not a file extension name",
+      "options": [
+        "a. .cdr",
+        "b. .doc",
+        "c. .ppt",
+        "d. .bas",
+        "e. None of the above"
+      ],
+      "correct_answer": "e. None of the above",
+      "id": 72
+    },
+    {
+      "question": "The EXIT command in DOS command prompt will",
+      "options": [
+        "a. Display all dir folders",
+        "b. Shut down the computer",
+        "c. Close the command prompt window",
+        "d. Not do anything",
+        "e. Restart the computer"
+      ],
+      "correct_answer": "c. Close the command prompt window",
+      "id": 73
+    },
+    {
+      "question": "The movement of the cursor to the next line as it gets to the end of the margin in the document area is called",
+      "options": [
+        "a. Cursor Movement",
+        "b. Word Wrap",
+        "c. Text Wrap",
+        "d. Enter New Line",
+        "e. Neither A, B, C nor D"
+      ],
+      "correct_answer": "b. Word Wrap",
+      "id": 74
+    },
+    {
+      "question": "The following are internal or external operable commands in DOS except",
+      "options": [
+        "a. DEL, COPY, PRINT",
+        "b. VERIFY, FORMAT, SHUTDOWN",
+        "c. CONVERT, RMDIR, REPLACE",
+        "d. COPY, EDIT, PASTE",
+        "e. CLS, DIR, ECHO"
+      ],
+      "correct_answer": "d. COPY, EDIT, PASTE",
+      "id": 75
+    },
+    {
+      "question": "Multiple windows that are opened are indicated on the",
+      "options": [
+        "a. Menu Bar",
+        "b. Standard Tools Bar",
+        "c. Notification Bar",
+        "d. Task Pane",
+        "e. Task Bar"
+      ],
+      "correct_answer": "d. Task Pane",
+      "id": 76
+    },
+    {
+      "question": "A list of logically arranged commands is displayed as",
+      "options": [
+        "a. Menu Bar",
+        "b. Tools Bar",
+        "c. Command Bar",
+        "d. Standard Tools Bar",
+        "e. None of the above"
+      ],
+      "correct_answer": "a. Menu Bar",
+      "id": 77
+    },
+    {
+      "question": "A file in Microsoft Office Excel is saved as a",
+      "options": [
+        "a. Spreadsheet",
+        "b. Excel File Doc.",
+        "c. Workbook",
+        "d. Spread Sheet Book",
+        "e. All of the above"
+      ],
+      "correct_answer": "c. Workbook",
+      "id": 78
+    },
+    {
+      "question": "The keyboard command to find a text in a document is",
+      "options": [
+        "a. Ctrl + A",
+        "b. Ctrl + F",
+        "c. Ctrl + G",
+        "d. Ctrl + H",
+        "e. Ctrl + V"
+      ],
+      "correct_answer": "b. Ctrl + F",
+      "id": 79
+    },
+    {
+      "question": "The screen of Microsoft Word is made up of the following components, except:",
+      "options": [
+        "a. Title Bar",
+        "b. Menu Bar",
+        "c. Standard Toolbar",
+        "d. Formatting Toolbar",
+        "e. Page Setup Bar"
+      ],
+      "correct_answer": "e. Page Setup Bar",
+      "id": 80
+    },
+    {
+      "question": "The movement of the full or part of the document from one place to another, leaving the original copy is called...",
+      "options": [
+        "a. Cutting",
+        "b. Copying",
+        "c. Pasting",
+        "d. Editing",
+        "e. All of the above"
+      ],
+      "correct_answer": "b. Copying",
+      "id": 81
+    },
+    {
+      "question": "The function of the Shift + F2 key is",
+      "options": [
+        "a. Do nothing",
+        "b. Copy Text",
+        "c. Edit Page",
+        "d. Paste All",
+        "e. None of the above"
+      ],
+      "correct_answer": "b. Copy Text",
+      "id": 82
+    },
+    {
+      "question": "The keyboard key that deletes all the characters in a buffer up to the last character is",
+      "options": [
+        "a. F4",
+        "b. F2",
+        "c. F6",
+        "d. F8",
+        "e. F12"
+      ],
+      "correct_answer": "a. F4",
+      "id": 83
+    },
+    {
+      "question": "A temporary storage area in computer memory is called",
+      "options": [
+        "a. RAM",
+        "b. ROM",
+        "c. Primary Memory",
+        "d. Buffer",
+        "e. Butter"
+      ],
+      "correct_answer": "d. Buffer",
+      "id": 84
+    },
+    {
+      "question": "The maximum number of sheets in a workbook is",
+      "options": [
+        "a. 256",
+        "b. 255",
+        "c. 265",
+        "d. 266",
+        "e. 258"
+      ],
+      "correct_answer": "a. 256",
+      "id": 85
+    },
+    {
+      "question": "What formula should be used to add the values in cells A2 and A4?",
+      "options": [
+        "a. =Sum (A1:A3)",
+        "b. Sum (A2:A4)",
+        "c. =A1:A3",
+        "d. None of the above",
+        "e. =SUM(A2;A4)"
+      ],
+      "correct_answer": "b. Sum (A2:A4)",
+      "id": 86
+    },
+    {
+      "question": "Excel is an electronic spreadsheet to calculate, analyze and view data",
+      "options": [
+        "a. Very true",
+        "b. Not all through",
+        "c. Not absolutely true",
+        "d. Very wrong",
+        "e. False"
+      ],
+      "correct_answer": "a. Very true",
+      "id": 87
+    },
+    {
+      "question": "Moving between cells is achieved through",
+      "options": [
+        "a. Press the Tab key on the keyboard",
+        "b. Use the mouse to select the next cell",
+        "c. Use any of the four arrow keys",
+        "d. None of the above",
+        "e. All of the above except d"
+      ],
+      "correct_answer": "e. All of the above except d",
+      "id": 88
+    },
+    {
+      "question": "The formula =MAX(c2,d3,f5,g5) will",
+      "options": [
+        "a. Do nothing",
+        "b. Find the sum of the cells",
+        "c. Find the maximum of the cells",
+        "d. Find the mean of the cells",
+        "e. None of the above"
+      ],
+      "correct_answer": "c. Find the maximum of the cells",
+      "id": 89
+    },
+    {
+      "question": "The Fill Handle is to",
+      "options": [
+        "a. Fill data into a row or column",
+        "b. Generate the sequence data in a row or column",
+        "c. A and B is correct",
+        "d. Only A is correct",
+        "e. Only B is correct"
+      ],
+      "correct_answer": "c. A and B is correct",
+      "id": 90
+    },
+    {
+      "question": "Font, font style, double strike through, emboss, subscript and all cap are all checkboxes in",
+      "options": [
+        "a. Edit",
+        "b. View",
+        "c. File",
+        "d. Menu",
+        "e. Format"
+      ],
+      "correct_answer": "e. Format",
+      "id": 91
+    },
+    {
+      "question": "The file with the following extensions .DOC, .VBP, .XLS, and .FOR are",
+      "options": [
+        "a. Word document, Visual Processor, Excel, Fortran",
+        "b. Word document, Visual Basic Program, Excel and Fortran",
+        "c. Word document, Visual Basic Package, Excel and Fortran",
+        "d. All of the above",
+        "e. None of the above"
+      ],
+      "correct_answer": "b. Word document, Visual Basic Program, Excel and Fortran",
+      "id": 92
+    },
+    {
+      "question": "Ctrl + U will perform what function on selected text",
+      "options": [
+        "a. Select All",
+        "b. Underline",
+        "c. Paste",
+        "d. Cut",
+        "e. None of the above"
+      ],
+      "correct_answer": "b. Underline",
+      "id": 93
+    },
+    {
+      "question": "The command dir s*.* will",
+      "options": [
+        "a. Display s*.* is not an internal or external command",
+        "b. Display an error message",
+        "c. Display all dir and files that start with the letter s",
+        "d. Display s*.* is a file",
+        "e. Display s*.* does not exist"
+      ],
+      "correct_answer": "c. Display all dir and files that start with the letter s",
+      "id": 94
+    },
+    {
+      "question": "The cls command in DOS",
+      "options": [
+        "a. Shutdown the computer",
+        "b. Shutdown the system",
+        "c. Display all directory with cls name",
+        "d. Restart the program",
+        "e. Clear the screen"
+      ],
+      "correct_answer": "e. Clear the screen",
+      "id": 95
+    },
+    {
+      "question": "Formatting in Microsoft Excel and Microsoft Word is the same method",
+      "options": [
+        "a. True",
+        "b. Not true",
+        "c. False",
+        "d. B and C are correct",
+        "e. Very false"
+      ],
+      "correct_answer": "a. True",
+      "id": 96
+    },
+    {
+      "question": "The formula bar in Excel displays",
+      "options": [
+        "a. The data in an active cell",
+        "b. The cell that is selected",
+        "c. A and B is correct",
+        "d. Only A is correct",
+        "e. Only B is correct"
+      ],
+      "correct_answer": "c. A and B is correct",
+      "id": 97
+    },
+    {
+      "question": "Ctrl + Z command will perform what function",
+      "options": [
+        "a. Select All",
+        "b. Copy All",
+        "c. Undo the last command",
+        "d. Display all zip files",
+        "e. Show zip folder"
+      ],
+      "correct_answer": "c. Undo the last command",
+      "id": 98
+    },
+    {
+      "question": "Icons are",
+      "options": [
+        "a. Shortcuts to programs in the computer",
+        "b. Picture commands",
+        "c. Pictorial representations of programs, applications, and commands",
+        "d. All of the above",
+        "e. Only D and A are correct"
+      ],
+      "correct_answer": "d. All of the above",
+      "id": 99
+    },
+    {
+      "question": "The roller on a PS2 mouse enables the user to",
+      "options": [
+        "a. Scroll up and down",
+        "b. Saves 35% of the time spent scrolling a document",
+        "c. Zoom in and out a graphic application",
+        "d. A, B and C is correct",
+        "e. Only B and C is correct"
+      ],
+      "correct_answer": "d. A, B and C is correct",
+      "id": 100
+    },
+    {
+      "question": "Triple click on a mouse selects",
+      "options": [
+        "a. A text",
+        "b. A line or paragraph",
+        "c. A word",
+        "d. All",
+        "e. A letter"
+      ],
+      "correct_answer": "b. A line or paragraph",
+      "id": 101
+    },
+    {
+      "question": "To expand the length of a column",
+      "options": [
+        "a. Move the mouse pointer to the line between the columns, left click holding down and drag to either left or right directions",
+        "b. Move the mouse pointer to the line between the rows, left click holding down and drag to either left or right directions",
+        "c. Move the mouse pointer away from the line between the columns, left click holding down and drag to either left or right directions",
+        "d. Move the mouse pointer to the line away from columns, left click holding down and drag to either left or right directions",
+        "e. None of the above"
+      ],
+      "correct_answer": "a. Move the mouse pointer to the line between the columns, left click holding down and drag to either left or right directions",
+      "id": 102
+    }
+  ]
+}

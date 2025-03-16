@@ -1,0 +1,607 @@
+{
+  "questions": [
+    {
+      "question": "The C in a FORTRAN program indicates;",
+      "options": [
+        "a) Beginning of program",
+        "b) Comment",
+        "c) end",
+        "d) Statement number",
+        "e) Loop"
+      ],
+      "correct_answer": "b) Comment",
+      "id": 1
+    },
+    {
+      "question": "The following is an executable statement in FORTRAN:",
+      "options": [
+        "a) FORMAT statement",
+        "b) Continue statement",
+        "c) Dimensional statement",
+        "d) Integer statement",
+        "e) End statement"
+      ],
+      "correct_answer": "b) Continue statement",
+      "id": 2
+    },
+    {
+      "question": "A FORTRAN program terminates with one of the following:",
+      "options": [
+        "a) STOP",
+        "b) TERMINATE",
+        "c) EXIT",
+        "d) ENDS",
+        "e) END"
+      ],
+      "correct_answer": "e) END",
+      "id": 3
+    },
+    {
+      "question": "Is a symbol used for",
+      "image":"https://f4.bcbits.com/img/a3104669527_16.jpg",
+      "options": [
+        "a) Decision",
+        "b) Start",
+        "c) Control",
+        "d) Stop",
+        "e) Connection"
+      ],
+      "correct_answer": "a) Decision",
+      "id": 4
+    },
+    {
+      "question": "One of the following is not a valid FORTRAN variable",
+      "options": [
+        "a) NUM",
+        "b) MATRIX-1",
+        "c) MAT1",
+        "d) MATRIX",
+        "e) none of the above"
+      ],
+      "correct_answer": "b) MATRIX-1",
+      "id": 5
+    },
+    {
+      "question": "** is an operator used as ________",
+      "options": [
+        "a) Multiplication",
+        "b) Addition",
+        "c) Double Multiplication",
+        "d) Exponential",
+        "e) None of the above"
+      ],
+      "correct_answer": "d) Exponential",
+      "id": 6
+    },
+    {
+      "question": "The statement used to handle flowchart symbol for DECISION in FORTRAN is",
+      "options": [
+        "a) IF statement",
+        "b) DO statement",
+        "c) DEC statement",
+        "d) GOTO statement",
+        "e) YES or NO statement"
+      ],
+      "correct_answer": "a) IF statement",
+      "id": 7
+    },
+    {
+      "question": "The statement .LE. in FORTRAN has one of this as its equivalent in maths",
+      "options": [
+        "a) <<",
+        "b) >=",
+        "c) <",
+        "d) <=",
+        "e) None of the above"
+      ],
+      "correct_answer": "d) <=",
+      "id": 8
+    },
+    {
+      "question": "The rules that supersede naming of a variable according to the first letter is called",
+      "options": [
+        "a) Type Declaration statement",
+        "b) Initialization statement",
+        "c) Assignment statement",
+        "d) Variable statement",
+        "e) None of the above"
+      ],
+      "correct_answer": "e) None of the above",
+      "id": 9
+    },
+    {
+      "question": "How many character sets are there in FORTRAN language",
+      "options": [
+        "a) 25",
+        "b) 16",
+        "c) 13",
+        "d) 11",
+        "e) None of the above"
+      ],
+      "correct_answer": "e) None of the above",
+      "id": 10
+    },
+    {
+      "question": "Which of the following has the highest precedence in arithmetic computation?",
+      "options": [
+        "a) *",
+        "b) +",
+        "c) * or /",
+        "d) + or –",
+        "e) **"
+      ],
+      "correct_answer": "e) **",
+      "id": 11
+    },
+    {
+      "question": "STOP statement perform one of the following functions.",
+      "options": [
+        "a) Terminates a written program",
+        "b) Suspends a program",
+        "c) Instructs the computer to stop running",
+        "d) Find the program",
+        "e) All of the above"
+      ],
+      "correct_answer": "c) Instructs the computer to stop running",
+      "id": 12
+    },
+    {
+      "question": "What contains the data and program during execution of the program by the CPU?",
+      "options": [
+        "a) ALU",
+        "b) Primary Memory",
+        "c) Flash Drive",
+        "d) Secondary Memory",
+        "e) UPS"
+      ],
+      "correct_answer": "b) Primary Memory",
+      "id": 13
+    },
+    {
+      "question": "_________ is an example of an input statement",
+      "options": [
+        "a) READ(*,*) SAM,PIE",
+        "b) WRITE(*,*) \"SAM,PIE\"",
+        "c) PRINT(*,*) \"SAM,PIE\"",
+        "d) SEND(*,*) \"SAM,PIE\"",
+        "e) INPUT(*,*) \"SAM,PIE\""
+      ],
+      "correct_answer": "a) READ(*,*) SAM,PIE",
+      "id": 14
+    },
+    {
+      "question": "In FORTRAN a numeric quality in an expression that has a fixed value throughout the program is known as",
+      "options": [
+        "a) Variable",
+        "b) Real",
+        "c) Constant",
+        "d) Integer",
+        "e) String"
+      ],
+      "correct_answer": "c) Constant",
+      "id": 15
+    },
+    {
+      "question": "Statement is used to output data in Fortran.",
+      "options": [
+        "a) FORMAT",
+        "b) SEND",
+        "c) WRITE",
+        "d) READ",
+        "e) None of a, b, c or d"
+      ],
+      "correct_answer": "c) WRITE",
+      "id": 16
+    },
+    {
+      "question": "Which command can be used to read data from a file into a program?",
+      "options": [
+        "a) WRITE",
+        "b) DO",
+        "c) OPEN",
+        "d) CALL",
+        "e) INSERT"
+      ],
+      "correct_answer": "c) OPEN",
+      "id": 17
+    },
+    {
+      "question": "What is the size of an Array with DIMENSION (-4:2, 0:2)?",
+      "options": [
+        "a) 20",
+        "b) 21",
+        "c) 24",
+        "d) 30",
+        "e) None of a, b, c or d"
+      ],
+      "correct_answer": "a) 20",
+      "id": 18
+    },
+    {
+      "question": "_____ is an orderly arrangement of similar objects in rows and columns, in the form of a matrix, whose objects are of the same size and data type although the objects can have different values.",
+      "options": [
+        "a) Vector",
+        "b) Index",
+        "c) Array",
+        "d) Function",
+        "e) None of a, b, c or d"
+      ],
+      "correct_answer": "c) Array",
+      "id": 19
+    },
+    {
+      "question": "The general format for array declaration in Fortran is",
+      "options": [
+        "a) Datatype, DIMENSION (a,b,c):: arrayname",
+        "b) DIMENSION, Datatype (a,b,c):: arrayname",
+        "c) Arrayname, DIMENSION (a,b,c):: Datatype",
+        "d) Datatype, arrayname :: DIMENSION (a,b,c)",
+        "e) None of a, b, c or d"
+      ],
+      "correct_answer": "a) Datatype, DIMENSION (a,b,c):: arrayname",
+      "id": 20
+    },
+    {
+      "question": "Which two of the following declarations are correct?",
+      "options": [
+        "a) Real, DIMENSION (2,4) :: Example",
+        "b) DIMENSION (5,6) Real :: Example",
+        "c) Integer Example :: Dimension (4,3)",
+        "d) Integer DIMENSION (2,4) :: Example",
+        "e) None of a, b, c or d"
+      ],
+      "correct_answer": "a) Real, DIMENSION (2,4) :: Example",
+      "id": 21
+    },
+    {
+      "question": "A ______ statement indicates exactly how data is laid out in a READ and WRITE",
+      "options": [
+        "a) FORTRAN",
+        "b) VARIABLE",
+        "c) EXPRESSION",
+        "d) TRANSFORM",
+        "e) FORMAT"
+      ],
+      "correct_answer": "e) FORMAT",
+      "id": 22
+    },
+    {
+      "question": "Statement is used to output data in Fortran.",
+      "options": [
+        "a) FORMAT",
+        "b) SEND",
+        "c) PRINT",
+        "d) OUTPUT",
+        "e) READ"
+      ],
+      "correct_answer": "c) PRINT",
+      "id": 23
+    },
+    {
+      "question": "___ is an example of an input statement",
+      "options": [
+        "a) READ (*,*) SAM,PIE SAM,PIE",
+        "b) WRITE(*,*)SAM,PIE",
+        "c) PRINT(*<*), SAM,PIE",
+        "d) SEND(*,*)SAM, PIE",
+        "e) FORMAT(*,*)SAM, PIE"
+      ],
+      "correct_answer": "a) READ (*,*) SAM,PIE SAM,PIE",
+      "id": 24
+    },
+    {
+      "question": "In an Array, what statement is used to define its size?",
+      "options": [
+        "a) ARRAY",
+        "b) INTEGER",
+        "c) DIMENSION",
+        "d) WRITE",
+        "e) RANGE"
+      ],
+      "correct_answer": "c) DIMENSION",
+      "id": 25
+    },
+    {
+      "question": "What is the purpose of the \"IMPLICIT NONE\" statement in Fortran?",
+      "options": [
+        "a) To declare all variables implicitly",
+        "b) To declare all variables explicitly",
+        "c) To disable implicit typing",
+        "d) To enable implicit typing",
+        "e) None of a,b,c or d"
+      ],
+      "correct_answer": "c) To disable implicit typing",
+      "id": 26
+    },
+    {
+      "question": "What is the output of the following Fortran code:",
+      "code": "Q27",
+      "code_snippet": "PROGRAM TEST\nINTEGER :: I\nI = 5\nPRINT *, I**2\nEND PROGRAM TEST",
+      "options": [
+        "a) 10",
+        "b) 25",
+        "c) 50",
+        "d) 100",
+        "e) None of a,b,c or d."
+      ],
+      "correct_answer": "b) 25",
+      "id": 27
+    },
+    {
+      "question": "What is the function of the \"INTENT\" attribute in a Fortran subroutine?",
+      "options": [
+        "a) To specify the data type of a variable",
+        "b) To specify the intent of a variable (input, output, or inout)",
+        "c) To specify the dimension of an array",
+        "d) To specify the precision of a real variable",
+        "e) None of a,b,c or d."
+      ],
+      "correct_answer": "b) To specify the intent of a variable (input, output, or inout)",
+      "id": 28
+    },
+    {
+      "question": "ALU in the central processing unit stands for____",
+      "options": [
+        "a) Arithmetic and linking unit",
+        "b) Algorithm and logical unit",
+        "c) Arithmetic and logical unit",
+        "d) Algorithm and linking unit",
+        "e) None of a,b,c or d."
+      ],
+      "correct_answer": "c) Arithmetic and logical unit",
+      "id": 29
+    },
+    {
+      "question": "An Array with rank 2 could be called a __",
+      "options": [
+        "a) Matrix",
+        "b) List",
+        "c) Subscript",
+        "d) Vector",
+        "e) None of a,b,c or d."
+      ],
+      "correct_answer": "a) Matrix",
+      "id": 30
+    },
+    {
+      "question": "Which of the following is a conditional statement in Fortran?",
+      "options": [
+        "a) IF statement",
+        "b) For loop",
+        "c) Print statement",
+        "d) None of the above",
+        "e) END statement."
+      ],
+      "correct_answer": "a) IF statement",
+      "id": 31
+    },
+    {
+      "question": "A comment in Fortran programming must begin with which of the following symbols?",
+      "options": [
+        "a) *",
+        "b) /",
+        "c) !",
+        "d) %",
+        "e) $"
+      ],
+      "correct_answer": "c) !",
+      "id": 32
+    },
+    {
+      "question": "Which statement in Fortran is used to inhibit a very old feature that by default treats all variables that start with letters I,j,k,l,m and n as integers and all other variables as real arguments?",
+      "options": [
+        "a) Control statement",
+        "b) Open statement",
+        "c) Close statement",
+        "d) Implicit None",
+        "e) Write statement."
+      ],
+      "correct_answer": "d) Implicit None",
+      "id": 33
+    },
+    {
+      "question": "__ statement makes their decisions based on an expression that evaluates to the logical values true or false or their equivalent in other data types.",
+      "options": [
+        "a) Loop statement",
+        "b) Conditional statement",
+        "c) Dimension statement",
+        "d) Static statement",
+        "e) END PROGRAM."
+      ],
+      "correct_answer": "b) Conditional statement",
+      "id": 34
+    },
+    {
+      "question": "When functions are declared within the body of the main program, they are referred to as",
+      "options": [
+        "a) Static",
+        "b) Interior",
+        "c) Exterior",
+        "d) External",
+        "e) Interior"
+      ],
+      "correct_answer": "e) Interior",
+      "id": 35
+    },
+    {
+      "question": "What contains the data and program during execution of the program by the CPU?",
+      "options": [
+        "a) ALU",
+        "b) Primary Memory",
+        "c) Flash Drive",
+        "d) Secondary Memory",
+        "e) UPS"
+      ],
+      "correct_answer": "b) Primary Memory",
+      "id": 36
+    },
+    {
+      "question": "In FORTRAN a numeric quality in an expression that has fixed value throughout the program is known as __",
+      "options": [
+        "a) Variable",
+        "b) Real",
+        "c) Constant",
+        "d) Integer",
+        "e) String"
+      ],
+      "correct_answer": "c) Constant",
+      "id": 37
+    },
+    {
+      "question": "__ statement is used in to output data in Fortran.",
+      "options": [
+        "a) FORMAT",
+        "b) SEND",
+        "c) WRITE",
+        "d) READ",
+        "e) None of a, b, c or d"
+      ],
+      "correct_answer": "c) WRITE",
+      "id": 38
+    },
+    {
+      "question": "Which command can be used to read data from a file into a program?",
+      "options": [
+        "a) WRITE",
+        "b) DO",
+        "c) OPEN",
+        "d) CALL",
+        "e) INSERT"
+      ],
+      "correct_answer": "c) OPEN",
+      "id": 39
+    },
+    {
+      "question": "__ is an orderly arrangement of similar objects in rows and columns,in the form of a matrix, whose objects are of the same size and data type although the objects can have different values.",
+      "options": [
+        "a) Vector",
+        "b) Index",
+        "c) Array",
+        "d) Function",
+        "e) None of a, b, c or d."
+      ],
+      "correct_answer": "c) Array",
+      "id": 40
+    },
+    {
+      "question": "In an Array what statement is used to define it's size?",
+      "options": [
+        "a) ARRAY",
+        "b) INTEGER",
+        "c) DIMENSION",
+        "d) WRITE",
+        "e) RANGE"
+      ],
+      "correct_answer": "c) DIMENSION",
+      "id": 41
+    },
+    {
+      "question": "How many character sets are in FORTRAN language",
+      "options": [
+        "a) 25",
+        "b) 1",
+        "c) 2",
+        "d) 40",
+        "e) 60"
+      ],
+      "correct_answer": "e) 60",
+      "id": 42
+    },
+    {
+      "question": "If two operators have the same binding strength, interpretation is from",
+      "options": [
+        "a) Right to left",
+        "b) Left to Right",
+        "c) Back to front",
+        "d) Center to back",
+        "e) None of the above"
+      ],
+      "correct_answer": "b) Left to Right",
+      "id": 43
+    },
+    {
+      "question": "How many arguments does ABS in-built function take?",
+      "options": [
+        "a) 1",
+        "b) 2",
+        "c) 3",
+        "d) 4",
+        "e) None of the above"
+      ],
+      "correct_answer": "a) 1",
+      "id": 44
+    },
+    {
+      "question": "Which of the following has the highest precedence in arithmetic computation?",
+      "options": [
+        "a) *",
+        "b) +",
+        "c) * Or /",
+        "d) + or –",
+        "e) **"
+      ],
+      "correct_answer": "e) **",
+      "id": 45
+    },
+    {
+      "question": "The rules that supersede naming of a variable according to that first letter is called",
+      "options": [
+        "a) Type Declaration statement",
+        "b) Initialization statement",
+        "c) Assignment statement",
+        "d) Variable statement",
+        "e) None of the above"
+      ],
+      "correct_answer": "e) None of the above",
+      "id": 46
+    },
+    {
+      "question": "Stop statement perform one of the following functions.",
+      "options": [
+        "a) Terminates a written program",
+        "b) Suspends a program",
+        "c) Instructs the computer to stop running",
+        "d) Find the program",
+        "e) All of the above"
+      ],
+      "correct_answer": "c) Instructs the computer to stop running",
+      "id": 47
+    },
+    {
+      "question": "The statement used to handle flowchart symbol for DECISION in FORTRAN is",
+      "options": [
+        "a) IF statement",
+        "b) DO statement",
+        "c) DEC statement",
+        "d) GO TO statement",
+        "e) Yes or No statement"
+      ],
+      "correct_answer": "a) IF statement",
+      "id": 48
+    },
+    {
+      "question": "** Is an operator used as ........... In FORTRAN",
+      "options": [
+        "a) multiplication",
+        "b) Addition",
+        "c) Double multiplication",
+        "d) Exponential",
+        "e) None of the above"
+      ],
+      "correct_answer": "d) Exponential",
+      "id": 49
+    },
+    {
+      "question": "The statement.LE. in FORTRAN has one of this as its equivalent in maths",
+      "options": [
+        "a) <<",
+        "b) >=",
+        "c) <",
+        "d) <=",
+        "e) None of the above"
+      ],
+      "correct_answer": "d) <=",
+      "id": 50
+    }
+  ]
+}
