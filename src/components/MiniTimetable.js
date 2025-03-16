@@ -22,12 +22,17 @@ const TimetableList = ({ timetable, timetableData, currentTime }) => {
         const isTimePassed = currentTime > timetableStartTime;
 
         return (
-          <div className="flex w-fit p-4 items-center rounded-md border-2 border-gray-300 ">
-            <p  style={{ whiteSpace: "nowrap" }}>{formatTime(item.time)}</p>
+          <div
+            className="flex w-fit p-4 items-center rounded-md border-2 border-gray-300"
+            key={index}
+          >
+            <p style={{ whiteSpace: "nowrap" }}>{formatTime(item.time)}</p>
             <div className="w-1 mx-2 h-[90%] bg-red-500"></div>
             <div>
-              <p className="font-bold"  style={{ whiteSpace: "nowrap" }}>{formatCode(item.course)}</p>
-              <p  style={{ whiteSpace: "nowrap" }}> {item.venue}</p>
+              <p className="font-bold" style={{ whiteSpace: "nowrap" }}>
+                {formatCode(item.course)}
+              </p>
+              <p style={{ whiteSpace: "nowrap" }}> {item.venue}</p>
             </div>
           </div>
         );

@@ -44,7 +44,7 @@ const AssignmentScreen = ({ className }) => {
         ) : (
           assignments?.map((item, idx) => {
             // const color = data1[idx].color;
-            return <AssignmentCard item={item} idx={idx} />;
+            return <AssignmentCard key={idx} item={item} idx={idx} />;
           })
         )}
       </div>
