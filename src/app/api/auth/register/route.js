@@ -2,7 +2,7 @@ import { firestore } from "@/firebase";
 import bcrypt from "bcryptjs"; // Import bcrypt for hashing
 
 // Firestore
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, serverTimestamp, doc, setDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
 // Register User (User MetaData)

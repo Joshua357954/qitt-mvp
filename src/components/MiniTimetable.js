@@ -12,7 +12,7 @@ const TimetableList = ({ timetable, timetableData, currentTime }) => {
   if (!timetable || timetableData(timetable)?.length === 0) return null;
 
   return (
-    <div className="flex gap-2 mt-3 mb-4">
+    <div className="flex gap-2 mt-3 mb-4 overflow-x-auto">
       {timetableData(timetable).map((item, index) => {
         const timetableStartTime = parseInt(
           item.time.split("-")[0].replace(":", "")

@@ -15,6 +15,7 @@ import { ArrowRight } from "lucide-react";
 import { Select } from "@/components/Select";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { app } from "../../../firebase";
+import useAuthStore from "@/app/store/authStore";
 
 const Register = () => {
   const [loading, setLoading] = useState(false);
@@ -28,13 +29,20 @@ const Register = () => {
     phone: "",
     name: "", // Store Google email
     email: "", // Store Google email
-    imageURL:"",
-    uid:""
+    imageURL: "",
+    uid: "",
   });
 
   const handleChange = (name, value) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
+
+  function completeRegister(user) {
+    console.log("Setting User");
+    setUser(user);
+    console.log(user);
+    navigate.push("/");
+  }
 
   const signInWithGoogle = async () => {
     try {
@@ -46,13 +54,13 @@ const Register = () => {
       toast.info("Signing in with Google...");
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      // console.log(result.user.displayName);
+      console.log(result.user);
       setFormData((prevData) => ({
         ...prevData,
         email: user.email,
         imageURL: user.photoURL,
         name: user.displayName,
-        uid: user.uid
+        uid: user.uid,
       }));
 
       return;
@@ -72,9 +80,8 @@ const Register = () => {
 
     try {
       const { data } = await Axios.post(`/api/auth/register`, formData);
-      
       toast.success(data.message);
-      navigate("/dashboard"); // Corrected navigation
+      completeRegister(data.user);
     } catch (error) {
       toast.error(error?.response?.data?.error);
       console.error(error);
