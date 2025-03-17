@@ -116,7 +116,7 @@ const ProfileScreen = ({ className }) => {
           {/*ob*/}
           <h2 className="text-xl font-extrabold  text-gray-800">School Info</h2>
           <fieldset className="flex border-0 border-gray-400 pt-2">
-            <div className="flex w-[40%] flex-col pl-  p ">
+            <div className="flex w-[45%] flex-col pl-  p ">
               <p className="font-bold">Department</p>
               <p title="Computer Science" className="cursor-pointer font-light">
                 {userData?.department}

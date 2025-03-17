@@ -78,7 +78,7 @@ const TimetableScreen = ({ className }) => {
             </div>
           )}
 
-          <div className="w-full justify-start sm:justify-center border rounded-sm border-gray-500 flex overflow-x-auto h-20 gap-20 sm:gap-6 mb-5 p-3">
+          <div className="w-full justify-start sm:justify-center border rounded-sm border-gray-500 flex overflow-x-auto h-20 sm:gap-20 gap-2 mb-5 p-2 py-3 sm:p-3">
             {days.map((item, idx) => (
               <div
                 key={idx}
