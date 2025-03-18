@@ -1,7 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
-import ProtectedAuth from "@/utils/protectedAuth";
 import { ToastContainer } from "react-toastify";
 import { Suspense } from "react";
 import ProtectedRoute from "@/utils/ProtectedRoute";

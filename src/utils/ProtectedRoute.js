@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     // Define which pages require authentication
-    const protectedRoutes = ["/", "/profile", "/assignment",'timetable'];
+    const protectedRoutes = ["/", "/profile", "/assignment",'timetable',];
     const authPages = ["/auth", "/auth/register"];
 
     if (!user && protectedRoutes.includes(pathname)) {
