@@ -45,42 +45,31 @@ const Register = () => {
     navigate.push("/");
   }
 
-  const signInWithGoogle = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+  
     try {
       const auth = getAuth(app);
       const googleProvider = new GoogleAuthProvider();
-
-      googleProvider.setCustomParameters({ prompt: "select_account" }); // Force account selection
-
+      googleProvider.setCustomParameters({ prompt: "select_account" });
+  
       toast.info("Signing in with Google...");
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      console.log(result.user);
-      setFormData((prevData) => ({
-        ...prevData,
-        email: user.email,
-        imageURL: user.photoURL,
-        name: user.displayName,
-        uid: user.uid,
-      }));
-
-      return;
-    } catch (error) {
-      console.error("Google Sign-In Error:", error);
-      toast.error("Google Sign-In Failed!");
-      return null;
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    await signInWithGoogle();
-
-    setLoading(true);
-
-    try {
-      const { data } = await Axios.post(`/api/auth/register`, formData);
+  
+      // Merge existing formData with Google sign-in data
+      const formPayload = {
+        ...formData, // Preserve existing form data
+        email: user?.email,
+        imageURL: user?.photoURL,
+        name: user?.displayName,
+        uid: user?.uid,
+      };
+  
+      console.log("The Form Payload: ", formPayload);
+  
+      const { data } = await Axios.post(`/api/auth/register`, formPayload);
       toast.success(data.message);
       completeRegister(data.user);
     } catch (error) {
@@ -90,6 +79,7 @@ const Register = () => {
       setLoading(false);
     }
   };
+  
   return (
     <AuthLayout choose={0}>
       <div className="w-full h-full font-aeonik mx-auto bg-white py-8 sm:px-16 px-6 overflow-auto">

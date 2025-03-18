@@ -85,7 +85,7 @@ const SideBar = ({ route }) => {
 
           </div>
           <Link
-            href={"/"}
+            href={"/more"}
             className={`hidden px-3 py-2 sm:flex w-full  flex-col text-md font sm:flex-row text-gray-600 ${
               "more" == route
                 ? "text-[#0A32F8] sm:bg-gradient-to-r from-[#DBE1FF] to-[#FFFFFF] "

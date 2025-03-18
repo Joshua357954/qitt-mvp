@@ -146,7 +146,7 @@ const HomeScreen = () => {
               {sections?.map((item, idx) => (
                 <div key={idx} className=" w-1/3 text-center">
                   <div
-                    className={` h-28 rounded-full relative ${item.color}`}
+                    className={` h-[102px] rounded-full relative ${item.color}`}
                   >
                     <Image
                       src={item?.image}

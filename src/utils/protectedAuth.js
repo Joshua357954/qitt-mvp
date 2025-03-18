@@ -1,22 +1,24 @@
 "use client";
 
+import { useAuthStore } from "@/app/store/authStore.js";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/libs/hook";
 
-export default function ProtectedAuth({ children }) {
-  const user = useAppSelector((state) => state.auth.user);
-  const router = useRouter();
+const withNonAuth = (Component) => {
+  return (props) => {
+    const { user } = useAuthStore();
+    const router = useRouter();
 
-  useEffect(() => {
-    // const user = JSON.parse(localStorage.getItem("qitt-user"));
+    useEffect(() => {
+      if (user) {
+        router.replace("/"); // Redirect to home if already logged in
+      }
+    }, [user, router]);
 
-    // Redirect to `/auth` if the user is not enrolled
-    if (!user?.enrolled  ) {
-      // router.push("/auth");
-    }
-  }, [router]);
+    if (user) return null; // Prevent rendering login/signup
 
-  // Render children if validation passes
-  return <>{children}</>;
-}
+    return <Component {...props} />;
+  };
+};
+
+export default withNonAuth;

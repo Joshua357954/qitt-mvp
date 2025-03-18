@@ -4,6 +4,7 @@ import StoreProvider from "./StoreProvider";
 import ProtectedAuth from "@/utils/protectedAuth";
 import { ToastContainer } from "react-toastify";
 import { Suspense } from "react";
+import ProtectedRoute from "@/utils/ProtectedRoute";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -39,7 +40,7 @@ export default function RootLayout({ children }) {
         <body
           className={`${atypDisplay.variable} ${geistMono.variable} antialiased`}
         >
-          <ProtectedAuth>
+          <ProtectedRoute>
             <Suspense
               fallback={
                 <div className="text-center my-12 text-md font-semibold font-aeonik">
@@ -49,7 +50,7 @@ export default function RootLayout({ children }) {
             >
               {children}
             </Suspense>
-          </ProtectedAuth>
+          </ProtectedRoute>
           <ToastContainer
             position="top-center"
             autoClose={3000}

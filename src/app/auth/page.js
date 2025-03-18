@@ -24,11 +24,12 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import useAuthStore from "../store/authStore.js";
+import Link from "next/link.js";
 
 const AuthScreen = () => {
   const [email, setEmail] = useState("");
   const [pin, setPin] = useState("");
-  const { setUser} = useAuthStore();
+  const { setUser } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useRouter();
   const auth = getAuth();
@@ -78,7 +79,7 @@ const AuthScreen = () => {
   return (
     <AuthLayout>
       <div className="flex justify-center font-aeonik items-center w-full h-full bg-white">
-      <Loader open={isLoading} />
+        <Loader open={isLoading} />
 
         <main className="max-w-md w-full p-8 ">
           <header className="text-center mb-10">
@@ -160,6 +161,12 @@ const AuthScreen = () => {
               Continue with Email
             </button>
           </form>
+          <p className="text-sm mt-5 sm:mt-3">
+            Don't have an account,{" "}
+            <Link href="/auth/register" className="ml-1 text-blue-700 underline">
+              Register
+            </Link>
+          </p>
         </main>
       </div>
     </AuthLayout>
