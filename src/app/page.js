@@ -108,13 +108,13 @@ const HomeScreen = () => {
           </div>
 
           {/* Quick Links */}
-
-          <div className="h-32 w-full py-2 mt-6 flex gap-10">
-            {sections?.map((item, idx) => {
-              return (
+          <div className="w-full my-6">
+            {/* Large screens */}
+            <div className="hidden sm:flex h-32 w-full justify-between bg-red-5500 mb-5 gap-10">
+              {sections?.map((item, idx) => (
                 <div
                   key={idx}
-                  className={`${item?.color} w-1/3 rounded h-full relative`} // ✅ Fixed template literal
+                  className={`${item?.color} w-1/3 rounded h-full relative`}
                 >
                   <Image
                     src={item?.image}
@@ -138,11 +138,41 @@ const HomeScreen = () => {
                     {item?.title}
                   </p>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+
+            {/* Small screens */}
+            <div className="flex sm:hidden w-full gap-4 justify-between">
+              {sections?.map((item, idx) => (
+                <div key={idx} className=" w-1/3 text-center">
+                  <div
+                    className={` h-28 rounded-full relative ${item.color}`}
+                  >
+                    <Image
+                      src={item?.image}
+                      width={40}
+                      height={40}
+                      alt="bg-image"
+                      className="-z-10 rounded-full bg-cover w-full h-full"
+                      unoptimized
+                    />
+                    <div className="w-full h-full bg-transparent absolute top-0 left-0 flex justify-center items-center rounded-full">
+                      <Image
+                        src={item?.icon}
+                        width={40}
+                        height={20}
+                        alt="icon"
+                        unoptimized
+                      />
+                    </div>
+                  </div>
+                  <p className="text-center mt-[2px]">{item?.title}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <h2 className="font-semibold text-xl mt-6 mb-1">
+          <h2 className="font-semibold text-xl mt-8 mb-1">
             Today's Classes
             {timetableData(timetable).length > 0 && (
               <span className="bg-blue-500 text-sm text-white rounded-full ml-3 px-2 py-1">

@@ -23,7 +23,7 @@ const TimetableList = ({ timetable, timetableData, currentTime }) => {
 
         return (
           <div
-            className="flex w-fit p-4 items-center rounded-md border-2 border-gray-300"
+            className="flex w-fit px-4 py-6 items-center rounded-md border-2 border-gray-300"
             key={index}
           >
             <p style={{ whiteSpace: "nowrap" }}>{formatTime(item.time)}</p>
