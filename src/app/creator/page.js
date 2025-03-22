@@ -35,7 +35,7 @@ export default function CreatorHome() {
     <main className="w-full font-aeonik">
       {/* Nav */}
       <div className="flex gap-5 items-center p-5 border-b border-gray-500">
-        <Link href="/creator">
+        <Link href="/">
           <ArrowLeft size={20} />
         </Link>
         <p className="text-2xl font-bold">Creator</p>
