@@ -2,6 +2,8 @@ import { ArrowLeft, BookOpen, ClipboardList, StickyNote } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { TbCalendarTime } from "react-icons/tb";
+import { LuNotebookText } from "react-icons/lu";
+import { LuGrid2X2Plus } from "react-icons/lu";
 
 const components = [
   {
@@ -11,7 +13,7 @@ const components = [
   },
   {
     name: "Resource",
-    icon: <BookOpen size={25} className="text-yellow-500" />,
+    icon: <LuGrid2X2Plus size={25} className="text-yellow-500" />,
     path: "resources",
   },
   {
@@ -21,7 +23,7 @@ const components = [
   },
   {
     name: "Notes",
-    icon: <StickyNote size={25} className="text-purple-500" />,
+    icon: <LuNotebookText size={25} className="text-purple-500" />,
     path: "note",
   },
 ];
