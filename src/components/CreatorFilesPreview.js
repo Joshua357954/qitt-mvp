@@ -27,6 +27,7 @@ export default function ImagePreview() {
                 height={40}
                 className="bg-cover w-full h-full rounded cursor-pointer"
                 alt="preview"
+                unoptimized
               />
             </PhotoView>
             <button
