@@ -12,7 +12,7 @@ function page() {
     {
       name: "Apply for Creator",
       icon: <LuNotebookPen />,
-      link: "/apply-creator",
+      link: "/creator/apply",
     },
     { name: "Feedback", icon: <TbMessage />, link: "/feedback" },
   ];
