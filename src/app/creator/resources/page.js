@@ -1,70 +1,99 @@
 "use client";
 import CreatorFilesPreview from "@/components/CreatorFilesPreview";
 import { Dropdown } from "@/components/Dropdown";
-import {
-  ArrowLeft,
-  PlusCircle,
-  Upload,
-} from "lucide-react/dist/cjs/lucide-react";
+import { ArrowLeft, PlusCircle, Upload } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import useResourceStore from "@/app/store/creator/resourcesStore";
+import CreatorLayout from "@/components/CreatorLayout";
 
-export default function CreatorTimetable() {
-  const [day, setDay] = useState("friday");
-  const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+export default function CreatorResources() {
+  const {
+    title,
+    description,
+    course,
+    type,
+    files,
+    setField,
+    addFiles,
+    uploadResources,
+    isLoading,
+  } = useResourceStore();
 
   return (
-    <main className="w-full font-aeonik ">
-      {/* Nav 1 */}
-      <div className="flex gap-5 items-center p-5 border-b border-gray-500">
-        <Link href="/creator">
-          <ArrowLeft size={20} />
-        </Link>
-        <p className="text-2xl font-bold ">Creator</p>
+    <CreatorLayout
+      screenName={"Resources"}
+      Button={
+        <button
+          onClick={uploadResources}
+          className={`hidden sm:flex justify-center items-center px-4 py-2 text-white bg-[#0A32F8] gap-3 rounded ${
+            isLoading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={isLoading}
+        >
+          <Upload size={15} /> {isLoading ? "Uploading..." : "Add Resources"}
+        </button>
+      }
+    >
+      {/* Main Content */}
+      <div className="flex flex-col ">
+        <label className="font-bold">Title</label>
+        <input
+          className="border border-black px-2 py-1 rounded"
+          value={title}
+          onChange={(e) => setField("title", e.target.value)}
+        />
       </div>
 
-      {/* Main Stuff */}
-      <section className="w-full px-8 sm:px-0 sm:w-3/4 mx-auto">
-        {/* Nav 2 */}
-        <nav className="flex sm:justify-between justify-center py-4 items-center border-b border-gray-600">
-          <h2 className="text-xl text-center font-semibold ">Resources</h2>
-          <button className="hidden sm:flex justify-center items-center px-4 py-2 text-white bg-[#0A32F8] gap-3 rounded">
-            <Upload size={15} /> Add Resources
-          </button>
-        </nav>
+      <div className="flex flex-col">
+        <label className="font-bold">Description</label>
+        <textarea
+          className="p-1 resizable-none border border-black rounded"
+          value={description}
+          onChange={(e) => setField("description", e.target.value)}
+        ></textarea>
+      </div>
 
-        {/* Main */}
-        <div className="w-4/5 sm:w-1/3 mx-auto py-5  flex flex-col gap-7">
-          <div className="flex flex-col">
-            <label className="font-bold">Title</label>
-            <input className="border border-black px-2 py-1 rounded" />
-          </div>
+      {/* Dropdowns */}
+      <div className="flex gap-4">
+        <Dropdown
+          label="Course"
+          dropdownItems={["CSC 240", "MTH 101", "PHY 112"]}
+          value={course}
+          onChange={(value) => setField("course", value)}
+        />
+        <Dropdown
+          label="Type"
+          dropdownItems={["Note", "Assignment", "Lecture"]}
+          value={type}
+          onChange={(value) => setField("type", value)}
+        />
+      </div>
 
-          <div className="flex flex-col">
-            <label  className="font-bold">Description</label>
-            <textarea className="p-1 resizable-none border border-black rounded"></textarea>
-          </div>
+      {/* File Upload */}
+      <label className="border p-3 border-dashed flex rounded justify-center items-center gap-5 border-[#0A32F8] text-[#0A32F8] cursor-pointer">
+        <PlusCircle color="#0A32F8" /> Add Files
+        <input
+          type="file"
+          multiple
+          className="hidden"
+          onChange={(e) => addFiles(Array.from(e.target.files))}
+        />
+      </label>
 
-          {/* Drowdowns */}
-          <div className="flex gap-4">
-            <Dropdown label="Course" dropdownItems={["CSC 240"]} />
+      {/* File Preview */}
 
-            <Dropdown label={"Type"} dropdownItems={["Note"]} />
-          </div>
+      <CreatorFilesPreview files={files} />
 
-          <button className="border p-3 border-dashed flex rounded justify-center items-center gap-5 border-[#0A32F8] text-[#0A32F8]">
-            <PlusCircle color="#0A32F8" /> Files
-          </button>
-        </div>
-
-        <div className="w-full">
-          <CreatorFilesPreview />
-        </div>
-
-        <button className="flex sm:hidden justify-center items-center px-4 py-3 text-white bg-[#0A32F8] gap-3 rounded w-4/5 mx-auto my-4 ">
-          <Upload size={15} /> Add Resources
-        </button>
-      </section>
-    </main>
+      {/* Mobile Upload Button */}
+      <button
+        onClick={uploadResources}
+        className={`flex sm:hidden justify-center items-center px-4 py-3 text-white bg-[#0A32F8] gap-3 rounded w-4/5 mx-auto my-4 ${
+          isLoading ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        disabled={isLoading}
+      >
+        <Upload size={15} /> {isLoading ? "Uploading..." : "Add Resources"}
+      </button>
+    </CreatorLayout>
   );
 }

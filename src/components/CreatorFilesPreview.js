@@ -4,7 +4,7 @@ import { MdClose } from "react-icons/md";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
 
-export default function ImagePreview() {
+export default function ImagePreview({files}) {
   const [images, setImages] = useState([
     { id: "img1", src: "/writings.png" },
     { id: "img2", src: "/writings.png" },
@@ -17,7 +17,7 @@ export default function ImagePreview() {
 
   return (
     <PhotoProvider>
-      <section className="w-4/5 sm:w-1/3 mx-auto flex my-2 justify-between">
+      <section className="w-full  mx-auto flex my-2 justify-between">
         {images.map((item) => (
           <div key={item.id} className="w-20 h-16 rounded relative">
             <PhotoView src={item.src}>

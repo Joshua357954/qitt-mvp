@@ -17,14 +17,14 @@ export function Dropdown({
 }) {
   return (
     <div className="w-full">
-      <label className="block text-sm text-gray-700 font-bold">{label}</label>
-      <Select onValueChange={onChange} defaultValue={value}>
+      <label className="block text-sm text-black font-bold">{label}</label>
+      <Select onValueChange={onChange} defaultValue={value} className="border border-black">
         <SelectTrigger>
           <SelectValue placeholder={`${label}`} />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent >
           {dropdownItems.map((item, index) => (
-            <SelectItem key={index} value={item}>
+            <SelectItem key={index} value={item} >
               {item}
             </SelectItem>
           ))}

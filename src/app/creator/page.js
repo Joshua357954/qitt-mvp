@@ -32,9 +32,10 @@ export default function CreatorHome() {
   const screenName = "yourScreenName"; // Replace with dynamic value
 
   return (
-    <main className="w-full font-aeonik">
+    <main className="w-full font-aeonik min-h-screen bg-red-6000">
       {/* Nav */}
-      <div className="flex gap-5 items-center p-5 border-b border-gray-500">
+      <div className="flex gap-5 items-center 
+      h-20 border-b border-gray-500 px-4">
         <Link href="/">
           <ArrowLeft size={20} />
         </Link>
