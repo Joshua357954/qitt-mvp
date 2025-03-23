@@ -61,7 +61,7 @@ export default function CreatorAssignment() {
       </div>
 
       {/* Date Inputs */}
-      <div className="flex gap-4">
+      <div className="flex justify-between w-full">
         <div className="flex flex-col">
           <label className="font-bold">Date Given</label>
           <input
@@ -100,7 +100,7 @@ export default function CreatorAssignment() {
       </div>
 
       {/* Mobile Upload Button */}
-      <button className="flex sm:hidden justify-center items-center px-4 py-3 text-white bg-[#0A32F8] gap-3 rounded w-4/5 mx-auto my-4">
+      <button className="flex sm:hidden justify-center items-center px-4 py-3 text-white bg-[#0A32F8] gap-3 rounded w-full mx-auto my-4">
         <Upload size={15} /> Add Assignment
       </button>
     </CreatorLayout>

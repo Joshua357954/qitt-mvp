@@ -95,7 +95,7 @@ export default function CreatorTimetable() {
             <PlusCircle size={30} /> <span>Add Entry</span>
           </button>
         </div>
-        <button className="flex sm:hidden justify-center items-center px-4 py-3 text-white bg-[#0A32F8] gap-3 rounded w-4/5 mx-auto my-4 ">
+        <button className="flex sm:hidden justify-center items-center px-4 py-3 text-white bg-[#0A32F8] gap-3 rounded w-full mx-auto my-4 ">
           <Upload size={15} /> Update Timetable
         </button>
       </section>

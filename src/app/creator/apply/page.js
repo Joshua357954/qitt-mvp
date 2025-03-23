@@ -8,7 +8,7 @@ export default function Apply() {
   return (
     <main className="bg-gray-200 h-screen font-aeonik">
       <section className="bg-white relative h-full w-full sm:w-1/2 mx-auto">
-        <div className="py-3 border-b border-gray-600 text-center px-3 w-full flex justify-between items-center">
+        <div className="py-5 border-b border-gray-600 text-center px-3 w-full flex justify-between items-center">
           <Link href={'/'}><ArrowLeft size={25} /></Link>
           <h1 className="font-extrabold text-xl sm:text-2xl ">
             Apply For Creator
@@ -54,7 +54,7 @@ export default function Apply() {
               placeholder="Brief Summery"
             ></textarea>
           </div>
-          <button className="flex text-white items-center justify-center gap-5 bg-[#0A32F8] hover:bg-blue-700 rounded p-3">
+          <button className="flex text-white items-center justify-center gap-5 bg-[#0A32F8] hover:bg-blue-700 rounded p-4">
             Apply <ArrowRight color="white" />
           </button>
         </div>

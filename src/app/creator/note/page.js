@@ -75,7 +75,7 @@ export default function CreatorNote() {
       <button
         onClick={uploadNote}
         disabled={loading}
-        className="flex sm:hidden justify-center items-center px-4 py-3 text-white bg-[#0A32F8] gap-3 rounded w-4/5 mx-auto my-4"
+        className="flex sm:hidden justify-center items-center px-4 py-3 text-white bg-[#0A32F8] gap-3 rounded w-full mx-auto my-4"
       >
         {loading ? (
           "Uploading..."

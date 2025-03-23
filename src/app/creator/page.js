@@ -35,7 +35,7 @@ export default function CreatorHome() {
     <main className="w-full font-aeonik min-h-screen bg-red-6000">
       {/* Nav */}
       <div className="flex gap-5 items-center 
-      h-20 border-b border-gray-500 px-4">
+      h-20 border-b border-gray-300 px-6">
         <Link href="/">
           <ArrowLeft size={20} />
         </Link>
@@ -43,8 +43,8 @@ export default function CreatorHome() {
       </div>
 
       {/* Main Content */}
-      <section className="w-full px-8 sm:px-0 sm:w-1/3 mx-auto py-5 flex flex-col justify-around h-full">
-        <div>
+      <section className="w-full px-8 sm:px-0 sm:w-1/3 mx-auto py-5 flex flex-col gap-6 h-full">
+        <div className="mt-2">
           <h1 className="font-bold text-2xl">Welcome Back.</h1>
           <div className="bg-blue-700 rounded-md h-24 mt-4 w-full"></div>
         </div>
