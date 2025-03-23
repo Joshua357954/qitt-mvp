@@ -9,8 +9,22 @@ const useNoteStore = create((set) => ({
 
   setCourse: (course) => set({ course }),
   setDescription: (description) => set({ description }),
-  addFiles: (newFiles) =>
-    set((state) => ({ files: [...state.files, ...newFiles] })),
+
+  addFiles: (newFiles) => {
+    const fileObjects = newFiles.map((file) => ({
+      id: crypto.randomUUID(), // Generate a unique ID
+      file,
+      src: URL.createObjectURL(file), // Create preview URL
+    }));
+
+    set((state) => ({ files: [...state.files, ...fileObjects] }));
+  },
+
+  removeFile: (id) =>
+    set((state) => {
+      const updatedFiles = state.files.filter((file) => file.id !== id);
+      return { files: updatedFiles };
+    }),
 
   uploadNote: async () => {
     set({ loading: true });
@@ -27,7 +41,7 @@ const useNoteStore = create((set) => ({
       const formData = new FormData();
       formData.append("course", course);
       formData.append("description", description);
-      files.forEach((file) => formData.append("files", file));
+      files.forEach(({ file }) => formData.append("files", file));
 
       const response = await axios.post("/api/upload-note", formData, {
         headers: { "Content-Type": "multipart/form-data" },

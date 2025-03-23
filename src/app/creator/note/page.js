@@ -11,11 +11,12 @@ export default function CreatorNote() {
     course,
     description,
     files,
+    loading,
     setCourse,
     setDescription,
     addFiles,
+    removeFile,
     uploadNote,
-    loading,
   } = useNoteStore();
 
   return (
@@ -66,9 +67,9 @@ export default function CreatorNote() {
         />
       </label>
 
-      {/* File Preview */}
+      {/* File Preview with Remove Option */}
       <div className="w-full">
-        <CreatorFilesPreview files={files} />
+        <CreatorFilesPreview files={files} removeFile={removeFile} />
       </div>
 
       {/* Mobile Upload Button */}

@@ -2,7 +2,6 @@
 import CreatorFilesPreview from "@/components/CreatorFilesPreview";
 import { Dropdown } from "@/components/Dropdown";
 import { ArrowLeft, PlusCircle, Upload } from "lucide-react";
-import Link from "next/link";
 import useResourceStore from "@/app/store/creator/resourcesStore";
 import CreatorLayout from "@/components/CreatorLayout";
 
@@ -15,6 +14,7 @@ export default function CreatorResources() {
     files,
     setField,
     addFiles,
+    removeFile,
     uploadResources,
     isLoading,
   } = useResourceStore();
@@ -35,10 +35,10 @@ export default function CreatorResources() {
       }
     >
       {/* Main Content */}
-      <div className="flex flex-col ">
+      <div className="flex flex-col">
         <label className="font-bold">Title</label>
         <input
-          className="border border-black px-2 py-1 rounded"
+          className="border border-black px-2 py-2 rounded"
           value={title}
           onChange={(e) => setField("title", e.target.value)}
         />
@@ -76,13 +76,12 @@ export default function CreatorResources() {
           type="file"
           multiple
           className="hidden"
-          onChange={(e) => addFiles(Array.from(e.target.files))}
+          onChange={(e) => addFiles(e.target.files)}
         />
       </label>
 
       {/* File Preview */}
-
-      <CreatorFilesPreview files={files} />
+      <CreatorFilesPreview files={files} removeFile={removeFile} />
 
       {/* Mobile Upload Button */}
       <button

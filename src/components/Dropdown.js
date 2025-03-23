@@ -16,15 +16,15 @@ export function Dropdown({
   placeholder,
 }) {
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <label className="block text-sm text-black font-bold">{label}</label>
-      <Select onValueChange={onChange} defaultValue={value} className="border border-black">
-        <SelectTrigger>
+      <Select onValueChange={onChange} defaultValue={value}>
+        <SelectTrigger className="border border-black px-4 py-3 rounded-md">
           <SelectValue placeholder={`${label}`} />
         </SelectTrigger>
-        <SelectContent >
+        <SelectContent>
           {dropdownItems.map((item, index) => (
-            <SelectItem key={index} value={item} >
+            <SelectItem key={index} value={item}>
               {item}
             </SelectItem>
           ))}
