@@ -2,8 +2,12 @@
 
 import { ArrowLeft, Upload, PlusCircle, Trash2 } from "lucide-react";
 import Link from "next/link";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
+
 import React, { useState } from "react";
 import { Dropdown } from "@/components/Dropdown"; // Assuming you have a Dropdown component
+import { formatTime } from "@/utils/utils";
 
 export default function CreatorTimetable() {
   const [day, setDay] = useState("friday");
@@ -37,11 +41,11 @@ export default function CreatorTimetable() {
   return (
     <main className="w-screen font-aeonik">
       {/* Nav 1 */}
-      <div className="flex gap-5 items-center p-5 border-b border-gray-500">
+      <div className="flex gap-5 items-center p-5 border-b border-gray-500 bg-black">
         <Link href="/creator">
-          <ArrowLeft size={20} />
+          <ArrowLeft size={20} color={"white"} />
         </Link>
-        <p className="text-2xl font-bold">Creator</p>
+        <p className="text-2xl font-bold text-white">Creator</p>
       </div>
 
       {/* Main Section */}
@@ -55,7 +59,7 @@ export default function CreatorTimetable() {
         </nav>
 
         {/* Day Selector */}
-        <div className="w-full justify-between sm:justify-center border rounded-sm border-gray-500 flex overflow-x-auto h-20 sm:gap-20   mb-5 p-2 py-2 sm:p-3">
+        <div className="w-full justify-between sm:justify-center border rounded-sm border-gray-500 flex overflow-x-auto h-20 sm:gap-20 mb-5 p-2 py-2 sm:p-3">
           {days.map((item) => (
             <div
               key={item}
@@ -90,7 +94,6 @@ export default function CreatorTimetable() {
           >
             <PlusCircle size={30} /> <span>Add Entry</span>
           </button>
-
         </div>
         <button className="flex sm:hidden justify-center items-center px-4 py-3 text-white bg-[#0A32F8] gap-3 rounded w-4/5 mx-auto my-4 ">
           <Upload size={15} /> Update Timetable
@@ -101,6 +104,14 @@ export default function CreatorTimetable() {
 }
 
 function CTItem({ data, updateEntry, removeEntry }) {
+  const timePickerOptions = {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "h:i K", // 'h' for 12-hour format, 'K' for AM/PM
+    time_24hr: false, // Enables AM/PM format
+    disableMobile: true, // Prevents native mobile time picker
+  };
+
   return (
     <div className="flex gap-3 sm:gap-5 mx-auto items-center border p-2 rounded">
       <p className="font-bold hidden sm:flex">{data.id}</p>
@@ -121,35 +132,35 @@ function CTItem({ data, updateEntry, removeEntry }) {
         onChange={(value) => updateEntry(data.id, "course", value)}
       />
 
-      {/* Start Time Picker */}
-      <div className="flex flex-col items-start">
-        <label className="text-sm font-semibold">Start Time</label>
-        <input
-          type="time"
-          value={data.start}
-          onChange={(e) => updateEntry(data.id, "start", e.target.value)}
-          placeholder="00:00"
-          className="border p-1 rounded w-24"
-        />
-      </div>
-
-      <p className="font-bold text-xl">-</p>
-
-      {/* End Time Picker */}
-      <div className="flex flex-col items-start">
-        <label className="text-sm font-semibold">End Time</label>
-        <input
-          type="time"
-          value={data.end}
-          onChange={(e) => updateEntry(data.id, "end", e.target.value)}
-          placeholder="00:00"
-          className="border p-1 rounded w-24"
-        />
+      {/* Time Pickers */}
+      <div className="flex items-center gap-2">
+        {["start", "end"].map((field) => (
+          <div key={field} className="flex flex-col items-start">
+            <label className="text-sm font-semibold">
+              {field === "start" ? "Start" : "End"}
+            </label>
+            <Flatpickr
+              className="border p-1 rounded w-14 text-center"
+              value={data[field]}
+              onChange={([time]) =>
+                updateEntry(
+                  data.id,
+                  field,
+                  time.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                )
+              }
+              options={timePickerOptions}
+            />
+          </div>
+        ))}
       </div>
 
       {/* Remove Entry Button */}
       <button onClick={() => removeEntry(data.id)} className="text-red-500">
-        <Trash2 size={20} />
+        <Trash2 size={12} />
       </button>
     </div>
   );
