@@ -45,16 +45,13 @@ const ProfileScreen = ({ className }) => {
     return formattedDate;
   }
 
-  const dispatch = useAppDispatch();
+
 
   const handleLogout = () => {
     // signout from firebase
     const sure = confirm("Are you sure you want to logout ?");
     if (!sure) return;
-    const auth = getAuth();
-    signOut(auth);
-    logout();
-    window.location.reload();
+    logout()
   };
 
   return (
