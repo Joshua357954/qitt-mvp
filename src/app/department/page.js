@@ -102,7 +102,7 @@ const Department = ({ className }) => {
             <div
               onClick={() => setSection("courses")}
               className={`w-[33%]  text-lg flex justify-center items-center text-black ${
-                section == "courses" ? "bg-purple-400 font-extrabold" : ""
+                section == "courses" ? "bg-blue-700 font-extrabold" : ""
               } h-full rounded px-1 `}
             >
               Courses{" "}
