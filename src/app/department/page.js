@@ -5,6 +5,7 @@ import Axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addCoursemates } from "../../libs/features/userSlice.js";
 import Link from "next/link.js";
+import useAuthStore from "../store/authStore.js";
 
 const NameInitial = ({ name }) => {
   // Extract the first letter of the name
@@ -19,58 +20,59 @@ const NameInitial = ({ name }) => {
 
 const Department = ({ className }) => {
   const dispatch = useDispatch();
+  const { user: userData } = useAuthStore();
   const [section, setSection] = useState("class");
   const { courseName } = useSelector((state) => state.user);
   const { coursemates } = useSelector((state) => state.users);
-  const userData = useSelector((state) => state.auth.user);
 
+  const dept = userData?.department;
 
-  const dept = userData?.department?.value;
-
-
-  const courses = 
-  dept === "computer_science"
-    ? [
-        { name: "MTH270.1", description: "Numerical analysis" },
-        { name: "MTH210.1", description: "Linear Algebra" },
-        {
-          name: "STA260.1",
-          description: "Introduction to probability and statistics",
-        },
-        {
-          name: "CSC280.1",
-          description: "Introduction to Computer programming (Fortran)",
-        },
-        { name: "CSC281.1", description: "Computer system fundamentals" },
-        {
-          name: "CSC283.1",
-          description: "Introduction to information systems and File structures",
-        },
-        { name: "CSC284.1", description: "Introduction to Logic Design" },
-        { name: "CSC288.1", description: "Structured programming" },
-      ]
-    : dept === "mechanical_engineering"
-    ? [
-        { name: "MEC101.1", description: "Introduction to Mechanical Engineering" },
-        { name: "MEC201.1", description: "Engineering Thermodynamics I" },
-        { name: "MEC202.1", description: "Strength of Materials" },
-        { name: "MEC203.1", description: "Fluid Mechanics I" },
-        { name: "MEC204.1", description: "Engineering Mechanics" },
-        { name: "MEC205.1", description: "Mechanical Engineering Drawing" },
-        { name: "MEC301.1", description: "Manufacturing Processes I" },
-        { name: "MEC302.1", description: "Machine Design I" },
-      ]
-    : [];
-
+  const courses =
+    dept === "computer_science"
+      ? [
+          { name: "MTH270.1", description: "Numerical analysis" },
+          { name: "MTH210.1", description: "Linear Algebra" },
+          {
+            name: "STA260.1",
+            description: "Introduction to probability and statistics",
+          },
+          {
+            name: "CSC280.1",
+            description: "Introduction to Computer programming (Fortran)",
+          },
+          { name: "CSC281.1", description: "Computer system fundamentals" },
+          {
+            name: "CSC283.1",
+            description:
+              "Introduction to information systems and File structures",
+          },
+          { name: "CSC284.1", description: "Introduction to Logic Design" },
+          { name: "CSC288.1", description: "Structured programming" },
+        ]
+      : dept === "mechanical_engineering"
+      ? [
+          {
+            name: "MEC101.1",
+            description: "Introduction to Mechanical Engineering",
+          },
+          { name: "MEC201.1", description: "Engineering Thermodynamics I" },
+          { name: "MEC202.1", description: "Strength of Materials" },
+          { name: "MEC203.1", description: "Fluid Mechanics I" },
+          { name: "MEC204.1", description: "Engineering Mechanics" },
+          { name: "MEC205.1", description: "Mechanical Engineering Drawing" },
+          { name: "MEC301.1", description: "Manufacturing Processes I" },
+          { name: "MEC302.1", description: "Machine Design I" },
+        ]
+      : [];
 
   const excoss = [];
 
   useEffect(() => {
     const getUsersByDepartment = async (department) => {
       try {
-        console.log(department)
+        console.log(department);
         const response = await Axios.get(
-          `/api/user/qitt?department=${department}`
+          `/api/user/qitt?department=${"computer_science"}`
         );
         const users = response.data;
         console.log(users);
@@ -79,14 +81,12 @@ const Department = ({ className }) => {
         console.error("Error fetching users:", error?.message);
       }
     };
-    getUsersByDepartment(userData?.department?.value);
-    console.log(userData)
+    getUsersByDepartment(userData?.department);
+    console.log(userData);
   }, [section == "class", coursemates == []]);
 
   return (
-    <MainLayout
-      route={`Department (${userData?.department?.value?.split("_")[0]})`}
-    >
+    <MainLayout route={`${userData?.department?.split("_").join(" ")}`}>
       <section className="flex flex-col items-center  w-full">
         <div className="w-full h-14 max-h-14 flex justify-center items-center mt-2">
           <div className="w-[80%] h-full py-1 bg-purple-50 flex justify-between items-center px-2 rounded text-center ">
@@ -136,11 +136,9 @@ const Department = ({ className }) => {
                       key={idx}
                       className="pb-2 flex items-center gap-x-4 px-2 pl-4"
                     >
-                    
                       <NameInitial name={item.name} />
                       <div className="flex flex-col">
                         <div className="font-bold">{item.name}</div>
-                        
                       </div>
                     </div>
                   );
@@ -169,7 +167,6 @@ const Department = ({ className }) => {
           ""
         )}
 
-   
         {section == "courses" ? (
           <section className="w-full">
             <div className="w-full pt-5 pl-1">

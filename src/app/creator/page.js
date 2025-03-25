@@ -1,6 +1,7 @@
 import { ArrowLeft, BookOpen, ClipboardList, StickyNote } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { GraduationCap } from "lucide-react";
 import { TbCalendarTime } from "react-icons/tb";
 import { LuNotebookText } from "react-icons/lu";
 import { LuGrid2X2Plus } from "react-icons/lu";
@@ -26,6 +27,11 @@ const components = [
     icon: <LuNotebookText size={25} className="text-purple-500" />,
     path: "note",
   },
+  {
+    name: "Courses",
+    icon: <GraduationCap size={25} className="text-blue-500" />,
+    path: "courses",
+  },
 ];
 
 export default function CreatorHome() {
@@ -34,8 +40,10 @@ export default function CreatorHome() {
   return (
     <main className="w-full font-aeonik min-h-screen bg-red-6000">
       {/* Nav */}
-      <div className="flex gap-5 items-center 
-      h-20 border-b border-gray-300 px-6">
+      <div
+        className="flex gap-5 items-center 
+      h-20 border-b border-gray-300 px-6"
+      >
         <Link href="/">
           <ArrowLeft size={20} />
         </Link>
