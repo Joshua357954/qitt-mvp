@@ -112,7 +112,8 @@ const HomeScreen = () => {
             {/* Large screens */}
             <div className="hidden sm:flex h-32 w-full justify-between bg-red-5500 mb-5 gap-10">
               {sections?.map((item, idx) => (
-                <div
+                <Link
+                  href={item?.link}
                   key={idx}
                   className={`${item?.color} w-1/3 rounded h-full relative`}
                 >
@@ -137,7 +138,7 @@ const HomeScreen = () => {
                   <p className="text-right text-white mr-3 z-50 absolute right-0 bottom-4">
                     {item?.title}
                   </p>
-                </div>
+                </Link>
               ))}
             </div>
 
@@ -145,7 +146,8 @@ const HomeScreen = () => {
             <div className="flex sm:hidden w-full gap-4 justify-between">
               {sections?.map((item, idx) => (
                 <div key={idx} className=" w-1/3 text-center">
-                  <div
+                  <Link
+                    href={item?.link}
                     className={` h-[102px] rounded-full relative ${item.color}`}
                   >
                     <Image
@@ -165,7 +167,7 @@ const HomeScreen = () => {
                         unoptimized
                       />
                     </div>
-                  </div>
+                  </Link>
                   <p className="text-center mt-[2px]">{item?.title}</p>
                 </div>
               ))}
