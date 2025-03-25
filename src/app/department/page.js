@@ -89,11 +89,11 @@ const Department = ({ className }) => {
     <MainLayout route={`${userData?.department?.split("_").join(" ")}`}>
       <section className="flex flex-col items-center  w-full">
         <div className="w-full h-14 max-h-14 flex justify-center items-center mt-2">
-          <div className="w-[80%] h-full py-1 bg-purple-50 flex justify-between items-center px-2 rounded text-center ">
+          <div className="w-[96%] sm:w-[80%] h-full py-1 bg-blue-50 flex justify-between items-center px-2 rounded text-center ">
             <div
               onClick={() => setSection("class")}
               className={`w-[33%]  text-lg flex justify-center items-center text-black ${
-                section == "class" ? "bg-purple-400 font-extrabold" : ""
+                section == "class" ? "bg-blue-700 font-extrabold" : ""
               } h-full rounded`}
             >
               Class{" "}
