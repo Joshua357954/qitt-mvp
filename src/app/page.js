@@ -86,7 +86,7 @@ const HomeScreen = () => {
       title: "Practice",
       icon: "/practice-2.png",
       image: "/q-green-2.png",
-      link: "/practice",
+      link: "/pastQuestion",
       color: "bg-[#46D28F]",
     },
   ];
