@@ -86,7 +86,7 @@ const HomeScreen = () => {
       title: "Practice",
       icon: "/practice-2.png",
       image: "/q-green-2.png",
-      link: "/practice",
+      link: "/pastQuestion",
       color: "bg-[#46D28F]",
     },
   ];
@@ -108,7 +108,7 @@ const HomeScreen = () => {
           </div>
 
           {/* Quick Links */}
-          <div className="w-full my-6">
+          <div className="w-full my-6 mb-7">
             {/* Large screens */}
             <div className="hidden sm:flex h-32 w-full justify-between bg-red-5500 mb-5 gap-10">
               {sections?.map((item, idx) => (
@@ -150,7 +150,7 @@ const HomeScreen = () => {
                 <div key={idx} className=" w-1/3 text-center">
                   <Link href={item?.link} className="w-full h-full">
                   <div
-                    className={` h-[110px] rounded-full relative ${item.color}`}
+                    className={` h-[105px] rounded-full relative ${item.color}`}
                   >
                     <Image
                       src={item?.image}

@@ -55,7 +55,7 @@ const PastQuestion = ({ className }) => {
   const cours = [0];
 
   return (
-    <MainLayout route="Past Q/A">
+    <MainLayout route="Practice">
       <section className="w-full h-full overflow-y-auto">
         <div className="w-full h-20  mt-5 px-2 ">
           <div className="w-[70%] sm:w-[40%] bg-purple-50 h-[80%] px-[4px] rounded  py-1 ">

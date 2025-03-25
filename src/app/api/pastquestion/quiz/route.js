@@ -1,8 +1,8 @@
-import { Respond } from "@/utils/utils";
+import { NextResponse } from "next/server";
 import CSC280 from "./csc280.json";
-import GES101 from "./ges101.json"
+import GES101 from "./ges101.json";
 
-const quizData = { 'csc280': CSC280,'ges101': GES101 };
+const quizData = { csc280: CSC280, ges101: GES101 };
 
 function shuffleArray(array) {
   const shuffledArray = [...array];
@@ -18,15 +18,16 @@ export async function GET(request) {
   const subject = searchParams.get("subject");
   const numberOfQuestions = parseInt(searchParams.get("numberOfQuestions"), 10);
 
-  console.log(subject,numberOfQuestions)
+  console.log(subject, numberOfQuestions);
+
   if (!quizData[subject]) {
-    return Respond({ error: "Subject not found" },500);
+    return NextResponse.json({ error: "Subject not found" }, { status: 500 });
   }
 
   const shuffledQuizData = shuffleArray(quizData[subject].questions);
   const selectedQuestions = shuffledQuizData.slice(0, numberOfQuestions);
 
-  return Respond({ questions: selectedQuestions },200);
+  return NextResponse.json({ questions: selectedQuestions }, { status: 200 });
 }
 
 export async function POST(request) {
@@ -37,7 +38,7 @@ export async function POST(request) {
   } = await request.json();
 
   if (!quizData[subject]) {
-    return Respond({ error: "Subject not found" },404);
+    return NextResponse.json({ error: "Subject not found" }, { status: 404 });
   }
 
   const results = Object.keys(userAnswers)
@@ -46,9 +47,7 @@ export async function POST(request) {
         (data) => data.id == qid
       );
 
-      if (!question) {
-        return null;
-      }
+      if (!question) return null;
 
       return {
         question_no: index + 1,
@@ -65,13 +64,13 @@ export async function POST(request) {
     0
   );
 
-  return Respond(
+  return NextResponse.json(
     {
       results,
       score,
       answeredQuestions: Object.keys(userAnswers).length,
       totalQuestions,
     },
-    200
+    { status: 200 }
   );
 }
