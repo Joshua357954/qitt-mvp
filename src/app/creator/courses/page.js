@@ -1,45 +1,101 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
+import ReactMarkdown from "react-markdown";
 import { PlusCircle, Upload } from "lucide-react";
 import CreatorLayout from "@/components/CreatorLayout";
+import useCourseStore from "@/app/store/creator/coursesStore"; // Import Zustand store
 
 export default function CreatorCourses() {
-  const [courseName, setCourseName] = useState("");
-  const [courses, setCourses] = useState([]);
-
-  const addCourse = () => {
-    if (courseName.trim() !== "") {
-      setCourses([...courses, courseName]);
-      setCourseName("");
-    }
-  };
+  const {
+    course,
+    courses,
+    isUploading,
+    updateCourse,
+    addCourse,
+    uploadCourses,
+  } = useCourseStore();
 
   return (
     <CreatorLayout
-      screenName="Courses Data"
+      screenName="Course Data"
       Button={
         <button
+          onClick={uploadCourses}
+          disabled={isUploading}
           className="hidden sm:flex justify-center items-center px-4 py-2 text-white bg-[#0A32F8] gap-3 rounded"
         >
-          <Upload size={15} /> Add Courses Data
+          {isUploading ? (
+            "Uploading..."
+          ) : (
+            <>
+              <Upload size={15} /> Upload Courses
+            </>
+          )}
         </button>
       }
     >
-      {/* Input Section */}
-      <div className="flex items-center gap-2">
-        <input
-          type="text"
-          placeholder="Enter course name..."
-          value={courseName}
-          onChange={(e) => setCourseName(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-700"
-        />
+      <div className="p-4">
+        {/* Input Fields */}
+        <div className="flex flex-col gap-5">
+          {[
+            {
+              label: "Course Code",
+              name: "code",
+              type: "text",
+              placeholder: "CSC280.2",
+            },
+            {
+              label: "Title",
+              name: "title",
+              type: "text",
+              placeholder: "Fortran",
+            },
+            {
+              label: "Credit Unit",
+              name: "creditUnit",
+              type: "number",
+              placeholder: "3",
+            },
+            {
+              label: "Lecturer's Name",
+              name: "lecturer",
+              type: "text",
+              placeholder: "Dr. John Doe",
+            },
+          ].map((field) => (
+            <div key={field.name} className="flex flex-col">
+              <label className="font-semibold text-black">{field.label}</label>
+              <input
+                type={field.type}
+                name={field.name}
+                value={course[field.name]}
+                onChange={(e) => updateCourse(field.name, e.target.value)}
+                placeholder={field.placeholder}
+                className="p-2 border border-black rounded-sm"
+              />
+            </div>
+          ))}
+
+          {/* Course Outline */}
+          <div className="flex flex-col">
+            <label className="font-semibold text-black">Course Outline</label>
+            <textarea
+              name="outline"
+              value={course.outline}
+              onChange={(e) => updateCourse("outline", e.target.value)}
+              placeholder="Enter course outline (Markdown supported)"
+              className="p-2 border border-black rounded-sm"
+              rows={2}
+            />
+          </div>
+        </div>
+
+        {/* Add Course Button */}
         <button
           onClick={addCourse}
-          className="flex items-center gap-1 bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition"
+          className="mt-4 px-4 py-2 bg-[#0A32F8] text-white rounded flex items-center gap-2"
         >
-          <PlusCircle size={20} />
-          Add
+          <PlusCircle size={16} /> Add Course
         </button>
       </div>
     </CreatorLayout>
