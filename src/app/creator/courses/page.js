@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Upload } from "lucide-react";
 import CreatorLayout from "@/components/CreatorLayout";
 
 export default function CreatorCourses() {
@@ -15,7 +15,16 @@ export default function CreatorCourses() {
   };
 
   return (
-    <CreatorLayout>
+    <CreatorLayout
+      screenName="Courses Data"
+      Button={
+        <button
+          className="hidden sm:flex justify-center items-center px-4 py-2 text-white bg-[#0A32F8] gap-3 rounded"
+        >
+          <Upload size={15} /> Add Courses Data
+        </button>
+      }
+    >
       {/* Input Section */}
       <div className="flex items-center gap-2">
         <input

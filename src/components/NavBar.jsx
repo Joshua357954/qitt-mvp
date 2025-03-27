@@ -71,7 +71,7 @@ const NavBar = ({ route }) => {
               </span>
             </div>
             <div className="flex font-light items-center gap-1 text-md  text-gray-700">
-              <div className="text-sm truncate">{userData?.department || "Qitt"}</div>
+              <div className="text-sm truncate w-fit">{userData?.department?.split('_').join(" ")|| "Qitt"}</div>
               <div className="w-2 h-2 rounded-full text-sm bg-gray-800">&nbsp;</div>
               <div className="text-sm">
                 {userData?.level}

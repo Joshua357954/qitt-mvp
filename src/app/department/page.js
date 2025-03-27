@@ -93,7 +93,9 @@ const Department = ({ className }) => {
             <div
               onClick={() => setSection("class")}
               className={`w-[33%]  text-lg flex justify-center items-center text-black ${
-                section == "class" ? "bg-blue-700 font-extrabold" : ""
+                section == "class"
+                  ? "bg-blue-700 font-extrabold text-white"
+                  : ""
               } h-full rounded`}
             >
               Class{" "}
@@ -102,7 +104,9 @@ const Department = ({ className }) => {
             <div
               onClick={() => setSection("courses")}
               className={`w-[33%]  text-lg flex justify-center items-center text-black ${
-                section == "courses" ? "bg-blue-700 font-extrabold" : ""
+                section == "courses"
+                  ? "bg-blue-700 font-extrabold text-white"
+                  : ""
               } h-full rounded px-1 `}
             >
               Courses{" "}
@@ -111,24 +115,8 @@ const Department = ({ className }) => {
         </div>
 
         {section == "class" ? (
-          <section className="w-full">
-            <div className="px-4 h-[6%] bg-gren-100 flex gap-x-5 my-4">
-              <Link
-                href="/timetable"
-                className="text-gray-600 underline underline-offset-2"
-              >
-                Timetable
-              </Link>
-              <Link
-                href="/assignment"
-                className="text-gray-600 underline underline-offset-2"
-              >
-                Assignments
-              </Link>
-              {/* <p className="underline underline-offset-2">Student(280)</p> */}
-            </div>
-
-            <div className="w-ful bg-gray-3000 h-[60%] pt-1 overscroll-y-auto">
+          <section className="w-[96%] sm:w-[80%] ">
+            <div className="w-full bg-gray-3000 h-full pt-1 overscroll-y-auto">
               {coursemates &&
                 coursemates?.map((item, idx) => {
                   return (
@@ -144,7 +132,7 @@ const Department = ({ className }) => {
                   );
                 })}
 
-              <div className="p-4">
+              <div className="py-10">
                 <p className="mb-2 text-lg font-semibold text-gray-800">
                   Ensure the class list is complete by inviting your course
                   mates to join.
@@ -168,8 +156,8 @@ const Department = ({ className }) => {
         )}
 
         {section == "courses" ? (
-          <section className="w-full">
-            <div className="w-full pt-5 pl-1">
+          <section className="w-[96%] sm:w-[80%]">
+            <div className="pt-5 pl-1 w-full">
               {courses.length > 0 ? (
                 courses.map((item, idx) => (
                   <div
@@ -180,26 +168,27 @@ const Department = ({ className }) => {
 									<img src={item.imgUrl} className='w-full h-full object-cover rounded-full' alt={`Course ${idx + 1}`} />
 									</div> */}
                     <div className="flex flex-col">
-                      <div className="font-black text-lg">{item.name}</div>
-                      <div className="font-light">{item.description}</div>
+                      <div className="font-black text-lg">{item?.name}</div>
+                      <div className="font-light">{item?.description}</div>
                       {/* {item.lecturers[0] && <div className="flex gap-x-2 items-center font-bold"><div className="w-3 h-3 rounded-full bg-blue-500"></div>{item.lecturers[0]}</div>} */}
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-center text-gray-600 flex flex-col gap-y-2 mt-2 items-center justify-center">
-                  <p> Oops! No courses or outlines available right now.</p>
-                  <p>
-                    👋 Reach out on WhatsApp to add or update courses! We're
-                    here to assist you.
-                    <br />
+                <div className="py-6">
+                  <p className="mb-2 text-lg font-semibold text-gray-800">
+                    Oops! No courses or outlines available at the moment.
+                  </p>
+                  <p className="mb-4 text-lg text-gray-700">
+                    Alternatively, you can also{" "}
                     <a
-                      href="https://api.whatsapp.com/send?phone=+2349034954069&text=Hi!%20I%20want%20to%20update%20the%20course%20outline."
+                      href="https://api.whatsapp.com/send?text=📚 Stay%20up%20to%20date%20with%20school%20activities%20by%20joining%20Qitt%20at%20https://qitt.com.ng"
                       target="_blank"
                       className="text-blue-500"
                     >
-                      Click here to update the course outline on WhatsApp 🚀
+                      Let Us Know
                     </a>
+                    .
                   </p>
                 </div>
               )}
