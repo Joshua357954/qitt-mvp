@@ -93,9 +93,9 @@ export default function CreatorCourses() {
         {/* Add Course Button */}
         <button
           onClick={addCourse}
-          className="mt-4 px-4 py-2 bg-[#0A32F8] text-white rounded flex items-center gap-2"
+          className="mt-4 px-4 py-2 bg-[#0A32F8] text-white rounded flex items-center gap-2 w-full justify-center "
         >
-          <PlusCircle size={16} /> Add Course
+          <PlusCircle size={16} className="mb-[0.2rem]"/> Add Course
         </button>
       </div>
     </CreatorLayout>
