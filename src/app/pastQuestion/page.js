@@ -37,16 +37,19 @@ const PastQuestion = ({ className }) => {
         </h1> */}
         <div className="w-full  h-24 bg-blue-700 text-white px-6 py-4 rounded-sm flex justify-between items-center">
           <div className="flex gap-3 items-center">
-            <FaTrophy size={28} />
+            <FaTrophy size={32} />
             <div className="flex flex-col gap-1">
               <p className="font-semibold text-md "> Practice like a Pro</p>
-              <p className="font- text-sm w-[86%]">
+              <p className="font- text-sm sm:w-full">
                 {" "}
-                This is one of the ways to level up your grades in school
+                Level up your grades in school{" "}
+                <Link href={"#"} className="underline sm:hidden text-gray-300">
+                  ScoreBoard 🎖️
+                </Link>
               </p>
             </div>
           </div>
-          <button className="bg-white text-blue-700 w-32 h-10 items-center flex px-4 rounded-full justify-center font-semibold">
+          <button className="bg-white text-blue-700 hidden h-10 items-center sm:flex px-4 rounded-full justify-center font-semibold w-34">
             Board 🎖️
           </button>
         </div>
