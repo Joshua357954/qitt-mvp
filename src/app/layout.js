@@ -39,10 +39,6 @@ export default function RootLayout({ children }) {
   return (
     <StoreProvider>
       <html lang="en">
-        <Head>
-          <link rel="manifest" href="/manifest.json" />
-          <meta name="theme-color" content="#007bff" />
-        </Head>
         <body
           className={`${atypDisplay.variable} ${geistMono.variable} antialiased`}
         >
