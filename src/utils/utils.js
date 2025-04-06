@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 
 export const baseUrl = "https://qitt-1-be.onrender.com";
 
+
 export function Respond(json, status = 400) {
   return (
     NextResponse.json(json),
@@ -14,6 +15,16 @@ export function Respond(json, status = 400) {
       status,
     }
   );
+}
+
+export function getSessionInfo(level) {
+  const currentYear = new Date().getFullYear(); // Get the current year
+  const currentSession = `${currentYear - 1}/${currentYear}`; // Format current session
+  
+  // Calculate the student's starting session based on their level
+  const studentSession = `${currentYear - level}/${currentYear - level + 1}`;
+  
+  return { currentSession, studentSession };
 }
 
 // const Classes = [
@@ -168,6 +179,7 @@ export const levels = [
   { label: "400", value: 400 },
   { label: "500", value: 500 },
 ];
+
 
 export const schoolNames = [
   { value: "university_of_portharcourt", label: "University Of Portharcourt" },

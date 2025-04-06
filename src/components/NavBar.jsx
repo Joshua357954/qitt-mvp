@@ -11,6 +11,12 @@ const NavBar = ({ route }) => {
   const { user: userData } = useAuthStore();
 
   const getName = (name) => name?.split(" ")[0];
+  const departmentAbbr = userData?.department
+    ? userData?.department
+        .split("_")
+        .map((word) => word[0])
+        .join(".")
+    : "Qitt";
 
   return (
     <nav
@@ -68,9 +74,7 @@ const NavBar = ({ route }) => {
               </span>
             </div>
             <div className="flex font-light items-center gap-1 text-md  text-gray-700">
-              <div className="text-sm truncate w-fit">
-                {userData?.department?.split("_").join(" ") || "Qitt"}
-              </div>
+              <div className="text-sm truncate w-fit capitalize">{departmentAbbr}</div>
               <div className="w-2 h-2 rounded-full text-sm bg-gray-800">
                 &nbsp;
               </div>
