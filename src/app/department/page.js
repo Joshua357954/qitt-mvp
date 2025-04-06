@@ -91,6 +91,16 @@ const Department = ({ className }) => {
         <div className="w-full h-14 max-h-14 flex justify-center items-center mt-2">
           <div className="w-[96%] sm:w-[80%] h-full py-1 bg-blue-50 flex justify-between items-center px-2 rounded text-center ">
             <div
+              onClick={() => setSection("announcement")}
+              className={`w-[33%]  text-lg flex justify-center items-center text-black ${
+                section == "announcement"
+                  ? "bg-blue-700 font-extrabold text-white"
+                  : ""
+              } h-full rounded`}
+            >
+              Announcement{" "}
+            </div>
+            <div
               onClick={() => setSection("class")}
               className={`w-[33%]  text-lg flex justify-center items-center text-black ${
                 section == "class"

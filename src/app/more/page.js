@@ -14,7 +14,7 @@ function page() {
       icon: <LuNotebookPen />,
       link: "/creator/apply",
     },
-    { name: "Help", icon: <TbMessage />, link: "#" },
+    { name: "Help", icon: <TbMessage />, link: "/more/help" },
   ];
 
   return (

@@ -4,21 +4,13 @@ import { useSelector } from "react-redux";
 import Image from "next/image";
 import { MoreVertical } from "lucide-react/dist/cjs/lucide-react";
 import useAuthStore from "@/app/store/authStore";
+import { IoNotificationsOutline } from "react-icons/io5";
+import { MdNotifications } from "react-icons/md";
 
 const NavBar = ({ route }) => {
   const { user: userData } = useAuthStore();
-  function getCurrentUniYear(startAcademicYear) {
-    var yr =
-      new Date().getFullYear() -
-      parseInt(startAcademicYear.split("/")[0], 10) +
-      1;
-    if (startAcademicYear == "2020/2021") return yr - 2;
-    return yr - 1;
-  }
 
-  const getName = (name) => {
-    return name?.split(" ")[0];
-  };
+  const getName = (name) => name?.split(" ")[0];
 
   return (
     <nav
@@ -42,7 +34,12 @@ const NavBar = ({ route }) => {
             <Image src={"/creator.png"} width={40} height={40} unoptimized />
           </Link>
 
-          <Link href={"/more"} className={`sm:hidden`}>
+          <Link href={"/notification"} className={`relative`}>
+            <IoNotificationsOutline className="font-extrabold text-3xl" />
+            <span className="w-3 h-3 rounded-full absolute bg-red-600 top-0 -right-0"></span>
+          </Link>
+
+          <Link href={"/more"} className={`sm:hidden relative`}>
             <MoreVertical className="text-lg" size={30} />
           </Link>
         </div>
@@ -71,8 +68,12 @@ const NavBar = ({ route }) => {
               </span>
             </div>
             <div className="flex font-light items-center gap-1 text-md  text-gray-700">
-              <div className="text-sm truncate w-fit">{userData?.department?.split('_').join(" ")|| "Qitt"}</div>
-              <div className="w-2 h-2 rounded-full text-sm bg-gray-800">&nbsp;</div>
+              <div className="text-sm truncate w-fit">
+                {userData?.department?.split("_").join(" ") || "Qitt"}
+              </div>
+              <div className="w-2 h-2 rounded-full text-sm bg-gray-800">
+                &nbsp;
+              </div>
               <div className="text-sm">
                 {userData?.level}
                 {"lvl"}

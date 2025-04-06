@@ -1,10 +1,18 @@
-import { ArrowLeft, BookOpen, ClipboardList, StickyNote } from "lucide-react";
+import {
+  ArrowLeft,
+  BookOpen,
+  ClipboardList,
+  Megaphone,
+  StickyNote,
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { GraduationCap } from "lucide-react";
 import { TbCalendarTime } from "react-icons/tb";
 import { LuNotebookText } from "react-icons/lu";
 import { LuGrid2X2Plus } from "react-icons/lu";
+import { GrAnnounce } from "react-icons/gr";
+import { AiOutlineNotification } from "react-icons/ai";
 
 const components = [
   {
@@ -31,6 +39,11 @@ const components = [
     name: "Courses",
     icon: <GraduationCap size={25} className="text-blue-500" />,
     path: "courses",
+  },
+  {
+    name: "Announcements",
+    icon: <GrAnnounce size={25} className="text-green-500" />, // Changed color
+    path: "announcement",
   },
 ];
 
