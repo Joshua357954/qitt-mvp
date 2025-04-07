@@ -7,7 +7,6 @@ import { NextResponse } from "next/server";
 
 export const baseUrl = "https://qitt-1-be.onrender.com";
 
-
 export function Respond(json, status = 400) {
   return (
     NextResponse.json(json),
@@ -20,10 +19,10 @@ export function Respond(json, status = 400) {
 export function getSessionInfo(level) {
   const currentYear = new Date().getFullYear(); // Get the current year
   const currentSession = `${currentYear - 1}/${currentYear}`; // Format current session
-  
+
   // Calculate the student's starting session based on their level
   const studentSession = `${currentYear - level}/${currentYear - level + 1}`;
-  
+
   return { currentSession, studentSession };
 }
 
@@ -179,7 +178,6 @@ export const levels = [
   { label: "400", value: 400 },
   { label: "500", value: 500 },
 ];
-
 
 export const schoolNames = [
   { value: "university_of_portharcourt", label: "University Of Portharcourt" },
@@ -398,3 +396,164 @@ export const departments = [
   { value: "theatre_film_studies", label: "Theatre & Film Studies" },
   { value: "zoology", label: "Zoology" },
 ];
+
+export const coursemates = [
+  {
+    id: 1,
+    name: "Adebayo Ogunlesi",
+    profilePic: "https://randomuser.me/api/portraits/men/32.jpg",
+    email: "adebayo.ogunlesi@example.com",
+  },
+  {
+    id: 2,
+    name: "Chioma Eze",
+    profilePic: "https://randomuser.me/api/portraits/women/44.jpg",
+    email: "chioma.eze@example.com",
+  },
+  {
+    id: 3,
+    name: "Emeka Okonkwo",
+    profilePic: "https://randomuser.me/api/portraits/men/75.jpg",
+    email: "emeka.okonkwo@example.com",
+  },
+  {
+    id: 4,
+    name: "Amina Mohammed",
+    profilePic: "https://randomuser.me/api/portraits/women/63.jpg",
+    email: "amina.mohammed@example.com",
+  },
+  {
+    id: 5,
+    name: "Oluwaseun Adebayo",
+    profilePic: "https://randomuser.me/api/portraits/men/55.jpg",
+    email: "oluwaseun.adebayo@example.com",
+  },
+  {
+    id: 6,
+    name: "Ngozi Chukwu",
+    profilePic: "https://randomuser.me/api/portraits/women/82.jpg",
+    email: "ngozi.chukwu@example.com",
+  },
+  {
+    id: 7,
+    name: "Ibrahim Musa",
+    profilePic: "https://randomuser.me/api/portraits/men/28.jpg",
+    email: "ibrahim.musa@example.com",
+  },
+  {
+    id: 8,
+    name: "Folake Adeleke",
+    profilePic: "https://randomuser.me/api/portraits/women/90.jpg",
+    email: "folake.adeleke@example.com",
+  },
+  {
+    id: 9,
+    name: "Chinedu Nwachukwu",
+    profilePic: "https://randomuser.me/api/portraits/men/67.jpg",
+    email: "chinedu.nwachukwu@example.com",
+  },
+  {
+    id: 10,
+    name: "Aisha Bello",
+    profilePic: "https://randomuser.me/api/portraits/women/58.jpg",
+    email: "aisha.bello@example.com",
+  },
+  {
+    id: 11,
+    name: "Obinna Eze",
+    profilePic: "https://randomuser.me/api/portraits/men/49.jpg",
+    email: "obinna.eze@example.com",
+  },
+  {
+    id: 12,
+    name: "Yewande Johnson",
+    profilePic: "https://randomuser.me/api/portraits/women/71.jpg",
+    email: "yewande.johnson@example.com",
+  },
+];
+
+export const courses = [
+  {
+    code: "MTH270.1",
+    title: "Numerical Analysis",
+    lecturers: ["Prof. Adebayo Ojo", "Dr. Fatima Bello"],
+    credits: 3,
+  },
+  {
+    code: "MTH210.1",
+    title: "Linear Algebra",
+    lecturers: ["Dr. Funmi Adeleke", "Prof. Chukwuma Eze"],
+    credits: 3,
+  },
+  {
+    code: "STA260.1",
+    title: "Introduction to Probability and Statistics",
+    lecturers: ["Prof. Ibrahim Musa", "Dr. Amina Yusuf"],
+    credits: 3,
+  },
+  {
+    code: "CSC280.1",
+    title: "Introduction to Computer Programming (Fortran)",
+    lecturers: ["Dr. Chinedu Okonkwo", "Prof. Ngozi Ibe"],
+    credits: 4,
+  },
+  {
+    code: "CSC281.1",
+    title: "Computer System Fundamentals",
+    lecturers: ["Prof. Amina Mohammed", "Dr. Olumide Adekunle"],
+    credits: 3,
+  },
+  {
+    code: "CSC283.1",
+    title: "Introduction to Information Systems and File Structures",
+    lecturers: ["Dr. Olumide Adewale", "Prof. Yusuf Bello"],
+    credits: 3,
+  },
+  {
+    code: "CSC284.1",
+    title: "Introduction to Logic Design",
+    lecturers: ["Prof. Yusuf Bello", "Dr. Chioma Nwachukwu"],
+    credits: 4,
+  },
+  {
+    code: "CSC288.1",
+    title: "Structured Programming",
+    lecturers: ["Dr. Ngozi Eze", "Prof. Ahmed Lawal"],
+    credits: 4,
+  },
+];
+
+// export const courses = [
+//   { name: "MTH270.1", description: "Numerical analysis" },
+//   { name: "MTH210.1", description: "Linear Algebra" },
+//   {
+//     name: "STA260.1",
+//     description: "Introduction to probability and statistics",
+//   },
+//   {
+//     name: "CSC280.1",
+//     description: "Introduction to Computer programming (Fortran)",
+//   },
+//   { name: "CSC281.1", description: "Computer system fundamentals" },
+//   {
+//     name: "CSC283.1",
+//     description: "Introduction to information systems and File structures",
+//   },
+//   { name: "CSC284.1", description: "Introduction to Logic Design" },
+//   { name: "CSC288.1", description: "Structured programming" },
+// ]; //
+// : dept === "mechanical_engineering"
+// ? [
+//     {
+//       name: "MEC101.1",
+//       description: "Introduction to Mechanical Engineering",
+//     },
+//     { name: "MEC201.1", description: "Engineering Thermodynamics I" },
+//     { name: "MEC202.1", description: "Strength of Materials" },
+//     { name: "MEC203.1", description: "Fluid Mechanics I" },
+//     { name: "MEC204.1", description: "Engineering Mechanics" },
+//     { name: "MEC205.1", description: "Mechanical Engineering Drawing" },
+//     { name: "MEC301.1", description: "Manufacturing Processes I" },
+//     { name: "MEC302.1", description: "Machine Design I" },
+//   ]
+// : [];
