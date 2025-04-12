@@ -1,41 +1,52 @@
 "use client";
 import MainLayout from "@/components/MainLayout";
-import React from "react";
-import { TbMessage } from "react-icons/tb";
-import { FiShield } from "react-icons/fi";
-import { LuNotebookPen } from "react-icons/lu";
-import { FaShieldAlt, FaUserEdit, FaComments } from "react-icons/fa";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ShieldCheck, NotebookPen, MessageSquare } from "lucide-react";
 
-function page() {
+const MorePage = () => {
   const features = [
-    { name: "Privacy Policy", icon: <FaShieldAlt />, link: "/privacy-policy" },
+    {
+      name: "Privacy Policy",
+      icon: <ShieldCheck className="h-5 w-5 text-blue-500" />,
+      link: "/more/privacy-policy",
+    },
     {
       name: "Apply for Creator",
-      icon: <LuNotebookPen />,
+      icon: <NotebookPen className="h-5 w-5 text-purple-500" />,
       link: "/creator/apply",
     },
-    { name: "Help", icon: <TbMessage />, link: "/more/help" },
+    {
+      name: "Help Center",
+      icon: <MessageSquare className="h-5 w-5 text-green-500" />,
+      link: "/more/help",
+    },
   ];
 
   return (
-    <MainLayout route={"More"}>
-      <div className="bg-gray-1000 rounded-lg p-6 h-full w-[95%] sm:w-[50%] mx-auto">
-        <ul className="space-y-4">
+    <MainLayout route="More">
+      <Card className="mx-auto w-3/4 sm:w-1/2 border-0 shadow-none">
+        <CardHeader className="px-0 pt-0">
+          {/* <CardTitle className="text-center text-xl">More Options</CardTitle> */}
+        </CardHeader>
+        <CardContent className="grid gap-7 px-0">
           {features.map((feature, index) => (
-            <li
+            <Button
               key={index}
-              className="flex items-center space-x-14 shadow px-6 rounded-sm py-6 text-gray-700 hover:text-blue-500 transition-colors"
+              variant="outline"
+              className="h-14 justify-start gap-4 px-6 py-4 hover:bg-gray-100/50 transition-colors"
+              asChild
             >
-              <span className="text-xl">{feature.icon}</span>
-              <a href={feature.link} className="text-lg font-semibold">
-                {feature.name}
+              <a href={feature.link}>
+                {feature.icon}
+                <span className="text-sm font-medium">{feature.name}</span>
               </a>
-            </li>
+            </Button>
           ))}
-        </ul>
-      </div>
+        </CardContent>
+      </Card>
     </MainLayout>
   );
-}
+};
 
-export default page;
+export default MorePage;
