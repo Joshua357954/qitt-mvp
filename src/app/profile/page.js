@@ -144,7 +144,7 @@ export default function ProfilePage() {
               <h3 className="text-lg font-semibold text-primary mb-4">
                 Personal Information
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-muted-foreground">
                     Gender
@@ -171,7 +171,7 @@ export default function ProfilePage() {
               <h3 className="text-lg font-semibold text-primary mb-4">
                 Academic Information
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-muted-foreground">
                     Department
