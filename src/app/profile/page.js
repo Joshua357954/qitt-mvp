@@ -1,142 +1,212 @@
 "use client";
-import React from "react";
-import { ImAttachment as Attachement } from "react-icons/im";
-import { useAppDispatch, useAppSelector } from "@/libs/hook.js";
-import MainLayout from "../../components/MainLayout.jsx";
-import { logout } from "../../libs/features/authSlice.js";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreVertical } from "lucide-react";
+import { ImAttachment as Attachment } from "react-icons/im";
 import { CgLogOut } from "react-icons/cg";
-import { removeItem } from "../../utils/utils.js";
-import { getAuth, signOut } from "firebase/auth";
-import Image from "next/image.js";
-import useAuthStore from "../store/authStore.js";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import MainLayout from "@/components/MainLayout";
+import useAuthStore from "../store/authStore";
 
-const ProfileScreen = ({ className }) => {
-  const { user: userData, logout } = useAuthStore();
-  function getCurrentUniYear(startAcademicYear) {
-    var yr =
-      new Date().getFullYear() -
-      parseInt(startAcademicYear.split("/")[0], 10) +
-      1;
-    if (startAcademicYear == "2020/2021") return yr - 2;
-    return yr - 1;
-  }
+// Department Space Heading Component
+function DepartmentSpaceHeading({
+  spaceId = "QDS/U2022CSC/UPH",
+  onRemove,
+  onChange,
+}) {
+  return (
+    <div className="flex items-center justify-between pb-2 rounded-md">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight text-primary">
+          Department Space
+        </h1>
+        <p className="text-sm text-muted-foreground">Space ID: {spaceId}</p>
+      </div>
 
-  function formatDate(inputDate) {
-    const date = new Date(inputDate);
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 text-primary hover:bg-primary/10"
+          >
+            <span className="sr-only">Open menu</span>
+            <MoreVertical className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="border-primary/20">
+          <DropdownMenuItem
+            onClick={onChange}
+            className="cursor-pointer text-primary focus:bg-primary/10"
+          >
+            Change
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={onRemove}
+            className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+          >
+            Remove
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+}
 
-    // Get the day, month, and year
-    const day = date.getDate();
-    const month = date.toLocaleString("default", { month: "long" });
+// Main Page Component
+export default function ProfilePage() {
+  // Mock user data - replace with your actual data source
+  // const userData = {
+  //   name: "Alex Johnson",
+  //   email: "alex.johnson@example.com",
+  //   phone: "1234567890",
+  //   imageURL: "",
+  //   gender: "Male",
+  //   dob: "15th May 1990",
+  //   department: "Computer Science",
+  //   level: "400",
+  // };
 
-    // Convert day to ordinal number (e.g., 1st, 2nd, 3rd, 4th)
-    const ordinalDay =
-      day +
-      (day % 10 === 1 && day !== 11
-        ? "st"
-        : day % 10 === 2 && day !== 12
-        ? "nd"
-        : day % 10 === 3 && day !== 13
-        ? "rd"
-        : "th");
-
-    // Format the output
-    const formattedDate = `${ordinalDay} ${month}`;
-
-    return formattedDate;
-  }
-
-
+  const { user: userData } = useAuthStore();
 
   const handleLogout = () => {
-    // signout from firebase
-    const sure = confirm("Are you sure you want to logout ?");
+    const sure = confirm("Are you sure you want to logout?");
     if (!sure) return;
-    logout()
+    console.log("Logging out...");
+    // Implement your logout logic here
   };
 
+  const handleChangeSpace = () => {
+    console.log("Changing space...");
+    // Implement space change logic
+  };
+
+  const handleRemoveSpace = () => {
+    console.log("Removing space...");
+    // Implement space removal logic
+  };
+
+  // Helper functions
+  const formatPhone = (phone) => phone?.slice(6, 10) || "N/A";
+  const getInitials = (name) =>
+    name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("") || "";
+
   return (
-    <MainLayout route="Profile">
-      <div className="h-full w-full flex flex-col py-2 items-center overflow-y-auto">
-        <div className="flex flex-col w-full px-2 gap-2 items-center">
-          {/*#4169E1*/}
-          <div className="flex justify-center items-center gap-3 ">
-            <div className="h-32 w-32 sm:h-36 sm:w-36 border-[1px] border-[#c0c0c0] rounded-full">
-              <Image
-                width={10}
-                height={10}
-                className="w-full h-full rounded-full object-cover"
-                alt="Profile Image"
-                unoptimized
-                src={
-                  userData?.imageURL || "/assets/images/serious-girl (1).jpg"
-                }
-              />
-            </div>
+    <MainLayout route={"Profile"}>
+      <div className="w-full max-w-4xl mx-auto p-4 md:p-6 space-y-6">
+        {/* Profile Section */}
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          <Avatar className="h-32 w-32 md:h-40 md:w-40 border-2 border-primary">
+            <AvatarImage src={userData?.imageURL} alt="Profile Image" />
+            <AvatarFallback className="text-3xl font-medium bg-primary/10">
+              {getInitials(userData?.name)}
+            </AvatarFallback>
+          </Avatar>
 
-            <div className=" flex flex-col gap-2">
-              <h2 className="text-2xl font-bold">{userData?.name}</h2>
-              <div className="bg-gray-100 p-1 w-[76px] text-sm rounded-lg flex items-center gap-2">
-                <Attachement className="text-gray-700" />
-                {userData?.phone.slice(6, 10)}
+          <div className="flex-1 space-y-2 text-center md:text-left">
+            <h1 className="text-2xl md:text-3xl font-bold text-primary">
+              {userData?.name || "User Name"}
+            </h1>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-primary">
+              <Attachment className="h-4 w-4" />
+              <span className="text-sm font-medium">
+                {formatPhone(userData?.phone)}
+              </span>
+            </div>
+            <p className="text-muted-foreground truncate">{userData?.email}</p>
+          </div>
+        </div>
+
+        {/* Account Settings Section */}
+        <Card className="border-primary/20">
+          <CardHeader className="bg-blue-100 rounded-lg">
+            <DepartmentSpaceHeading
+              spaceId="QDS34233UPH"
+              onChange={handleChangeSpace}
+              onRemove={handleRemoveSpace}
+            />
+          </CardHeader>
+          <Separator className="bg-primary/20" />
+
+          <CardContent className="p-6 space-y-6">
+            {/* Personal Info */}
+            <section>
+              <h3 className="text-lg font-semibold text-primary mb-4">
+                Personal Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Gender
+                  </p>
+                  <p className="font-medium">
+                    {userData?.gender || "Not specified"}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Date of Birth
+                  </p>
+                  <p className="font-medium">
+                    {userData?.dob || "Not specified"}
+                  </p>
+                </div>
               </div>
-              <p className="truncate">{userData?.email}</p>
-            </div>
-          </div>
+            </section>
 
-          <div className="w-full sm:w-[70%] bg-[#3759FF] font-bold border-[1px] border-gray-900 p-3 flex justify-center items-center rounded text-white">
-            {" "}
-            Account Settings{" "}
-          </div>
-        </div>
+            <Separator className="bg-primary/20" />
 
-        <div className="w-full sm:w-[67%] pt-5 px-2 pb-3">
-          {/*og */}
-          <h2 className="text-xl font-extrabold text-gray-800">
-            Personal Info
-          </h2>
-          <fieldset className="flex border-0 border-gray-400 pt-2">
-            <div className="flex flex-col border-r-2 border-gray-400 w-[40%]">
-              <p className="font-bold">Gender</p>
-              <p className="font-light">{userData?.gender || "No Set"}</p>
-            </div>
+            {/* School Info */}
+            <section>
+              <h3 className="text-lg font-semibold text-primary mb-4">
+                Academic Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Department
+                  </p>
+                  <p className="font-medium">
+                    {userData?.department || "Not specified"}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Level
+                  </p>
+                  <p className="font-medium">
+                    {userData?.level
+                      ? `${userData.level} Level`
+                      : "Not specified"}
+                  </p>
+                </div>
+              </div>
+            </section>
+          </CardContent>
+        </Card>
 
-            <div className="flex flex-col pl-4">
-              <p className="font-bold">Birthday</p>
-              <p className="font-light">
-                {userData?.dob || "Not Set"}
-              </p>
-            </div>
-          </fieldset>
-        </div>
-
-        <div className="w-full sm:w-[67%] pt-3 px-2 ">
-          {/*ob*/}
-          <h2 className="text-xl font-extrabold  text-gray-800">School Info</h2>
-          <fieldset className="flex border-0 border-gray-400 pt-2">
-            <div className="flex w-[45%] flex-col pl-  p ">
-              <p className="font-bold">Department</p>
-              <p title="Computer Science" className="cursor-pointer font-light">
-                {userData?.department}
-              </p>
-            </div>
-
-            <div className="flex w-[30%] flex-col pl-4 border-l-2 border-gray-400">
-              <p className="font-bold">Level</p>
-              <p className="font-light">{userData?.level}lvl</p>
-            </div>
-          </fieldset>
-        </div>
-
-        <div
-          className="mt-12  flex justify-center items-center gap-3 xl:mb-3 mb-2 text-red-500 hover:text-red-600 mr-6"
-          onClick={handleLogout}
-        >
-          <CgLogOut className="text-xl font-medium" />
-          Logout
+        {/* Logout Button */}
+        <div className="flex justify-center">
+          <Button
+            variant="outline"
+            className="text-destructive border-destructive hover:bg-destructive/10 gap-2"
+            onClick={handleLogout}
+          >
+            <CgLogOut className="h-5 w-5" />
+            Logout
+          </Button>
         </div>
       </div>
     </MainLayout>
   );
-};
-
-export default ProfileScreen;
+}
