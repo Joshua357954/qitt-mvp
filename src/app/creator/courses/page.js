@@ -1,18 +1,21 @@
 "use client";
+
 import React, { useRef, useEffect, useState } from "react";
 import { PlusCircle, Upload } from "lucide-react";
+import dynamic from "next/dynamic";
 import CreatorLayout from "@/components/CreatorLayout";
 import useCourseStore from "@/app/store/creator/coursesStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import ReactQuill from "react-quill-new";
+
+// Dynamically import ReactQuill with SSR disabled
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 import "react-quill-new/dist/quill.snow.css";
 
 export default function CreatorCourses() {
   const {
     course,
-    courses,
     isUploading,
     updateCourse,
     addCourse,
@@ -27,14 +30,13 @@ export default function CreatorCourses() {
     updateCourse("outline", editorContent);
   }, [editorContent]);
 
-  // Quill modules configuration
+  // Quill modules config
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
-      
       [{ list: "ordered" }],
-   
-      ["clean"],  ["bold"], [""],
+      ["bold", "italic", "underline"],
+      ["clean"],
     ],
     clipboard: {
       matchVisual: false,
