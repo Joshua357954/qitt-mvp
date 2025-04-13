@@ -1,9 +1,13 @@
 "use client";
-import React from "react";
-import ReactMarkdown from "react-markdown";
+import React, { useRef, useEffect, useState } from "react";
 import { PlusCircle, Upload } from "lucide-react";
 import CreatorLayout from "@/components/CreatorLayout";
-import useCourseStore from "@/app/store/creator/coursesStore"; // Import Zustand store
+import useCourseStore from "@/app/store/creator/coursesStore";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 
 export default function CreatorCourses() {
   const {
@@ -15,88 +19,120 @@ export default function CreatorCourses() {
     uploadCourses,
   } = useCourseStore();
 
+  const [editorContent, setEditorContent] = useState(course.outline || "");
+  const quillRef = useRef(null);
+
+  // Update store when editor content changes
+  useEffect(() => {
+    updateCourse("outline", editorContent);
+  }, [editorContent]);
+
+  // Quill modules configuration
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      
+      [{ list: "ordered" }],
+   
+      ["clean"],  ["bold"], [""],
+    ],
+    clipboard: {
+      matchVisual: false,
+    },
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "bullet",
+    "link",
+    "image",
+  ];
+
+  const inputFields = [
+    {
+      label: "Course Code",
+      name: "code",
+      type: "text",
+      placeholder: "CSC280.2",
+    },
+    {
+      label: "Title",
+      name: "title",
+      type: "text",
+      placeholder: "Fortran",
+    },
+    {
+      label: "Credit Unit",
+      name: "creditUnit",
+      type: "number",
+      placeholder: "3",
+    },
+    {
+      label: "Lecturer's Name",
+      name: "lecturer",
+      type: "text",
+      placeholder: "Dr. John Doe",
+    },
+  ];
+
   return (
     <CreatorLayout
       screenName="Course Data"
       Button={
-        <button
+        <Button
           onClick={uploadCourses}
           disabled={isUploading}
-          className="hidden sm:flex justify-center items-center px-4 py-2 text-white bg-[#0A32F8] gap-3 rounded"
+          className="hidden sm:flex gap-2"
         >
-          {isUploading ? (
-            "Uploading..."
-          ) : (
-            <>
-              <Upload size={15} /> Upload Courses
-            </>
-          )}
-        </button>
+          <Upload size={15} />
+          {isUploading ? "Uploading..." : "Upload Courses"}
+        </Button>
       }
     >
-      <div className="p-4">
+      <div className="p-6 space-y-6">
         {/* Input Fields */}
-        <div className="flex flex-col gap-5">
-          {[
-            {
-              label: "Course Code",
-              name: "code",
-              type: "text",
-              placeholder: "CSC280.2",
-            },
-            {
-              label: "Title",
-              name: "title",
-              type: "text",
-              placeholder: "Fortran",
-            },
-            {
-              label: "Credit Unit",
-              name: "creditUnit",
-              type: "number",
-              placeholder: "3",
-            },
-            {
-              label: "Lecturer's Name",
-              name: "lecturer",
-              type: "text",
-              placeholder: "Dr. John Doe",
-            },
-          ].map((field) => (
-            <div key={field.name} className="flex flex-col">
-              <label className="font-semibold text-black">{field.label}</label>
-              <input
+        <div className="grid gap-4">
+          {inputFields.map((field) => (
+            <div key={field.name} className="space-y-2">
+              <Label>{field.label}</Label>
+              <Input
                 type={field.type}
                 name={field.name}
-                value={course[field.name]}
+                value={course[field.name] || ""}
                 onChange={(e) => updateCourse(field.name, e.target.value)}
                 placeholder={field.placeholder}
-                className="p-2 border border-black rounded-sm"
               />
             </div>
           ))}
 
-          {/* Course Outline */}
-          <div className="flex flex-col">
-            <label className="font-semibold text-black">Course Outline</label>
-            <textarea
-              name="outline"
-              value={course.outline}
-              onChange={(e) => updateCourse("outline", e.target.value)}
-              placeholder="Enter course outline (Markdown supported)"
-              className="p-2 border border-black rounded-sm"
-              rows={2}
-            />
+          {/* Course Outline with Quill Editor */}
+          <div className="space-y-2">
+            <Label>Course Outline</Label>
+            <div className="h-[300px] mb-12">
+              <ReactQuill
+                ref={quillRef}
+                theme="snow"
+                value={editorContent}
+                onChange={setEditorContent}
+                modules={modules}
+                formats={formats}
+                className="h-[250px] bg-white"
+                placeholder="Enter detailed course outline..."
+              />
+            </div>
           </div>
         </div>
 
         {/* Add Course Button */}
-        <button
-          onClick={addCourse}
-          className="mt-4 px-4 py-2 bg-[#0A32F8] text-white rounded flex items-center gap-2 w-full justify-center "
-        >
-          <PlusCircle size={16} className="mb-[0.2rem]"/> Add Course
-        </button>
+        <Button onClick={addCourse} className="w-full py-2 sm:hidden gap-2">
+          <PlusCircle size={16} />
+          Add Course
+        </Button>
       </div>
     </CreatorLayout>
   );
