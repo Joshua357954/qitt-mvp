@@ -25,7 +25,7 @@ const AnnouncementMessage = ({
           <div className="flex items-center gap-2">
             {priorityIcons[priority]}
             <span className="text-sm text-gray-500 flex items-center gap-1">
-              <Clock className="w-3 h-3" />
+              {/* <Clock className="w-3 h-3" /> */}
               {new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
@@ -89,9 +89,8 @@ const AnnouncementSection = () => {
 
   return (
     <div className="w-full p-4">
-      <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-        <Bell className="w-4 h-4 text-blue-600" />
-        Announcements
+      <h2 className="text-md font-semibold mb-2 flex items-center gap-2">
+        Today
       </h2>
       
       <div className="space-y-4">

@@ -6,13 +6,17 @@ import { ChevronLeft } from "lucide-react/dist/cjs/lucide-react";
 
 const PageNav = ({ url, name, right }) => {
   return (
-    <div className="z-10 sticky top-0 right-0 flex gap-7 sm:gap-8  h-[70px] bg-gray-50 items-center text-gray-100 px-2">
-      <ChevronLeft
-        onClick={() => window.history.back()}
-        size={30}
-        className="text-gray-900 ml-3 font-extrabold "
-      />
-      <p className="text-black font-bold text-xl mt-[3px] capitalize">{url}</p>
+    <div className="z-10 sticky top-0 right-0 flex gap-7 sm:gap-8  h-[70px] bg-gray-50 items-center text-gray-100 px-3 justify-between">
+      <div className="flex items-center gap-8">
+        <ChevronLeft
+          onClick={() => window.history.back()}
+          size={30}
+          className="text-gray-900 ml-3 font-extrabold "
+        />
+        <p className="text-black font-bold text-xl mt-[3px] capitalize">
+          {url}
+        </p>
+      </div>
       {!right ? (
         <small className="">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
