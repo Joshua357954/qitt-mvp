@@ -31,6 +31,12 @@ export default function ManageSpace() {
       manageMembers: false,
     },
   });
+  // check if the space the user is trying to access he is an admin
+  // approved members -> all users in dept.->level with dept._space.status == approved
+  // pending members -> all users in dept.->level with dept._space.status == pending
+  // approve user -> change dept._space.status of user to approved
+  // add admin
+  // revoke admin 
 
   // Sample data
   const approvedMembers = [

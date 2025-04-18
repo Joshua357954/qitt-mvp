@@ -224,11 +224,11 @@ const Department = () => {
     }
   };
 
-  const space = false;
+  const space = userData?.department_space?.spaceId && !userData?.department_space?.status == 'pending';
 
   return (
     <MainLayout
-      route={`${userData?.department?.split("_").join(" ")}`}
+      route={`${userData?.departmentId?.split("_").join(" ")}`}
       right={
         space && (
           <Link href="/space/manage-space">

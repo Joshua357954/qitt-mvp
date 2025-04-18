@@ -74,13 +74,13 @@ export default function ProfilePage() {
   //   level: "400",
   // };
 
-  const { user: userData } = useAuthStore();
+  const { user: userData, logout } = useAuthStore();
 
   const handleLogout = () => {
     const sure = confirm("Are you sure you want to logout?");
     if (!sure) return;
     console.log("Logging out...");
-    // Implement your logout logic here
+    logout();
   };
 
   const handleChangeSpace = () => {
@@ -131,7 +131,7 @@ export default function ProfilePage() {
         <Card className="border-primary/20">
           <CardHeader className="bg-blue-100 rounded-lg">
             <DepartmentSpaceHeading
-              spaceId="QDS34233UPH"
+              spaceId={userData?.department_space?.spaceId || "No Space"}
               onChange={handleChangeSpace}
               onRemove={handleRemoveSpace}
             />
@@ -177,7 +177,7 @@ export default function ProfilePage() {
                     Department
                   </p>
                   <p className="font-medium">
-                    {userData?.department || "Not specified"}
+                    {userData?.departmentId || "Not specified"}
                   </p>
                 </div>
                 <div className="space-y-1">

@@ -25,7 +25,7 @@ export async function POST(request) {
       // Google login Check
       userQuery = query(
         collection(firestore, "usersV1"),
-        where("uid", "==", uid)
+        where("email", "==", email)
       );
     } else if (pin) {
       // Regular login Check

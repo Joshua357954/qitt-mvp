@@ -1,156 +1,151 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, X, PartyPopper, Link2, Hash, Plus } from "lucide-react";
+import { HelpCircle, Loader2, Plus, RefreshCw, UserRound } from "lucide-react";
 import Link from "next/link";
+import useAuthStore from "../store/authStore";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function SpaceJoin() {
+  const { user } = useAuthStore();
+  const defaultStatus =
+    user?.department_space?.status === "pending" ? "pending" : "idle";
+
   const [input, setInput] = useState("");
-  const [status, setStatus] = useState("idle"); // 'idle', 'pending', 'success', 'error'
-  const [inputType, setInputType] = useState(null); // 'link', 'code'
-  const [isValid, setIsValid] = useState(false);
+  const [status, setStatus] = useState(defaultStatus);
 
-  useEffect(() => {
-    const isLink = input.toLowerCase().startsWith("https://qds:");
-    const isCode = input.toLowerCase().startsWith("qds");
-    setIsValid(isLink || isCode);
-    setInputType(isLink ? "link" : isCode ? "code" : null);
-  }, [input]);
-
-  const resetForm = () => {
-    setInput("");
-    setStatus("idle");
-    setInputType(null);
-  };
+  const isValid = input.trim().length > 0;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!isValid) {
-      setStatus("error");
-      return;
-    }
-
-    setStatus("pending");
+    if (!isValid) return;
+    toast.loading("Joining Dept. Space");
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      const shouldSucceed = Math.random() > 0.2;
-      setStatus(shouldSucceed ? "success" : "error");
+      // Simulate API call
+      const res = await axios.post("/api/department/join-space", {
+        uid: user.uid,
+        schoolId: user.schoolId,
+        departmentId: user.departmentId,
+        level: user.level,
+        code: input,
+      });
+
+      // Now update the user
+      await updateUser({
+        department_space: {
+          spaceId: res.data.spaceId,
+          name: res.data.name, 
+          status: "pending",
+        },
+      });
+      setStatus("pending");
+      toast.dismiss();
     } catch {
-      setStatus("error");
+      setStatus("idle");
     }
   };
 
-  const renderContent = () => {
-    switch (status) {
-      case "pending":
-        return (
-          <>
-            <Loader2 className="h-12 w-12 text-blue-500 animate-spin" />
-            <div className="space-y-2">
-              <h2 className="text-2xl font-bold">Request Sent</h2>
-              <p className="text-muted-foreground">
-                {inputType === "link"
-                  ? "Verifying your invite link..."
-                  : "Verifying your access code..."}
-              </p>
-            </div>
-            <Button variant="outline" onClick={resetForm}>
-              <X className="mr-2 h-4 w-4" />
-              Cancel Request
-            </Button>
-          </>
-        );
-
-      case "success":
-        return (
-          <>
-            <div className="relative">
-              <PartyPopper className="h-12 w-12 text-blue-500" />
-              <span className="absolute -top-2 -right-2 text-2xl">🎉</span>
-            </div>
-            <div className="space-y-2">
-              <h2 className="text-2xl font-bold">
-                Your request has been Sent!
-              </h2>
-              <p className="text-muted-foreground">
-                Once your request is accepted, <br /> you’ll be automatically
-                onboarded into the department.
-              </p>
-            </div>
-            <Button onClick={resetForm}>Cancel Request</Button>
-          </>
-        );
-
-      case "error":
-        return (
-          <>
-            <X className="h-12 w-12 text-red-500" />
-            <div className="space-y-2">
-              <h2 className="text-2xl font-bold">Something went wrong</h2>
-              <p className="text-muted-foreground">
-                {inputType
-                  ? `The ${
-                      inputType === "link" ? "link" : "code"
-                    } you entered is invalid or expired.`
-                  : "Please enter a valid QDS code or link."}
-              </p>
-            </div>
-            <Button onClick={resetForm}>Try Again</Button>
-          </>
-        );
-
-      default:
-        return (
-          <div className="bg-blue-5000 h-full w-full flex justify-center mb-[25%] flex-col items-center">
-            <div className="flex flex-col gap-y-3 text-center">
-              <h1 className="text-3xl font-bold text-blue-600">
-                Join a Department Space
-              </h1>
-              <p className="text-muted-foreground mb-2">
-                Enter your invite code (QDS) or link below
-              </p>
-            </div>
-            <form onSubmit={handleSubmit} className="w-full space-y-4">
-              <div className="relative">
-                <Input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Enter Code or Link"
-                  className="h-12 text-center font-extrabold text-lg uppercase pr-10"
-                />
-                <div className="absolute right-3 top-3">
-                  {inputType === "link" && (
-                    <Link2 className="h-5 w-5 text-blue-500" />
-                  )}
-                  {inputType === "code" && (
-                    <Hash className="h-5 w-5 text-blue-500" />
-                  )}
-                </div>
-              </div>
-              <Button
-                type="submit"
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700"
-                disabled={!isValid}
-              >
-                Join Space
-              </Button>
-            </form>
-          </div>
-        );
-    }
+  const reset = () => {
+    setInput("");
+    setStatus("idle");
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-6 text-center p-6 max-w-md mx-auto font-aeonik relative">
-      {renderContent()}
-
-      {/* Floating Create Space Button */}
+    <div className="flex flex-col justify-center items-center h-full pt-[12%] text-center p-6 max-w-md mx-auto">
       {status === "idle" && (
-        <Link href="/create-space" className="fixed bottom-20 right-6">
+        <div className="w-full flex flex-col gap-y-6 items-center">
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-bold text-blue-600">
+              Join a Department Space
+            </h1>
+            <p className="text-muted-foreground">
+              Enter your invite code below, let’s vibe!
+            </p>
+          </div>
+          <form onSubmit={handleSubmit} className="w-full space-y-4">
+            <Input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Enter Code or Link"
+              className="h-12 text-center font-extrabold text-lg uppercase"
+            />
+            <Button
+              type="submit"
+              className="w-full h-12 bg-blue-600 hover:bg-blue-700"
+              disabled={!isValid}
+            >
+              Join Space
+            </Button>
+          </form>
+        </div>
+      )}
+
+      {status === "pending" && (
+        <div className="text-center space-y-6 max-w-md mx-auto p-6 rounded-lg border bg-gray-50/50">
+          <div className="flex justify-center">
+            <div className="relative">
+              <UserRound className="h-12 w-12 text-blue-500" />
+              <HelpCircle className="absolute -right-1 -top-1 h-5 w-5 text-yellow-500 animate-pulse" />
+            </div>
+          </div>
+
+          {/* <h3 className="text-lg font-medium text-gray-900">
+         Department Join Request Pending
+       </h3> */}
+
+          {/* <p className="text-gray-600">
+         Your request to join <span className="font-semibold text-blue-600">Marketing Team</span> is being reviewed
+       </p> */}
+
+          <div className="py-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full">
+              <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+              <span className="text-sm font-medium text-blue-700">
+                Awaiting department admin approval
+              </span>
+            </div>
+          </div>
+
+          <div className="flex gap-3 justify-center pt-2">
+            <Button
+              onClick={reset}
+              variant="outline"
+              className="border-gray-300 hover:bg-gray-100"
+            >
+              Cancel Request
+            </Button>
+            <Button
+              variant="outline"
+              className="border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100"
+              disabled
+            >
+              <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+              Refresh Status
+            </Button>
+          </div>
+
+          <p className="text-xs text-gray-500 pt-4">
+            You'll be automatically redirected to the department space once
+            approved
+          </p>
+        </div>
+      )}
+
+      {status === "success" && (
+        <div className="text-center space-y-4">
+          <p className="text-green-600 font-semibold">You're in! 🎉</p>
+          <Button onClick={reset} className="mt-2">
+            Done
+          </Button>
+        </div>
+      )}
+
+      {status === "idle" && (
+        <Link href="/space/create-space" className="fixed bottom-20 right-6">
           <Button className="rounded-full h-14 w-14 shadow-lg bg-blue-600 hover:bg-blue-700">
             <Plus className="h-6 w-6" />
           </Button>

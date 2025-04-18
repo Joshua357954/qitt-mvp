@@ -67,11 +67,12 @@ export async function POST(request) {
     // Add new user to Firestore
     console.log("📝 Adding new user to Firestore");
     const newUser = {
+      uid,
       name,
       nickname,
       email,
-      school,
-      department,
+      schoolId:school,
+      departmentId:department,
       level,
       pin: hashedPin, // Store the hashed pin
       phone,

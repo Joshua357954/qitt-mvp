@@ -1,163 +1,404 @@
 "use client";
+
 import { useState, useEffect } from "react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Loader2, X, PartyPopper, Link2, Hash, Plus } from "lucide-react";
+import {
+  Plus,
+  CalendarDays,
+  FileText,
+  BookOpen,
+  Megaphone,
+  ExternalLink,
+  Notebook,
+  Clock,
+  Pencil,
+  Trash2,
+  AlertCircle,
+  ArrowLeft,
+} from "lucide-react";
 import Link from "next/link";
 
-export default function SpaceJoin() {
-  const [input, setInput] = useState("");
-  const [status, setStatus] = useState("idle"); // 'idle', 'pending', 'success', 'error'
-  const [inputType, setInputType] = useState(null); // 'link', 'code'
-  const [isValid, setIsValid] = useState(false);
+// Dummy data for all content types
+const DUMMY_DATA = {
+  assignments: [
+    {
+      id: 1,
+      title: "Math Homework",
+      description: "Complete chapters 5-7 problems",
+      dueDate: "2023-12-15",
+      createdAt: "2023-11-01",
+    },
+    {
+      id: 2,
+      title: "Science Project",
+      description: "Research paper on renewable energy",
+      dueDate: "2023-12-20",
+      createdAt: "2023-11-05",
+    },
+  ],
+  announcements: [
+    {
+      id: 1,
+      title: "Campus Closure",
+      content: "University will be closed next Monday for maintenance",
+      createdAt: "2023-11-10",
+    },
+  ],
+  courses: [
+    {
+      id: 1,
+      courseCode: "CS101",
+      title: "Introduction to Computer Science",
+      description: "Fundamentals of programming and algorithms",
+      instructor: "Dr. Smith",
+      credits: 3,
+      createdAt: "2023-08-15",
+    },
+  ],
+  resources: [
+    {
+      id: 1,
+      title: "React Documentation",
+      description: "Official React documentation for hooks",
+      url: "https://react.dev",
+      createdAt: "2023-11-12",
+    },
+  ],
+  notes: [
+    {
+      id: 1,
+      title: "Lecture Notes Week 5",
+      content: "Important concepts about state management",
+      tags: ["react", "state"],
+      updatedAt: "2023-11-08",
+    },
+  ],
+  timetable: [
+    {
+      id: 1,
+      courseCode: "CS101",
+      title: "Midterm Exam",
+      date: "2023-12-10",
+      time: "09:00 AM",
+      location: "Building A, Room 203",
+      type: "exam",
+      instructor: "Dr. Smith",
+      updatedAt: "2023-11-01",
+    },
+  ],
+};
 
+const CONTENT_TYPES = [
+  {
+    id: "assignments",
+    name: "Assignments",
+    icon: <FileText className="h-4 w-4" />,
+  },
+  {
+    id: "announcements",
+    name: "Announcements",
+    icon: <Megaphone className="h-4 w-4" />,
+  },
+  { id: "courses", name: "Courses", icon: <BookOpen className="h-4 w-4" /> },
+  {
+    id: "resources",
+    name: "Resources",
+    icon: <ExternalLink className="h-4 w-4" />,
+  },
+  { id: "notes", name: "Notes", icon: <Notebook className="h-4 w-4" /> },
+  { id: "timetable", name: "Timetable", icon: <Clock className="h-4 w-4" /> },
+];
+
+export default function SpacePage() {
+  const [activeType, setActiveType] = useState("assignments");
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Load dummy data
   useEffect(() => {
-    // Validate input dynamically as user types
-    const validLink = input.toLowerCase().startsWith("https://qds:");
-    const validCode = input.toLowerCase().startsWith("qds");
-    setIsValid(validLink || validCode);
+    setIsLoading(true);
+    setTimeout(() => {
+      setItems(DUMMY_DATA[activeType] || []);
+      setIsLoading(false);
+    }, 500);
+  }, [activeType]);
 
-    if (validLink) {
-      setInputType("link");
-    } else if (validCode) {
-      setInputType("code");
-    } else {
-      setInputType(null);
+  const handleDelete = (id) => {
+    if (confirm("Are you sure you want to delete this item?")) {
+      setItems(items.filter((item) => item.id !== id));
     }
-  }, [input]);
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const renderItemActions = (type, id) => (
+    <div className="flex gap-1">
+      <Button variant="ghost" size="sm" asChild>
+        <Link href={`/${type}/edit/${id}`}>
+          <Pencil className="h-4 w-4" />
+        </Link>
+      </Button>
+      <Button variant="ghost" size="sm" onClick={() => handleDelete(id)}>
+        <Trash2 className="h-4 w-4 text-red-600" />
+      </Button>
+    </div>
+  );
 
-    if (!isValid) {
-      setStatus("error");
-      return;
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" />
+        </div>
+      );
     }
 
-    setStatus("pending");
+    if (items.length === 0) {
+      return (
+        <Card>
+          <CardContent className="p-8 text-center">
+            <p className="text-gray-600">No {activeType} found</p>
+          </CardContent>
+        </Card>
+      );
+    }
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+    return items.map((item) => {
+      switch (activeType) {
+        case "assignments":
+          return (
+            <Card key={item.id} className="mb-4 border-l-4 border-blue-500">
+              <CardHeader>
+                <div className="flex justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-blue-600" />
+                    {item.title}
+                  </CardTitle>
+                  {renderItemActions("assignments", item.id)}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-2">{item.description}</p>
+                <div className="flex items-center gap-2 text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-md w-fit">
+                  <AlertCircle className="h-4 w-4" />
+                  Due: {new Date(item.dueDate).toLocaleDateString()}
+                </div>
+              </CardContent>
+              <CardFooter className="text-xs text-gray-500">
+                <CalendarDays className="h-4 w-4 mr-1" />
+                Posted: {new Date(item.createdAt).toLocaleDateString()}
+              </CardFooter>
+            </Card>
+          );
 
-      // Randomly simulate success or error for demo purposes
-      const shouldSucceed = Math.random() > 0.2; // 80% success rate
-      if (shouldSucceed) {
-        setStatus("success");
-      } else {
-        setStatus("error");
+        case "announcements":
+          return (
+            <Card key={item.id} className="mb-4 border-l-4 border-orange-500">
+              <CardHeader>
+                <div className="flex justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Megaphone className="h-5 w-5 text-orange-600" />
+                    {item.title}
+                  </CardTitle>
+                  {renderItemActions("announcements", item.id)}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">{item.content}</p>
+              </CardContent>
+              <CardFooter className="text-xs text-gray-500">
+                <CalendarDays className="h-4 w-4 mr-1" />
+                Posted: {new Date(item.createdAt).toLocaleDateString()}
+              </CardFooter>
+            </Card>
+          );
+
+        case "courses":
+          return (
+            <Card key={item.id} className="mb-4 border-l-4 border-green-500">
+              <CardHeader>
+                <div className="flex justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <BookOpen className="h-5 w-5 text-green-600" />
+                    {item.courseCode}: {item.title}
+                  </CardTitle>
+                  {renderItemActions("courses", item.id)}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-2">{item.description}</p>
+                <div className="flex gap-2">
+                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                    Instructor: {item.instructor}
+                  </span>
+                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                    Credits: {item.credits}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          );
+
+        case "resources":
+          return (
+            <Card key={item.id} className="mb-4 border-l-4 border-purple-500">
+              <CardHeader>
+                <div className="flex justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <ExternalLink className="h-5 w-5 text-purple-600" />
+                    {item.title}
+                  </CardTitle>
+                  {renderItemActions("resources", item.id)}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-4">{item.description}</p>
+                <Button variant="outline" className="w-full" asChild>
+                  <a href={item.url} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    View Resource
+                  </a>
+                </Button>
+              </CardContent>
+              <CardFooter className="text-xs text-gray-500">
+                <CalendarDays className="h-4 w-4 mr-1" />
+                Posted: {new Date(item.createdAt).toLocaleDateString()}
+              </CardFooter>
+            </Card>
+          );
+
+        case "notes":
+          return (
+            <Card key={item.id} className="mb-4 border-l-4 border-amber-500">
+              <CardHeader>
+                <div className="flex justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Notebook className="h-5 w-5 text-amber-600" />
+                    {item.title}
+                  </CardTitle>
+                  {renderItemActions("notes", item.id)}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-2 line-clamp-3">
+                  {item.content}
+                </p>
+                {item.tags && (
+                  <div className="flex gap-2">
+                    {item.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+              <CardFooter className="text-xs text-gray-500">
+                <CalendarDays className="h-4 w-4 mr-1" />
+                Last updated: {new Date(item.updatedAt).toLocaleDateString()}
+              </CardFooter>
+            </Card>
+          );
+
+        case "timetable":
+          return (
+            <Card key={item.id} className="mb-4 border-l-4 border-red-500">
+              <CardHeader>
+                <div className="flex justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="h-5 w-5 text-red-600" />
+                    {item.courseCode} - {item.title}
+                  </CardTitle>
+                  {renderItemActions("timetable", item.id)}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="font-medium">Date & Time</p>
+                    <p>
+                      {new Date(item.date).toLocaleDateString()} {item.time}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-medium">Location</p>
+                    <p>{item.location}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">Type</p>
+                    <p className="capitalize">{item.type}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">Instructor</p>
+                    <p>{item.instructor}</p>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="text-xs text-gray-500">
+                <CalendarDays className="h-4 w-4 mr-1" />
+                Updated: {new Date(item.updatedAt).toLocaleDateString()}
+              </CardFooter>
+              - Normal Timetable
+              - Exam Timetable
+              - Today's Timetable
+            </Card>
+          );
+
+        default:
+          return null;
       }
-    } catch (error) {
-      setStatus("error");
-    }
+    });
   };
-
-  const resetForm = () => {
-    setInput("");
-    setStatus("idle");
-    setInputType(null);
-  };
-
-  if (status === "pending") {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-6 text-center p-6 font-aeonik">
-        <Loader2 className="h-12 w-12 text-blue-500 animate-spin" />
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold">Request Sent</h2>
-          <p className="text-muted-foreground">
-            {inputType === "link"
-              ? "Verifying your invite link..."
-              : "Verifying your access code..."}
-          </p>
-        </div>
-        <Button variant="outline" onClick={resetForm}>
-          <X className="mr-2 h-4 w-4" />
-          Cancel Request
-        </Button>
-      </div>
-    );
-  }
-
-  if (status === "success") {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-6 text-center p-6 font-aeonik">
-        <div className="relative">
-          <PartyPopper className="h-12 w-12 text-blue-500" />
-          <span className="absolute -top-2 -right-2 text-2xl">🎉</span>
-        </div>
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold">Your request has been Sent!</h2>
-          <p className="text-muted-foreground">
-            Once your request is accepted, <br /> You'll be automatically
-            onboarded into the department
-          </p>
-        </div>
-        <Button onClick={resetForm}>Cancel Request </Button>
-      </div>
-    );
-  }
-
-  if (status === "error") {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-6 text-center p-6 font-aeonik">
-        <div className="relative">
-          <X className="h-12 w-12 text-red-500" />
-        </div>
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold">Something went wrong</h2>
-          <p className="text-muted-foreground">
-            {inputType
-              ? "The " +
-                (inputType === "link" ? "link" : "code") +
-                " you entered is invalid or expired"
-              : "Please enter a valid QDS code or link"}
-          </p>
-        </div>
-        <Button onClick={resetForm}>Try Again</Button>
-      </div>
-    );
-  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-8 p-6 max-w-md mx-auto font-aeonik relative">
-      <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold text-blue-600">Join a Department Space</h1>
-        <p className="text-muted-foreground">
-          Enter your invite code (QDS) or link below
-        </p>
+    <main className="w-full font-aeonik">
+      {/* Nav 1 */}
+      <div className="flex gap-5 items-center p-5 border-b border-gray-500 bg-black">
+        <Link href="/creator">
+          <ArrowLeft size={20} color={"white"} />
+        </Link>
+        <p className=" text-2xl font-bold text-white">Creator</p>
+        {/* <p className="text-blue-400 bg-blue-400  py-3 bg-opacity-30 font-semibold rounded-full px-4">Resources</p> */}
       </div>
 
-      <form onSubmit={handleSubmit} className="w-full space-y-4">
-        <div className="relative">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Enter Code or Link"
-            className="h-12 text-center font-extrabold text-2xl uppercase pr-10"
-          />
-          <div className="absolute right-3 top-3">
-            {inputType === "link" ? (
-              <Link2 className="h-5 w-5 text-blue-500" />
-            ) : inputType === "code" ? (
-              <Hash className="h-5 w-5 text-blue-500" />
-            ) : null}
-          </div>
+      {/* Main Section */}
+      <section className="w-full px-8 sm:px-0 sm:w-3/4 mx-auto pt-7 pb-4">
+        <div className="flex overflow-x-auto gap-2 mb-6">
+          {CONTENT_TYPES.map((type) => (
+            <Button
+              key={type.id}
+              variant={activeType === type.id ? "default" : "outline"}
+              onClick={() => setActiveType(type.id)}
+              className="flex items-center gap-2"
+            >
+              {type.icon}
+              {type.name}
+            </Button>
+          ))}
         </div>
-        <Button
-          type="submit"
-          className="w-full h-12 bg-blue-600 hover:bg-blue-700"
-          disabled={!isValid}
-        >
-          Join Space
-        </Button>
-      </form>
 
-      {/* Floating Create Space Button */}
-      <Link href="/create-space" className="fixed bottom-6 right-6">
-        <Button className="rounded-full h-14 w-14 shadow-lg bg-blue-600 hover:bg-blue-700">
-          <Plus className="h-6 w-6" size={30}/>
-        </Button>
-      </Link>
-    </div>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">
+            {CONTENT_TYPES.find((t) => t.id === activeType)?.name}
+          </h2>
+          <Button asChild>
+            <Link href={`/${activeType}/new`}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add New
+            </Link>
+          </Button>
+        </div>
+
+        <div className="space-y-4">{renderContent()}</div>
+      </section>
+    </main>
   );
 }
