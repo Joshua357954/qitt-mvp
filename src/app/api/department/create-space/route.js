@@ -96,8 +96,9 @@ export async function POST(req) {
       schoolId,
       departmentId,
       level,
-      id: spaceId,
+      id: spaceId.toLocaleLowerCase(),
       createdAt: serverTimestamp(),
+      
       admins: [
         {
           uid,
@@ -109,7 +110,7 @@ export async function POST(req) {
     // Now, find the user with the provided uid and update their record
     const userRef = doc(firestore, "usersV1", uid);
     await updateDoc(userRef, {
-      department_space: {spaceId, name:name.trim()}
+      department_space: {spaceId, name:name.trim(),status:"admin", permissions:['full']}
     });
 
     return NextResponse.json(

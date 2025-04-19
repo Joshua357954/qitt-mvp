@@ -50,7 +50,8 @@ export async function POST(req) {
       department_space: {
         spaceId: trimmedCode,
         name: spaceData.name || "Unnamed Space",
-        status: "pending",
+        status: spaceData?.visibility.toLowerCase() == 'private' ? "pending" : "approved",
+        isAdmin: false
       },
     });
 

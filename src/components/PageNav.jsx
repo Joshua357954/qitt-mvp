@@ -13,7 +13,7 @@ const PageNav = ({ url, name, right }) => {
           size={30}
           className="text-gray-900 ml-3 font-extrabold "
         />
-        <p className="text-black font-bold text-xl mt-[3px] capitalize">
+        <p className="text-black font-bold text-xl mt-[3px] flex flex-1 flex-nowrap capitalize">
           {url}
         </p>
       </div>
