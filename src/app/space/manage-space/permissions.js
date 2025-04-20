@@ -1,5 +1,4 @@
-// Permissions.js
-import { useState } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,45 +10,149 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import useManageSpaceStore from "@/app/store/manageSpaceStore";
+import useAuthStore from "@/app/store/authStore";
+import { RULES } from "@/utils/hasAccess";
+import toast from "react-hot-toast";
 
 export default function Permissions() {
   const [showAddRoleModal, setShowAddRoleModal] = useState(false);
   const [newRole, setNewRole] = useState({
     email: "",
-    permissions: {
-      moderate: false,
-      managePosts: false,
-      manageMembers: false,
-    },
+    permissions: {},
   });
 
-  const roles = [
-    {
-      id: 1,
-      name: "You",
-      email: "admin@uni.edu",
-      permissions: ["Full access"],
-      isCurrentUser: true,
-    },
-    {
-      id: 2,
-      name: "Morgan",
-      email: "morgan@uni.edu",
-      permissions: ["Moderate content"],
-    },
-  ];
+  const { error, approvedUsers, addSpaceAdmin } = useManageSpaceStore();
+  const { user } = useAuthStore();
+
+  const permissionsList = useMemo(() => Object.keys(RULES), []);
+
+  const currentUserPermissions = useMemo(() => {
+    if (!user || !approvedUsers) return [];
+    const currentUser = approvedUsers.find((u) => u.uid === user.uid);
+    return currentUser?.department_space?.permissions || [];
+  }, [user, approvedUsers]);
+
+  const isCurrentUserAdmin = useMemo(
+    () => currentUserPermissions.includes("full"),
+    [currentUserPermissions]
+  );
+
+  // Get users without permissions
+  const usersWithoutPermissions = useMemo(() => {
+    if (!approvedUsers) return [];
+    return approvedUsers.filter(
+      (u) =>
+        !u?.department_space?.permissions ||
+        u.department_space.permissions.length === 0
+    );
+  }, [approvedUsers]);
+
+  const roles = useMemo(() => {
+    if (!user || !approvedUsers) return [];
+
+    return approvedUsers
+      .map((u, index) => ({
+        id: index + 1,
+        name: u.name || "Unknown",
+        email: u.email || "N/A",
+        permissions: u?.department_space?.permissions || [],
+        isCurrentUser: user?.uid === u.uid,
+        hasPermissions: (u?.department_space?.permissions?.length || 0) > 0,
+      }))
+      .filter((role) => role.hasPermissions);
+  }, [user, approvedUsers]);
+
+  const handlePermissionChange = useCallback((permission, checked) => {
+    setNewRole((prev) => ({
+      ...prev,
+      permissions: {
+        ...prev.permissions,
+        [permission]: checked,
+      },
+    }));
+  }, []);
+
+  useEffect(() => {
+    if (!newRole.email && isCurrentUserAdmin) {
+      const updatedPermissions = permissionsList.reduce((acc, permission) => {
+        acc[permission] = currentUserPermissions.includes(permission);
+        return acc;
+      }, {});
+
+      setNewRole((prev) => ({
+        ...prev,
+        permissions: updatedPermissions,
+      }));
+    }
+  }, [
+    isCurrentUserAdmin,
+    currentUserPermissions,
+    permissionsList,
+    newRole.email,
+  ]);
+
+  // Get keys from 'permission' object where the values are true
+  const permissionKeys = Object.entries(newRole.permissions)
+    .filter(([key, value]) => value) // Keep only entries with truthy values
+    .map(([key]) => key); // Extract the keys from the filtered entries
+
+  const handleAddRole = useCallback(async () => {
+    if (!newRole.email || !Object.values(newRole.permissions).some(Boolean)) {
+      console.log("Requirements Not Satisfied !!");
+      return;
+    }
+    console.log("Passed Check (IF)", permissionKeys, newRole.permissions);
+    toast.loading("Adding a new Admin");
+    try {
+      // Zustand State Function To Add Admin
+      console.log("Role: ", newRole);
+      await addSpaceAdmin({
+        email: newRole.email,
+        permissions: permissionKeys, //prettyfied permissions to add to user
+      });
+
+      toast.dismiss();
+
+      if (error) toast.error("User Error!");
+      else toast.success("Added User as Admin");
+
+      setShowAddRoleModal(false);
+      setNewRole({ email: "", permissions: {} });
+    } catch (error) {
+      toast.dismiss();
+      toast.error("An error Occured 😕");
+      console.error("Error adding role:", error);
+    }
+  }, [newRole]);
+
+  const hasValidPermissions = useMemo(
+    () => Object.values(newRole.permissions).some(Boolean),
+    [newRole.permissions]
+  );
+
+  const shouldShowAddButton =
+    isCurrentUserAdmin && usersWithoutPermissions.length > 0;
 
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-blue-800">Admin Roles</h2>
-        <Button
-          onClick={() => setShowAddRoleModal(true)}
-          className="bg-blue-600 hover:bg-blue-700"
-        >
-          + Add Admin
-        </Button>
+        {shouldShowAddButton && (
+          <Button
+            onClick={() => setShowAddRoleModal(true)}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            + Add Admin
+          </Button>
+        )}
       </div>
 
       <div className="space-y-4">
@@ -81,12 +184,12 @@ export default function Permissions() {
                       variant="outline"
                       className="border-blue-200 text-blue-600"
                     >
-                      {perm}
+                      {RULES[perm] || perm}
                     </Badge>
                   ))}
                 </div>
               </div>
-              {!role.isCurrentUser && (
+              {!role.isCurrentUser && isCurrentUserAdmin && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -100,105 +203,90 @@ export default function Permissions() {
         ))}
       </div>
 
-      {/* Add Role Modal */}
-      <Dialog open={showAddRoleModal} onOpenChange={setShowAddRoleModal}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle className="text-blue-800">Add New Admin</DialogTitle>
-            <DialogDescription>
-              Grant admin privileges to a community member
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label className="text-blue-800">Student Email</Label>
-              <Input
-                type="email"
-                value={newRole.email}
-                onChange={(e) =>
-                  setNewRole({ ...newRole, email: e.target.value })
-                }
-                placeholder="Enter student email"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label className="text-blue-800">Permissions</Label>
-              <div className="space-y-2 mt-2">
-                {" "}
-                <Checkbox
-                  checked={newRole.permissions.moderate}
-                  onChange={(e) =>
-                    setNewRole({
-                      ...newRole,
-                      permissions: {
-                        ...newRole.permissions,
-                        moderate: e.target.checked,
-                      },
-                    })
-                  }
-                >
-                  {" "}
-                  Moderate content{" "}
-                </Checkbox>{" "}
-                <Checkbox
-                  checked={newRole.permissions.managePosts}
-                  onChange={(e) =>
-                    setNewRole({
-                      ...newRole,
-                      permissions: {
-                        ...newRole.permissions,
-                        managePosts: e.target.checked,
-                      },
-                    })
-                  }
-                >
-                  {" "}
-                  Manage posts{" "}
-                </Checkbox>{" "}
-                <Checkbox
-                  checked={newRole.permissions.manageMembers}
-                  onChange={(e) =>
-                    setNewRole({
-                      ...newRole,
-                      permissions: {
-                        ...newRole.permissions,
-                        manageMembers: e.target.checked,
-                      },
-                    })
-                  }
-                >
-                  {" "}
-                  Manage members{" "}
-                </Checkbox>{" "}
-              </div>{" "}
-            </div>{" "}
-          </div>
+      {isCurrentUserAdmin && (
+        <Dialog open={showAddRoleModal} onOpenChange={setShowAddRoleModal}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-blue-800">Add New Admin</DialogTitle>
+              <DialogDescription>
+                Grant admin privileges to a Department member
+              </DialogDescription>
+            </DialogHeader>
 
-          <div className="flex justify-end gap-2 pt-2">
-            <Button
-              variant="outline"
-              onClick={() => setShowAddRoleModal(false)}
-              className="border-blue-200 text-blue-600 hover:bg-blue-50"
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => {
-                console.log(`Adding role for ${newRole.email}`);
-                setShowAddRoleModal(false);
-              }}
-              disabled={
-                !newRole.email ||
-                !Object.values(newRole.permissions).includes(true)
-              }
-            >
-              Add Admin
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-blue-800">Select Student</Label>
+                <Select
+                  onValueChange={(value) => {
+                    const selectedUser = usersWithoutPermissions.find(
+                      (u) => u.email === value
+                    );
+                    setNewRole({
+                      email: value,
+                      name: selectedUser?.name || "",
+                      permissions: {},
+                    });
+                  }}
+                  value={newRole.email}
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select a student" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {usersWithoutPermissions.map((user) => (
+                      <SelectItem key={user.uid} value={user.email}>
+                        {user.name} ({user.email})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-blue-800">Permissions</Label>
+                <div className="space-y-2 mt-2">
+                  {permissionsList.map((permission) => (
+                    <div
+                      key={permission}
+                      className="flex items-center space-x-2"
+                    >
+                      <Checkbox
+                        id={`permission-${permission}`}
+                        checked={newRole.permissions[permission] || false}
+                        onCheckedChange={(checked) =>
+                          handlePermissionChange(permission, checked)
+                        }
+                      />
+                      <Label
+                        htmlFor={`permission-${permission}`}
+                        className="text-blue-800 capitalize"
+                      >
+                        {RULES[permission]}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowAddRoleModal(false)}
+                className="border-blue-200 text-blue-600 hover:bg-blue-50"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="default"
+                onClick={handleAddRole}
+                disabled={!newRole.email || !hasValidPermissions}
+              >
+                Add Admin
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }

@@ -12,6 +12,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import useManageSpaceStore from "@/app/store/manageSpaceStore";
 import useAuthStore from "@/app/store/authStore";
+import { RULES } from "@/utils/hasAccess";
 
 const LoadingSkeleton = () => (
   <div className="space-y-4">
@@ -33,7 +34,7 @@ const ErrorMessage = ({ message }) => (
   </div>
 );
 
-// Inline MemberCard Component
+// Inline MemberCard Component with permission badges
 const MemberCard = ({
   loading,
   member,
@@ -42,14 +43,39 @@ const MemberCard = ({
   onRemove,
   user,
 }) => {
+  const isCurrentUser = member.uid === user?.uid;
+  const isAdmin = member.department_space.status === "admin";
+  const isModerator = member?.department_space?.permissions?.some(
+    (permission) => Object.values(RULES).includes(permission)
+  );
+
   return (
     <div className="flex items-center justify-between border rounded-lg p-4 shadow-sm bg-white">
       <div>
-        <h4 className="text-lg font-medium">{member.name}</h4>
+        <div className="flex items-center gap-2">
+          <h4 className="text-lg font-medium">
+            {member.name}
+            {isCurrentUser && (
+              <span className="ml-2 text-sm text-gray-500">(You)</span>
+            )}
+          </h4>
+        </div>
         <p className="text-sm text-gray-600">{member.email}</p>
-        {member.role && !pending && (
-          <Badge className="mt-1">{member.role}</Badge>
-        )}
+        <div className="flex gap-2 mt-1">
+          {isAdmin && (
+            <Badge variant="destructive" className="bg-red-500">
+              Admin
+            </Badge>
+          )}
+          {isModerator && (
+            <Badge variant="secondary" className="bg-blue-500 text-white">
+              Moderator
+            </Badge>
+          )}
+          {member.role === "member" && !pending && (
+            <Badge className="bg-gray-500 text-white">Member</Badge>
+          )}
+        </div>
       </div>
 
       {pending ? (
@@ -71,7 +97,13 @@ const MemberCard = ({
           </Button>
         </div>
       ) : (
-        user?.department_space?.status !== "admin" && (
+        // Only show remove button if:
+        // 1. Not the current user
+        // 2. Current user is admin
+        // 3. The member is not an admin (admins can't be removed)
+        !isCurrentUser &&
+        user?.department_space?.status === "admin" &&
+        !isAdmin && (
           <Button
             variant="outline"
             onClick={onRemove}
@@ -83,6 +115,30 @@ const MemberCard = ({
       )}
     </div>
   );
+};
+
+// Helper function to sort members by role (admin -> moderator -> member)
+const sortMembersByRole = (members) => {
+  return [...members].sort((a, b) => {
+    // Check if admin
+    const aIsAdmin = a.department_space?.status === "admin";
+    const bIsAdmin = b.department_space?.status === "admin";
+    if (aIsAdmin && !bIsAdmin) return -1;
+    if (!aIsAdmin && bIsAdmin) return 1;
+
+    // Check if moderator
+    const aIsModerator = a?.department_space?.permissions?.some((permission) =>
+      Object.values(RULES).includes(permission)
+    );
+    const bIsModerator = b?.department_space?.permissions?.some((permission) =>
+      Object.values(RULES).includes(permission)
+    );
+    if (aIsModerator && !bIsModerator) return -1;
+    if (!aIsModerator && bIsModerator) return 1;
+
+    // If same role, sort alphabetically
+    return a.name.localeCompare(b.name);
+  });
 };
 
 // Main Members Component
@@ -100,25 +156,22 @@ export default function Members() {
     fetchMembers,
     makeJoinDecision,
     removeUserFromSpace,
-  } = useManageSpaceStore(); // Get from main store
-  const { user } = useAuthStore(); // Get user from auth store
+  } = useManageSpaceStore();
+  const { user } = useAuthStore();
 
   useEffect(() => {
-    if (user) {
-      // Call the fetchMembers function if user is authenticated
+    if (user && approvedUsers.length === 0) {
+      // Only fetch if there's no data
       fetchMembers();
     }
-  }, [user, fetchMembers]);
+  }, [user, approvedUsers.length, fetchMembers]);
 
-  //   const approvedUsers = [
-  //     { id: 1, name: "Alex Johnson", email: "alex@uni.edu", role: "Member" },
-  //     { id: 2, name: "Sam Wilson", email: "sam@uni.edu", role: "Moderator" },
-  //   ];
-
-  //   const pendingUsers = [
-  //     { id: 3, name: "Taylor Smith", email: "taylor@uni.edu" },
-  //     { id: 4, name: "Jordan Lee", email: "jordan@uni.edu" },
-  //   ];
+  // Sort approved users by role
+  const sortedApprovedUsers = sortMembersByRole(approvedUsers);
+  // Sort pending users by request date (assuming there's a createdAt field)
+  const sortedPendingUsers = [...pendingUsers].sort(
+    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+  );
 
   return (
     <>
@@ -149,31 +202,43 @@ export default function Members() {
 
           <TabsContent value="approved">
             <div className="space-y-4">
-              {approvedUsers.map((member) => (
-                <MemberCard
-                  key={member.id}
-                  member={member}
-                  user={user}
-                  onRemove={() => {
-                    setSelectedMember(member);
-                    setShowRemoveModal(true);
-                  }}
-                />
-              ))}
+              {sortedApprovedUsers.length > 0 ? (
+                sortedApprovedUsers.map((member) => (
+                  <MemberCard
+                    key={member.uid}
+                    member={member}
+                    user={user}
+                    onRemove={() => {
+                      setSelectedMember(member);
+                      setShowRemoveModal(true);
+                    }}
+                  />
+                ))
+              ) : (
+                <div className="p-4 text-center text-gray-500">
+                  No approved members yet
+                </div>
+              )}
             </div>
           </TabsContent>
 
           <TabsContent value="pending">
             <div className="space-y-4">
-              {pendingUsers.map((member) => (
-                <MemberCard
-                  key={member.id}
-                  loading={loading}
-                  member={member}
-                  makeJoinDecision={makeJoinDecision}
-                  pending
-                />
-              ))}
+              {sortedPendingUsers.length > 0 ? (
+                sortedPendingUsers.map((member) => (
+                  <MemberCard
+                    key={member.uid}
+                    loading={loading}
+                    member={member}
+                    makeJoinDecision={makeJoinDecision}
+                    pending
+                  />
+                ))
+              ) : (
+                <div className="p-4 text-center text-gray-500">
+                  No pending requests
+                </div>
+              )}
             </div>
           </TabsContent>
         </Tabs>
@@ -203,7 +268,10 @@ export default function Members() {
           <div className="flex justify-end gap-2 pt-2">
             <Button
               variant="outline"
-              onClick={() => setShowRemoveModal(false)}
+              onClick={() => {
+                setShowRemoveModal(false);
+                setRemoveReason("");
+              }}
               className="border-blue-200 text-blue-600 hover:bg-blue-50"
             >
               Cancel

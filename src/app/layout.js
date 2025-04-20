@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import { Suspense } from "react";
 import ProtectedRoute from "@/utils/ProtectedRoute";
 import Head from "next/head";
+import toast, { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -58,6 +59,7 @@ export default function RootLayout({ children }) {
             autoClose={3000}
             hideProgressBar={true}
           />
+          <Toaster />
         </body>
       </html>
     </StoreProvider>
