@@ -10,12 +10,10 @@ const useManageSpaceStore = create((set, get) => ({
   success: false,
   response: null,
 
-  // Fetch members based on user's department context
   fetchMembers: async () => {
     const { user } = useAuthStore.getState();
-    if (!user?.email) {
+    if (!user?.email)
       return set({ error: "User not authenticated", loading: false });
-    }
 
     const { schoolId, departmentId, level, department_space } = user;
     set({ loading: true, error: null });
@@ -29,7 +27,6 @@ const useManageSpaceStore = create((set, get) => ({
           level,
         },
       });
-
       set({
         approvedUsers: data.approved_users,
         pendingUsers: data.pending_users,
@@ -40,14 +37,10 @@ const useManageSpaceStore = create((set, get) => ({
     }
   },
 
-  // Approve or reject a pending user
   makeJoinDecision: async (uid, decision) => {
     const { user } = useAuthStore.getState();
     const { pendingUsers, approvedUsers } = get();
-
-    if (!user?.uid) {
-      return set({ error: "Admin not authenticated" });
-    }
+    if (!user?.uid) return set({ error: "Admin not authenticated" });
 
     set({ loading: true });
 
@@ -66,7 +59,6 @@ const useManageSpaceStore = create((set, get) => ({
 
         if (decision === "approved") {
           const approvedUser = pendingUsers.find((u) => u.id === uid);
-
           if (approvedUser) {
             approvedUser.department_space.status = "approved";
             return set({
@@ -77,7 +69,6 @@ const useManageSpaceStore = create((set, get) => ({
           }
         }
 
-        // If rejected, just update pending list
         set({ pendingUsers: updatedPending, loading: false });
       }
     } catch (err) {
@@ -85,14 +76,10 @@ const useManageSpaceStore = create((set, get) => ({
     }
   },
 
-  // Remove a user from the space
   removeUserFromSpace: async (uid, reason) => {
     const { user } = useAuthStore.getState();
     const { approvedUsers } = get();
-
-    if (!user?.uid) {
-      return set({ error: "Admin not authenticated" });
-    }
+    if (!user?.uid) return set({ error: "Admin not authenticated" });
 
     set({ loading: true });
 
@@ -104,8 +91,10 @@ const useManageSpaceStore = create((set, get) => ({
       });
 
       if (res.status === 200) {
-        const updatedApproved = approvedUsers.filter((u) => u.id !== uid);
-        set({ approvedUsers: updatedApproved, loading: false });
+        set({
+          approvedUsers: approvedUsers.filter((u) => u.uid !== uid),
+          loading: false,
+        });
       }
     } catch (err) {
       console.error("Remove error", err);
@@ -113,18 +102,15 @@ const useManageSpaceStore = create((set, get) => ({
     }
   },
 
-  // Add a space admin with permissions
   addSpaceAdmin: async ({ email, permissions }) => {
     const { user } = useAuthStore.getState();
-
+    const { approvedUsers } = get();
     const { schoolId, departmentId, department_space, level } = user;
-
-    alert("Add Space Running")
 
     set({ loading: true, success: false, error: null });
 
     try {
-      const { data } = await axios.post("/api/department/add-space-admin", {
+      await axios.post("/api/department/add-space-admin", {
         email,
         schoolId,
         departmentId,
@@ -133,15 +119,56 @@ const useManageSpaceStore = create((set, get) => ({
         permissions,
       });
 
-      console.log("Data :", data)
+      const updatedUsers = approvedUsers.map((u) => {
+        if (u.email !== email) return u;
 
-      set({ loading: false, response: data });
+        const existing = u.department_space?.permissions || [];
+        return {
+          ...u,
+          department_space: {
+            ...u.department_space,
+            permissions: Array.from(new Set([...existing, ...permissions])),
+          },
+        };
+      });
+
+      set({ approvedUsers: updatedUsers, loading: false });
     } catch (err) {
       set({
         loading: false,
         error:
           err?.response?.data?.message || err.message || "Something went wrong",
       });
+    }
+  },
+
+  updateSpaceAdmin: async ({ email, permissions }) => {
+    set({ loading: true });
+    const { user } = useAuthStore.getState();
+    const { schoolId, departmentId, department_space, level } = user;
+
+    try {
+      await axios.post("/api/department/update-admin", {
+        email,
+        schoolId,
+        departmentId,
+        spaceId: department_space.spaceId,
+        level,
+        permissions,
+      });
+
+      set({
+        approvedUsers: get().approvedUsers.map((u) =>
+          u.email === email
+            ? { ...u, department_space: { ...u.department_space, permissions } }
+            : u
+        ),
+        success: true,
+      });
+    } catch (err) {
+      set({ error: err?.response?.data?.message || err.message });
+    } finally {
+      set({ loading: false });
     }
   },
 }));

@@ -24,6 +24,7 @@ import TimetableList from "@/components/MiniTimetable.js";
 import Image from "next/image.js";
 import useAuthStore from "./store/authStore.js";
 import useTimetableStore from "./store/timetableStore.js";
+import { listenToUserDepartmentSpace } from "@/libs/listener.js";
 
 const HomeScreen = () => {
   const { user: userData } = useAuthStore();
@@ -44,6 +45,7 @@ const HomeScreen = () => {
   // UseEffect To Fetch Timetable
   useEffect(() => {
     fetchTimetable("computer_science", 2);
+    listenToUserDepartmentSpace(userData.uid)
   }, []);
 
   const timetableData = (timetable) => {

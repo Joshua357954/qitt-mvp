@@ -29,7 +29,7 @@ export async function POST(req) {
     // Query for department space using the provided code
     const spaceQuery = query(
       collection(firestore, "department-space"),
-      where("id", "==", trimmedCode.toUpperCase())
+      where("id", "==", trimmedCode.toLowerCase())
     );
 
     const spaceSnap = await getDocs(spaceQuery);

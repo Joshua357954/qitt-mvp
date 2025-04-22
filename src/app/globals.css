@@ -67,7 +67,9 @@
   }
 }
 
-
+body {
+  pointer-events: auto !important;
+}
 
 @layer base {
   * {

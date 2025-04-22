@@ -1,10 +1,6 @@
-// app/api/roles/add/route.js
-
 import { NextResponse } from "next/server";
 import {
-  getFirestore,
   doc,
-  setDoc,
   updateDoc,
   collection,
   query,
@@ -16,13 +12,16 @@ import { firestore } from "@/firebase";
 
 export async function POST(request) {
   try {
-    // Destructure expected fields from request body
-    const body = await request.json();
-    console.log(body); // for debugging
+    const {
+      email,
+      schoolId,
+      departmentId,
+      spaceId,
+      level,
+      permissions = [],
+    } = await request.json();
 
-    const { email, schoolId, departmentId, spaceId, level, permissions } = body;
-
-    // Validate all required fields are present
+    // Validate required fields
     if (
       !email ||
       !schoolId ||
@@ -31,25 +30,13 @@ export async function POST(request) {
       !level ||
       !permissions
     ) {
-      console.log(
-        email,
-        schoolId,
-        departmentId,
-        spaceId,
-        level,
-        permissions,
-        "All fields (email, schoolId, departmentId, spaceId, level, permissions) are required"
-      );
       return NextResponse.json(
-        {
-          message:
-            "All fields (email, schoolId, departmentId, spaceId, level, permissions) are required",
-        },
+        { message: "All fields are required" },
         { status: 400 }
       );
     }
 
-    // Step 1: Find the user in the userV1 collection
+    // Find user
     const userQuerySnapshot = await getDocs(
       query(
         collection(firestore, "usersV1"),
@@ -60,85 +47,58 @@ export async function POST(request) {
       )
     );
 
-    const userDocSnapshot = userQuerySnapshot.docs[0];
-
-    console.log("User Snapshot ID:", userDocSnapshot?.id);
-    console.log("User Snapshot Data:", userDocSnapshot?.data());
-
-    // If user not found, return 404
-    if (!userDocSnapshot) {
-      return NextResponse.json(
-        { message: "No user found matching the specified criteria" },
-        { status: 404 }
-      );
+    if (userQuerySnapshot.empty) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
+    const user = userQuerySnapshot.docs[0];
 
-    // Step 2: Check if the specified department-space exists
-    const departmentSpaceQuery = query(
-      collection(firestore, "department-space"),
-      where("schoolId", "==", schoolId),
-      where("departmentId", "==", departmentId),
-      where("level", "==", Number(level)),
-      where("id", "==", spaceId.toLowerCase())
+    // Find department-space
+    const spaceQuerySnapshot = await getDocs(
+      query(
+        collection(firestore, "department-space"),
+        where("schoolId", "==", schoolId),
+        where("departmentId", "==", departmentId),
+        where("level", "==", Number(level)),
+        where("id", "==", spaceId.toLowerCase())
+      )
     );
 
-    const departmentSpaceSnap = await getDocs(departmentSpaceQuery);
-
-    console.log("Department Space Docs Found:", departmentSpaceSnap.size);
-
-    departmentSpaceSnap.forEach((doc, index) => {
-      console.log(`Doc ${index + 1} ID:`, doc.id);
-      console.log(`Doc ${index + 1} Data:`, doc.data());
-    });
-
-    // If department-space not found, return 404
-    if (departmentSpaceSnap.empty) {
-      return NextResponse.json(
-        {
-          message: "No department space found matching the specified criteria",
-        },
-        { status: 404 }
-      );
+    if (spaceQuerySnapshot.empty) {
+      return NextResponse.json({ message: "Space not found" }, { status: 404 });
     }
+    const space = spaceQuerySnapshot.docs[0];
 
-    // Step 3: Update the department-space by adding user to 'admins' array
-    const departmentSpaceDoc = departmentSpaceSnap.docs[0];
-    const departmentSpaceRef = doc(
-      firestore,
-      "department-space",
-      departmentSpaceDoc.id
-    );
-
-    const userId = userDocSnapshot.id; // Get user ID from snapshot
-
-    await updateDoc(departmentSpaceRef, {
-      admins: arrayUnion({ uid: userId, permissions }), // Add new admin with permissions
+    // Update space with new admin
+    await updateDoc(doc(firestore, "department-space", space.id), {
+      admins: arrayUnion({ uid: user.id, permissions }),
       updatedAt: new Date().toISOString(),
     });
 
-    // Step 4: Update user's document to reflect new department-space permissions
-    await updateDoc(doc(firestore, "usersV1", userDocSnapshot.id), {
-      "department_space.permissions": arrayUnion(...permissions), // Merge new permissions
-      "department_space.lastUpdated": new Date().toISOString(),
-    });
+    // Check if user is in space
+    if (user.department_space && user.department_space.spaceId === spaceId) {
+      // Update user permissions
+      await updateDoc(doc(firestore, "usersV1", user.id), {
+        "department_space.permissions": arrayUnion(...permissions),
+        "department_space.lastUpdated": new Date().toISOString(),
+      });
+    } else {
+      return NextResponse.json(
+        { message: "User not in space" },
+        { status: 500 }
+      );
+    }
 
-    // Return success response
     return NextResponse.json({
       success: true,
-      message: "User added to department-space admins successfully",
-      userId,
+      message: "Admin added successfully",
+      userId: user.id,
       spaceId,
       permissions,
     });
   } catch (error) {
-    // Log and return error details
-    console.error("Error processing request:", error);
+    console.error("Error:", error);
     return NextResponse.json(
-      {
-        success: false,
-        message: "Internal server error",
-        error: error.message,
-      },
+      { success: false, message: "Server error", error: error.message },
       { status: 500 }
     );
   }

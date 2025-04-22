@@ -14,40 +14,58 @@ export async function POST(req) {
     const body = await req.json();
     const { userId, adminId, reason } = body;
 
-    if (!userId || !adminId || !reason) {
-      console.log("🚫 Missing params:", { userId, adminId, reason });
+    if (!userId || !reason) {
+      console.log("🚫 Missing required params:", { userId, reason });
       return NextResponse.json(
-        { error: "Missing userId, adminId or reason" },
+        { error: "Missing userId or reason" },
         { status: 400 }
       );
     }
 
-    // Query user document where uid == userId
     const usersRef = collection(firestore, "usersV1");
-    const q = query(usersRef, where("uid", "==", userId));
-    const querySnapshot = await getDocs(q);
 
-    if (querySnapshot.empty) {
+    // ✅ Optional: If adminId is provided, verify it's a real user
+    if (adminId) {
+      const adminQuery = query(usersRef, where("uid", "==", adminId));
+      const adminSnapshot = await getDocs(adminQuery);
+
+      if (adminSnapshot.empty) {
+        console.log("🚫 Invalid adminId, no such user:", adminId);
+        return NextResponse.json(
+          { error: "Invalid adminId: no such user found" },
+          { status: 403 }
+        );
+      }
+    }
+
+    // ✅ Fetch user being removed
+    const userQuery = query(usersRef, where("uid", "==", userId));
+    const userSnapshot = await getDocs(userQuery);
+
+    if (userSnapshot.empty) {
       console.log("❌ User not found:", userId);
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const userDoc = querySnapshot.docs[0];
+    const userDoc = userSnapshot.docs[0];
     const userRef = userDoc.ref;
 
-    // Log reason
-    console.log("📣 Send Notification: User was removed because:", reason);
-
-    // Remove department space data
+    // ✅ Clear department_space field
     await updateDoc(userRef, {
       department_space: {},
     });
 
-    console.log(`✅ User ${userId} removed from department by ${adminId}`);
+    // ✅ Log the removal reason and who removed
+    if (adminId) {
+      console.log(`✅ Admin (${adminId}) removed user (${userId}) from department for reason:`, reason);
+    } else {
+      console.log(`✅ User (${userId}) removed themselves from department for reason:`, reason);
+    }
 
     return NextResponse.json(
       {
         message: `User ${userId} removed from department space`,
+        removedBy: adminId ? "admin" : "self",
         reason,
       },
       { status: 200 }

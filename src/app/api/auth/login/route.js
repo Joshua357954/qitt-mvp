@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import { collection, doc, query, where, getDocs } from "firebase/firestore";
 import { firestore } from "@/firebase";
-import { Respond } from "@/utils/utils";
 import { NextResponse } from "next/server";
 
 const saltRounds = 10;

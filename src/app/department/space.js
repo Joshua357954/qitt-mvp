@@ -7,10 +7,11 @@ import { HelpCircle, Loader2, Plus, RefreshCw, UserRound } from "lucide-react";
 import Link from "next/link";
 import useAuthStore from "../store/authStore";
 import axios from "axios";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
+// import toast from "react-toastify";
 
 export default function SpaceJoin() {
-  const { user } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
   const defaultStatus =
     user?.department_space?.status === "pending" ? "pending" : "idle";
 
@@ -22,30 +23,36 @@ export default function SpaceJoin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isValid) return;
-    toast.loading("Joining Dept. Space");
+
+    const toastId = toast.loading("Joining Department Space...");
 
     try {
-      // Simulate API call
-      const res = await axios.post("/api/department/join-space", {
+      const { data } = await axios.post("/api/department/join-space", {
         uid: user.uid,
         schoolId: user.schoolId,
         departmentId: user.departmentId,
         level: user.level,
-        code: input,
+        code: input.toLocaleLowerCase(),
       });
 
-      // Now update the user
-      await updateUser({
-        department_space: {
-          spaceId: res.data.spaceId,
-          name: res.data.name, 
-          status: "pending",
-        },
-      });
-      setStatus("pending");
-      toast.dismiss();
-    } catch {
+      // toast(JSON.stringify(data));
+      if (data.spaceId) {
+        await updateUser({
+          department_space: {
+            spaceId: data.spaceId,
+            name: data.name,
+            status: "pending",
+          },
+        });
+
+        setStatus("pending");
+        toast.dismiss(toastId);
+        toast.success(data.message || "Request sent successfully!");
+      }
+    } catch (error) {
       setStatus("idle");
+      toast.dismiss(toastId);
+      toast.error("InCorrect Code, Pls Try again ");
     }
   };
 
@@ -111,13 +118,13 @@ export default function SpaceJoin() {
           </div>
 
           <div className="flex gap-3 justify-center pt-2">
-            <Button
+            {/* <Button
               onClick={reset}
               variant="outline"
               className="border-gray-300 hover:bg-gray-100"
             >
               Cancel Request
-            </Button>
+            </Button> */}
             <Button
               variant="outline"
               className="border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100"

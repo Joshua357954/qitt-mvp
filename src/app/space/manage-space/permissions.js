@@ -24,12 +24,15 @@ import toast from "react-hot-toast";
 
 export default function Permissions() {
   const [showAddRoleModal, setShowAddRoleModal] = useState(false);
+  const [showRevokeModal, setShowRevokeModal] = useState(false);
   const [newRole, setNewRole] = useState({
     email: "",
     permissions: {},
   });
+  const [userToRevoke, setUserToRevoke] = useState(null);
 
-  const { error, approvedUsers, addSpaceAdmin } = useManageSpaceStore();
+  const { error, approvedUsers, addSpaceAdmin, updateSpaceAdmin } =
+    useManageSpaceStore();
   const { user } = useAuthStore();
 
   const permissionsList = useMemo(() => Object.keys(RULES), []);
@@ -80,6 +83,37 @@ export default function Permissions() {
     }));
   }, []);
 
+  const handleRevokePermissionChange = useCallback((permission, checked) => {
+    setUserToRevoke((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        updatedPermissions: {
+          ...prev.updatedPermissions,
+          [permission]: checked,
+        },
+      };
+    });
+  }, []);
+
+  const prepareRevokeModal = useCallback(
+    (role) => {
+      const initialPermissions = permissionsList.reduce((acc, permission) => {
+        acc[permission] = role.permissions.includes(permission);
+        return acc;
+      }, {});
+
+      setUserToRevoke({
+        email: role.email,
+        name: role.name,
+        currentPermissions: role.permissions,
+        updatedPermissions: initialPermissions,
+      });
+      setShowRevokeModal(true);
+    },
+    [permissionsList]
+  );
+
   useEffect(() => {
     if (!newRole.email && isCurrentUserAdmin) {
       const updatedPermissions = permissionsList.reduce((acc, permission) => {
@@ -99,28 +133,24 @@ export default function Permissions() {
     newRole.email,
   ]);
 
-  // Get keys from 'permission' object where the values are true
-  const permissionKeys = Object.entries(newRole.permissions)
-    .filter(([key, value]) => value) // Keep only entries with truthy values
-    .map(([key]) => key); // Extract the keys from the filtered entries
-
+  // Add New Admin Zustand
   const handleAddRole = useCallback(async () => {
     if (!newRole.email || !Object.values(newRole.permissions).some(Boolean)) {
       console.log("Requirements Not Satisfied !!");
       return;
     }
-    console.log("Passed Check (IF)", permissionKeys, newRole.permissions);
+    const permissionKeys = Object.entries(newRole.permissions)
+      .filter(([key, value]) => value)
+      .map(([key]) => key);
+
     toast.loading("Adding a new Admin");
     try {
-      // Zustand State Function To Add Admin
-      console.log("Role: ", newRole);
       await addSpaceAdmin({
         email: newRole.email,
-        permissions: permissionKeys, //prettyfied permissions to add to user
+        permissions: permissionKeys,
       });
 
       toast.dismiss();
-
       if (error) toast.error("User Error!");
       else toast.success("Added User as Admin");
 
@@ -132,6 +162,39 @@ export default function Permissions() {
       console.error("Error adding role:", error);
     }
   }, [newRole]);
+
+
+  // Revoke Admin Zustand
+  const handleUpdatePermissions = useCallback(async () => {
+    if (!userToRevoke) return;
+
+    const updatedPermissionKeys = Object.entries(
+      userToRevoke.updatedPermissions
+    )
+      .filter(([key, value]) => value)
+      .map(([key]) => key);
+
+    toast.loading("Updating permissions...");
+    try {
+      await updateSpaceAdmin({
+        email: userToRevoke.email,
+        permissions: updatedPermissionKeys,
+      });
+
+      toast.dismiss();
+      if (error) {
+        toast.error("Failed to update permissions");
+      } else {
+        toast.success("Permissions updated successfully");
+      }
+      setShowRevokeModal(false);
+      setUserToRevoke(null);
+    } catch (error) {
+      toast.dismiss();
+      toast.error("An error occurred while updating permissions");
+      console.error("Error updating permissions:", error);
+    }
+  }, [userToRevoke, updateSpaceAdmin]);
 
   const hasValidPermissions = useMemo(
     () => Object.values(newRole.permissions).some(Boolean),
@@ -194,8 +257,9 @@ export default function Permissions() {
                   variant="ghost"
                   size="sm"
                   className="text-red-600 hover:bg-red-50"
+                  onClick={() => prepareRevokeModal(role)}
                 >
-                  Revoke
+                  Revoke/Edit
                 </Button>
               )}
             </div>
@@ -203,6 +267,7 @@ export default function Permissions() {
         ))}
       </div>
 
+      {/* Add Admin Modal */}
       {isCurrentUserAdmin && (
         <Dialog open={showAddRoleModal} onOpenChange={setShowAddRoleModal}>
           <DialogContent className="sm:max-w-[425px]">
@@ -282,6 +347,79 @@ export default function Permissions() {
                 disabled={!newRole.email || !hasValidPermissions}
               >
                 Add Admin
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Revoke/Edit Permissions Modal */}
+      {isCurrentUserAdmin && userToRevoke && (
+        <Dialog open={showRevokeModal} onOpenChange={setShowRevokeModal}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-blue-800">
+                Edit Permissions for {userToRevoke.name}
+              </DialogTitle>
+              <DialogDescription>
+                Update or revoke admin privileges
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <div>
+                <Label className="text-blue-800">Current Permissions</Label>
+                <div className="mt-2 flex gap-2 flex-wrap">
+                  {userToRevoke.currentPermissions.map((perm) => (
+                    <Badge
+                      key={perm}
+                      variant="outline"
+                      className="border-blue-200 text-blue-600"
+                    >
+                      {RULES[perm] || perm}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <Label className="text-blue-800">Update Permissions</Label>
+                <div className="space-y-2 mt-2">
+                  {permissionsList.map((permission) => (
+                    <div
+                      key={permission}
+                      className="flex items-center space-x-2"
+                    >
+                      <Checkbox
+                        id={`revoke-permission-${permission}`}
+                        checked={
+                          userToRevoke.updatedPermissions[permission] || false
+                        }
+                        onCheckedChange={(checked) =>
+                          handleRevokePermissionChange(permission, checked)
+                        }
+                      />
+                      <Label
+                        htmlFor={`revoke-permission-${permission}`}
+                        className="text-blue-800 capitalize"
+                      >
+                        {RULES[permission]}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowRevokeModal(false)}
+                className="border-blue-200 text-blue-600 hover:bg-blue-50"
+              >
+                Cancel
+              </Button>
+              <Button variant="default" onClick={handleUpdatePermissions}>
+                Update Permissions
               </Button>
             </div>
           </DialogContent>
