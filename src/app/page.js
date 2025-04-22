@@ -45,7 +45,7 @@ const HomeScreen = () => {
   // UseEffect To Fetch Timetable
   useEffect(() => {
     fetchTimetable("computer_science", 2);
-    listenToUserDepartmentSpace(userData.uid)
+    listenToUserDepartmentSpace(userData?.uid)
   }, []);
 
   const timetableData = (timetable) => {
