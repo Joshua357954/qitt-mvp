@@ -14,13 +14,8 @@ const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 import "react-quill-new/dist/quill.snow.css";
 
 export default function CreatorCourses() {
-  const {
-    course,
-    isUploading,
-    updateCourse,
-    addCourse,
-    uploadCourses,
-  } = useCourseStore();
+  const { course, isUploading, updateCourse, addCourse, uploadCourses } =
+    useCourseStore();
 
   const [editorContent, setEditorContent] = useState(course.outline || "");
   const quillRef = useRef(null);
@@ -75,10 +70,10 @@ export default function CreatorCourses() {
       placeholder: "3",
     },
     {
-      label: "Lecturer's Name",
-      name: "lecturer",
+      label: "Lecturers Name",
+      name: "lecturers", // ✅ Corrected
       type: "text",
-      placeholder: "Dr. John Doe",
+      placeholder: "Dr. John Doe, Mrs. Lilian",
     },
   ];
 
@@ -92,7 +87,7 @@ export default function CreatorCourses() {
           className="hidden sm:flex gap-2"
         >
           <Upload size={15} />
-          {isUploading ? "Uploading..." : "Upload Courses"}
+          {isUploading ? "Uploading..." : "Upload Course"}
         </Button>
       }
     >
@@ -130,7 +125,7 @@ export default function CreatorCourses() {
           </div>
         </div>
 
-        {/* Add Course Button */}
+        {/* Add Course Button (Mobile) */}
         <Button onClick={addCourse} className="w-full py-2 sm:hidden gap-2">
           <PlusCircle size={16} />
           Add Course

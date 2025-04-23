@@ -6,13 +6,14 @@ import { MoreVertical } from "lucide-react/dist/cjs/lucide-react";
 import useAuthStore from "@/app/store/authStore";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { MdNotifications } from "react-icons/md";
+import { hasAccess, RULES } from "@/utils/hasAccess";
 
 const NavBar = ({ route }) => {
   const { user: userData } = useAuthStore();
 
   const getName = (name) => name?.split(" ")[0];
   const departmentAbbr = userData?.department
-    ? userData?.department
+    ? userData?.departmentId
         .split("_")
         .map((word) => word[0])
         .join(".")
@@ -36,9 +37,11 @@ const NavBar = ({ route }) => {
       <div className="flex flex-row-reverse sm:flex-row px-1 justify-between sm:justify-around sm:px-3 items-center gap-2 bg-yel-low-300 w-full sm:w-[40%] py-5 ">
         {" "}
         <div className="flex gap-5 items-center">
-          <Link href="/creator" className="">
-            <Image src={"/creator.png"} width={40} height={40} unoptimized />
-          </Link>
+          {hasAccess(RULES.CAN_POST) && (
+            <Link href="/creator" className="">
+              <Image src={"/creator.png"} width={40} height={40} unoptimized />
+            </Link>
+          )}
 
           <Link href={"/notification"} className={`relative`}>
             <IoNotificationsOutline className="font-extrabold text-3xl" />
@@ -74,7 +77,9 @@ const NavBar = ({ route }) => {
               </span>
             </div>
             <div className="flex font-light items-center gap-1 text-md  text-gray-700">
-              <div className="text-sm truncate w-fit capitalize">{departmentAbbr}</div>
+              <div className="text-sm truncate w-fit capitalize">
+                {departmentAbbr}
+              </div>
               <div className="w-2 h-2 rounded-full text-sm bg-gray-800">
                 &nbsp;
               </div>
