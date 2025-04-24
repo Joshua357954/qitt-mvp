@@ -6,7 +6,7 @@ import { MoreVertical } from "lucide-react/dist/cjs/lucide-react";
 import useAuthStore from "@/app/store/authStore";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { MdNotifications } from "react-icons/md";
-import { RULES, useHasAccess } from "@/utils/hasAccess";
+import { RULES, useHasAccess } from "@/utils/useHasAccess";
 
 const NavBar = ({ route }) => {
   const { user: userData } = useAuthStore();

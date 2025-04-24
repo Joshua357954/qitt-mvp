@@ -12,7 +12,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import useManageSpaceStore from "@/app/store/manageSpaceStore";
 import useAuthStore from "@/app/store/authStore";
-import { RULES } from "@/utils/hasAccess";
+import { RULES } from "@/utils/useHasAccess";
 
 const LoadingSkeleton = () => (
   <div className="space-y-4">

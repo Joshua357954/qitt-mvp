@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import useManageSpaceStore from "@/app/store/manageSpaceStore";
 import useAuthStore from "@/app/store/authStore";
-import { RULES } from "@/utils/hasAccess";
+import { RULES } from "@/utils/useHasAccess";
 import toast from "react-hot-toast";
 
 export default function Permissions() {
@@ -162,7 +162,6 @@ export default function Permissions() {
       console.error("Error adding role:", error);
     }
   }, [newRole]);
-
 
   // Revoke Admin Zustand
   const handleUpdatePermissions = useCallback(async () => {
