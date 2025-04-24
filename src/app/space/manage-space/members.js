@@ -250,7 +250,7 @@ export default function Members() {
           <DialogHeader>
             <DialogTitle className="text-blue-800">Remove Member</DialogTitle>
             <DialogDescription>
-              Please specify reason for removing{" "}
+              Please specify reason for removing
               <span className="font-medium">{selectedMember?.name}</span>:
             </DialogDescription>
           </DialogHeader>
