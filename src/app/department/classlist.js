@@ -80,8 +80,10 @@ const ClassTab = () => {
   const sortedUsers = sortUsersByRole(approvedUsers);
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h2 className="text-xl font-semibold mb-5 text-gray-800">Classmates</h2>
+    <div className="mx-auto h-full">
+      <h2 className="text-md sm:text-lg font-medium mb-5 text-gray-800">
+        Classmates
+      </h2>
 
       {loading && approvedUsers.length === 0 ? (
         <div className="space-y-3">

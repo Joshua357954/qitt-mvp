@@ -88,8 +88,8 @@ const AnnouncementSection = () => {
   ];
 
   return (
-    <div className="w-full p-4">
-      <h2 className="text-md font-semibold mb-2 flex items-center gap-2">
+    <div className="w-full h-full">
+      <h2 className="text-md sm:text-lg font-medium mb-2 flex items-center gap-2">
         Today
       </h2>
       

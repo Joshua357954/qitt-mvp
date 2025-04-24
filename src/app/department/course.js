@@ -34,8 +34,8 @@ const CoursesTab = () => {
   }
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Current Courses</h2>
+    <div className=" ">
+      <h2 className="text-md sm:text-lg font-medium mb-4">Current Courses</h2>
 
       {/* Show loading indicator only if we're loading more courses but already have some */}
       {loading && courses.length > 0 && (
@@ -61,15 +61,17 @@ const CoursesTab = () => {
                     </div>
                     <div className="mt-2 flex items-start gap-2">
                       <div className="text-sm text-gray-500 space-y-1">
-                        {course.lecturers?.split(',')?.map((lecturer, index) => (
-                          <div key={index} className="flex items-center">
-                            <UserIcon className="h-3 w-3 mr-1 text-gray-400" />
-                            <span>
-                              {lecturer}
-                              {/* {index !== course.lecturers.length - 1 && ","} */}
-                            </span>
-                          </div>
-                        ))}
+                        {course.lecturers
+                          ?.split(",")
+                          ?.map((lecturer, index) => (
+                            <div key={index} className="flex items-center">
+                              <UserIcon className="h-3 w-3 mr-1 text-gray-400" />
+                              <span>
+                                {lecturer}
+                                {/* {index !== course.lecturers.length - 1 && ","} */}
+                              </span>
+                            </div>
+                          ))}
                       </div>
                     </div>
                   </div>
