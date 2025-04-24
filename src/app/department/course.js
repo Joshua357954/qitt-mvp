@@ -59,7 +59,6 @@ const CoursesTab = () => {
                         {course.code} - {course.title}
                       </h3>
                     </div>
-
                     <div className="mt-2 flex items-start gap-2">
                       <div className="text-sm text-gray-500 space-y-1">
                         {course.lecturers?.split(',')?.map((lecturer, index) => (

@@ -17,7 +17,7 @@ import {
 } from "lucide-react/dist/cjs/lucide-react.js";
 import Link from "next/link.js";
 import SpaceJoin from "./space.js";
-import { hasAccess, RULES } from "@/utils/hasAccess.js";
+import { hasAccess, RULES, useHasAccess } from "@/utils/hasAccess.js";
 
 const Department = () => {
   const { user: userData } = useAuthStore();
@@ -34,12 +34,14 @@ const Department = () => {
   const space =
     userData?.department_space?.spaceId &&
     userData?.department_space?.status !== "pending";
+  
+  const manageSpace = useHasAccess(RULES.VIEW_MANAGE_SPACE)
 
   return (
     <MainLayout
       route={`${userData?.departmentId?.split("_").join(" ")}`}
       right={
-        hasAccess(RULES.VIEW_MANAGE_SPACE) && (
+        manageSpace && (
           <Link href="/space/manage-space">
             <Settings2 className="w-5 h-5 text-black" size={25} />
           </Link>

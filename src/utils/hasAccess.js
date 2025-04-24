@@ -24,7 +24,8 @@ export const RULES = {
   CAN_POST: "can-post", // special case handled in hasAccess
 };
 
-export function hasAccess(action) {
+
+export function useHasAccess(action) {
   const { user } = useAuthStore();
 
   const departmentSpace = user?.department_space;
