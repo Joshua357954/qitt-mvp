@@ -57,7 +57,7 @@ export async function POST(req) {
 
     return NextResponse.json(
       {
-        message: "Joined space successfully ✅",
+        message: "Joined space successfully",
         spaceId: trimmedCode,
         name: spaceData.name,
       },

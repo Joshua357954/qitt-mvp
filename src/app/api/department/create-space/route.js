@@ -80,7 +80,7 @@ export async function POST(req) {
         {
           success: false,
           message:
-            "A space for this department, school, and level already exists.",
+            "A space for this department, with that name already exists.",
         },
         { status: 409 }
       );
@@ -110,7 +110,7 @@ export async function POST(req) {
     // Now, find the user with the provided uid and update their record
     const userRef = doc(firestore, "usersV1", uid);
     await updateDoc(userRef, {
-      department_space: {spaceId, name:name.trim(),status:"admin", permissions:['full']}
+      department_space: {spaceId:spaceId.toLocaleLowerCase(), name:name.trim(),status:"admin", permissions:['full']}
     });
 
     return NextResponse.json(
@@ -118,8 +118,10 @@ export async function POST(req) {
         success: true,
         message: "Space created and user updated successfully",
         id: docRef.id,
-        spaceId,
-        name
+        spaceId:spaceId.toLocaleLowerCase(),
+        name,
+        status:'admin',
+        permissions:['full']
       },
       { status: 201 }
     );

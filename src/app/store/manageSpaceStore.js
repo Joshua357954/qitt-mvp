@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 import useAuthStore from "./authStore";
+import { toast } from "react-toastify";
 
 const useManageSpaceStore = create((set, get) => ({
   approvedUsers: [],
@@ -43,7 +44,7 @@ const useManageSpaceStore = create((set, get) => ({
     if (!user?.uid) return set({ error: "Admin not authenticated" });
 
     set({ loading: true });
-
+    const toastId = toast.loading('Making Decision...')
     try {
       const res = await axios.post(
         "/api/department/handle-space-join-request",
@@ -67,11 +68,16 @@ const useManageSpaceStore = create((set, get) => ({
               loading: false,
             });
           }
+
+          toast.dismiss(toastId)
+          toast.success("Decision Made Successfully!")
         }
 
         set({ pendingUsers: updatedPending, loading: false });
       }
     } catch (err) {
+      toast.dismiss(toastId)
+      toast.error("An Error Occured In Decision")
       set({ error: err.message, loading: false });
     }
   },
@@ -82,6 +88,8 @@ const useManageSpaceStore = create((set, get) => ({
     if (!user?.uid) return set({ error: "Admin not authenticated" });
 
     set({ loading: true });
+    const toastId = toast.loading("Removing User...");
+
 
     try {
       const res = await axios.post("/api/department/remove-user", {
@@ -91,6 +99,8 @@ const useManageSpaceStore = create((set, get) => ({
       });
 
       if (res.status === 200) {
+        toast.dismiss(toastId)
+        toast.success("User removed successfully!")
         set({
           approvedUsers: approvedUsers.filter((u) => u.uid !== uid),
           loading: false,
@@ -98,7 +108,12 @@ const useManageSpaceStore = create((set, get) => ({
       }
     } catch (err) {
       console.error("Remove error", err);
-      set({ error: err.message, loading: false });
+      toast.update(toastId, {
+        render: "Upload failed. Please try again.",
+        type: "error",
+        isLoading: false
+      })
+      set({ error: err?.message, loading: false });
     }
   },
 

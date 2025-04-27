@@ -51,6 +51,8 @@ const useSpaceStore = create((set, get) => ({
         department_space: {
           spaceId: result.spaceId,
           name: result.name,
+          status:result.status,
+          permissions:result.permissions
         },
       });
 
