@@ -38,7 +38,7 @@ const components = [
   {
     name: "Courses",
     icon: <GraduationCap size={25} className="text-blue-500" />,
-    path: "courses",
+    path: "type/courses/",
   },
   {
     name: "Announcements",

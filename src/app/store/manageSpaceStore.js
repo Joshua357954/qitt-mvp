@@ -68,7 +68,7 @@ const useManageSpaceStore = create((set, get) => ({
               loading: false,
             });
           }
-
+  
           toast.dismiss(toastId)
           toast.success("Decision Made Successfully!")
         }

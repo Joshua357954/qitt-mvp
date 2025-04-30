@@ -1,31 +1,74 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import { PlusCircle, Upload } from "lucide-react";
+import { PlusCircle, Upload, Save, Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
+import { useSearchParams, useRouter } from "next/navigation";
 import CreatorLayout from "@/components/CreatorLayout";
 import useCourseStore from "@/app/store/creator/coursesStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "react-toastify";
+import useDepartmentStore from "@/app/store/departmentStore";
 
 // Dynamically import ReactQuill with SSR disabled
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 import "react-quill-new/dist/quill.snow.css";
 
 export default function CreatorCourses() {
-  const { course, isUploading, updateCourse, addCourse, uploadCourses } =
-    useCourseStore();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("editId");
+  const isEditMode = Boolean(editId);
 
-  const [editorContent, setEditorContent] = useState(course.outline || "");
+  const {
+    course,
+    isUploading,
+    isLoading,
+    updateCourse,
+    addCourse,
+    uploadCourses,
+    setCourseData,
+    resetCourse,
+    fetchCourse,
+  } = useCourseStore();
+
+  const [editorContent, setEditorContent] = useState("");
+
   const quillRef = useRef(null);
+  const { courses, fetchCourses } = useDepartmentStore();
+
+  // Initialize form based on mode
+  useEffect(() => {
+    const initializeForm = async () => {
+      if (isEditMode) {
+        try {
+          // Use existing courses if available; otherwise, fetch them
+          const data = courses?.length ? courses : await fetchCourses();
+          // Find the course with the matching ID
+          const found = data.find((course) => course.id === id);
+          // Set the editor content if course is found
+          if (found) setEditorContent(found.outline || "");
+        } catch (error) {
+          // router.back();
+          toast.error(`Failed to load course data ${error?.message}`);
+        }
+      } else {
+        resetCourse();
+        setEditorContent("");
+      }
+    };
+
+    initializeForm();
+  }, [isEditMode, editId, fetchCourse, resetCourse, router]);
 
   // Update store when editor content changes
   useEffect(() => {
     updateCourse("outline", editorContent);
-  }, [editorContent]);
+  }, [editorContent, updateCourse]);
 
-  // Quill modules config
+  // Quill editor configuration
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -56,53 +99,105 @@ export default function CreatorCourses() {
       name: "code",
       type: "text",
       placeholder: "CSC280.2",
+      required: true,
     },
     {
       label: "Title",
       name: "title",
       type: "text",
-      placeholder: "Fortran",
+      placeholder: "Introduction to Programming",
+      required: true,
     },
     {
       label: "Credit Unit",
       name: "creditUnit",
       type: "number",
       placeholder: "3",
+      required: false,
     },
     {
       label: "Lecturers Name",
-      name: "lecturers", // ✅ Corrected
+      name: "lecturers",
       type: "text",
       placeholder: "Dr. John Doe, Mrs. Lilian",
+      required: true,
     },
   ];
 
+  const handleSubmit = async () => {
+    try {
+      if (isEditMode) {
+        await uploadCourses(editId);
+        toast.success("Course updated successfully");
+      } else {
+        await uploadCourses();
+        toast.success("Course created successfully");
+        // router.push("/creator/type/courses");
+      }
+    } catch (error) {
+      // Error handling is done in the store
+      toast.error("An Error Occured, While Creating Course");
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <CreatorLayout
+        screenName={isEditMode ? "Loading Course..." : "Create Course"}
+      >
+        <div className="p-6 flex flex-col items-center justify-center h-64 gap-4">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <p>Loading course data...</p>
+        </div>
+      </CreatorLayout>
+    );
+  }
+
   return (
     <CreatorLayout
-      screenName="Course Data"
+      screenName={isEditMode ? `Edit: ${course.title}` : "Create New Course"}
       Button={
         <Button
-          onClick={uploadCourses}
+          onClick={handleSubmit}
           disabled={isUploading}
           className="hidden sm:flex gap-2"
         >
-          <Upload size={15} />
-          {isUploading ? "Uploading..." : "Upload Course"}
+          {isUploading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Processing...
+            </>
+          ) : isEditMode ? (
+            <>
+              <Save size={15} />
+              Update Course
+            </>
+          ) : (
+            <>
+              <PlusCircle size={15} />
+              Create Course
+            </>
+          )}
         </Button>
       }
     >
+      {/* {JSON.stringify()} */}
       <div className="p-6 space-y-6">
         {/* Input Fields */}
         <div className="grid gap-4">
           {inputFields.map((field) => (
             <div key={field.name} className="space-y-2">
-              <Label>{field.label}</Label>
+              <Label>
+                {field.label}
+                {field.required && <span className="text-red-500 ml-1">*</span>}
+              </Label>
               <Input
                 type={field.type}
                 name={field.name}
                 value={course[field.name] || ""}
                 onChange={(e) => updateCourse(field.name, e.target.value)}
                 placeholder={field.placeholder}
+                required={field.required}
               />
             </div>
           ))}
@@ -125,10 +220,28 @@ export default function CreatorCourses() {
           </div>
         </div>
 
-        {/* Add Course Button (Mobile) */}
-        <Button onClick={addCourse} className="w-full py-2 sm:hidden gap-2">
-          <PlusCircle size={16} />
-          Add Course
+        {/* Submit Button (Mobile) */}
+        <Button
+          onClick={handleSubmit}
+          disabled={isUploading}
+          className="w-full py-2 sm:hidden gap-2"
+        >
+          {isUploading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Processing...
+            </>
+          ) : isEditMode ? (
+            <>
+              <Save size={16} />
+              Update Course
+            </>
+          ) : (
+            <>
+              <PlusCircle size={16} />
+              Create Course
+            </>
+          )}
         </Button>
       </div>
     </CreatorLayout>

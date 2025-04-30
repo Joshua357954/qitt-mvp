@@ -39,7 +39,7 @@ const NavBar = ({ route }) => {
         {" "}
         <div className="flex gap-5 items-center">
           {canPost && (
-            <Link href="/creator" className="">
+            <Link href="/creator/type/announcements" className="">
               <Image src={"/creator.png"} width={40} height={40} unoptimized />
             </Link>
           )}
