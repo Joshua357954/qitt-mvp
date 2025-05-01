@@ -27,32 +27,36 @@ export default function CreatorCourses() {
     isUploading,
     isLoading,
     updateCourse,
-    addCourse,
     uploadCourses,
     setCourseData,
     resetCourse,
-    fetchCourse,
   } = useCourseStore();
 
-  const [editorContent, setEditorContent] = useState("");
-
-  const quillRef = useRef(null);
   const { courses, fetchCourses } = useDepartmentStore();
+  const [editorContent, setEditorContent] = useState("");
+  const quillRef = useRef(null);
 
   // Initialize form based on mode
   useEffect(() => {
     const initializeForm = async () => {
       if (isEditMode) {
         try {
-          // Use existing courses if available; otherwise, fetch them
-          const data = courses?.length ? courses : await fetchCourses();
-          // Find the course with the matching ID
-          const found = data.find((course) => course.id === id);
-          // Set the editor content if course is found
-          if (found) setEditorContent(found.outline || "");
+          if (!courses?.length) {
+            await fetchCourses();
+          }
+
+          const updatedCourses = useDepartmentStore.getState().courses;
+          const found = updatedCourses?.find((course) => course.id === editId);
+
+          if (found) {
+            setCourseData(found);
+            setEditorContent(found.outline || "");
+          } else {
+            console.warn("No course found with ID:", editId);
+          }
         } catch (error) {
-          // router.back();
-          toast.error(`Failed to load course data ${error?.message}`);
+          console.error("Error fetching course:", error);
+          toast.error(`Failed to load course data: ${error?.message}`);
         }
       } else {
         resetCourse();
@@ -61,7 +65,7 @@ export default function CreatorCourses() {
     };
 
     initializeForm();
-  }, [isEditMode, editId, fetchCourse, resetCourse, router]);
+  }, [isEditMode, editId, fetchCourses, resetCourse]);
 
   // Update store when editor content changes
   useEffect(() => {
@@ -132,11 +136,10 @@ export default function CreatorCourses() {
       } else {
         await uploadCourses();
         toast.success("Course created successfully");
-        // router.push("/creator/type/courses");
+        // router.push("/creator/type/courses"); // optional redirect
       }
     } catch (error) {
-      // Error handling is done in the store
-      toast.error("An Error Occured, While Creating Course");
+      toast.error("An error occurred while saving the course.");
     }
   };
 
@@ -181,7 +184,6 @@ export default function CreatorCourses() {
         </Button>
       }
     >
-      {/* {JSON.stringify()} */}
       <div className="p-6 space-y-6">
         {/* Input Fields */}
         <div className="grid gap-4">

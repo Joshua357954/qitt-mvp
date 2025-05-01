@@ -118,7 +118,7 @@ const useCourseStore = create((set, get) => ({
 
       let response;
       if (isUpdate) {
-        response = await axios.put(`/api/courses/${courseId}`, payload);
+        response = await axios.put(`/api/courses/update`, {courseId,updateData:payload});
       } else {
         response = await axios.post("/api/courses/add", payload);
       }
