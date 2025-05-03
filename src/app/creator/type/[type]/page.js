@@ -31,7 +31,7 @@ export default function CreatorPage() {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { fetchCourses, courses } = useDepartmentStore();
+  const { fetchCourses, courses, fetchAnnouncements, announcements,loading  } = useDepartmentStore();
 
   // Sync URL with active type
   useEffect(() => {
@@ -48,27 +48,32 @@ export default function CreatorPage() {
         if (activeType === "courses" && courses.length === 0) {
           await fetchCourses();
         }
-        // Add additional fetch cases here if needed
+        if (activeType === "announcements" && announcements.length === 0) {
+          console.log('Fetching Announcement in progress')
+          await fetchAnnouncements();
+        }
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
         setIsLoading(false);
       }
     };
-
+  
     loadData();
-  }, [activeType, fetchCourses]);
+  }, [activeType, fetchCourses, fetchAnnouncements, courses.length, announcements.length]);
+  
 
-  // Update items once data is fetched
   useEffect(() => {
     if (activeType === "courses") {
       setItems(courses || []);
-    }
-    // Add additional type cases if you fetch other types
-    else {
+    } else if (activeType === "announcements") {
+      console.log('Found Announcements',announcements)
+      setItems(announcements || []);
+    } else {
       setItems([]);
     }
-  }, [activeType, courses]);
+  }, [activeType, courses, announcements]);
+  
 
   const handleDelete = (id) => {
     if (confirm("Are you sure you want to delete this item?")) {
@@ -92,11 +97,11 @@ export default function CreatorPage() {
 
     const CardComponent = cardComponents[activeType];
 
-    return items.map((item) => (
+    return items?.map((item,idx) => (
       <CardComponent
-        key={item.id}
+        key={idx}
         item={item}
-        onDelete={() => handleDelete(item.id)}
+        onDelete={() => handleDelete(idx)}
       />
     ));
   };
@@ -145,7 +150,7 @@ export default function CreatorPage() {
 
         {/* Debug info (optional) */}
         {/* <pre>{JSON.stringify(courses, null, 2)}</pre> */}
-
+        {loading && 'Loading In Progress'}
         <div className="space-y-4">{renderContent()}</div>
       </section>
     </main>

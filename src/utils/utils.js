@@ -5,6 +5,9 @@
 
 import { NextResponse } from "next/server";
 
+import { toast } from "react-hot-toast";
+
+
 export const baseUrl = "https://qitt-1-be.onrender.com";
 
 export function Respond(json, status = 400) {
@@ -55,6 +58,18 @@ export function getSessionInfo(level) {
 //   },
 // ];
 
+
+export function handleStoreError(set, msg, shouldThrow = true) {
+  toast.error(msg);
+  set({ error: msg });
+  if (shouldThrow) throw new Error(msg);
+}
+
+export function handleStoreSuccess(set, message) {
+  toast.success(message);
+}
+
+
 export const formatCode = (code) =>
   code.replace(/([a-zA-Z]+)([0-9.]+)/, "$1 $2").toUpperCase();
 
@@ -88,7 +103,7 @@ export const formatTimetableEntry = (timeRange) => {
 
 // 2024-06-06T12:00:00
 export function fbTime(data) {
-  return new Date(data.seconds * 1000);
+  return new Date(data?.seconds * 1000);
 }
 
 export const fDate = (date) =>

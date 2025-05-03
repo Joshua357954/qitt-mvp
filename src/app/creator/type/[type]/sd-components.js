@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { CONTENT_TYPES } from "./data";
+import { fbTime } from "@/utils/utils";
 
 // Common Components
 export const LoadingState = () => (
@@ -130,9 +131,9 @@ export const AnnouncementCard = ({ item, onDelete }) => (
       </div>
     </CardHeader>
     <CardContent>
-      <p className="text-sm text-gray-600">{item.content}</p>
+      <p className="text-sm text-gray-600">{item.message}</p>
     </CardContent>
-    <ItemFooter date={item.createdAt} />
+    <ItemFooter date={fbTime(item.updatedAt)} />
   </Card>
 );
 
