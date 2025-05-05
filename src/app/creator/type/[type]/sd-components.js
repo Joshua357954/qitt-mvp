@@ -227,7 +227,7 @@ export const TimetableCard = ({ item, onDelete }) => (
       <div className="flex justify-between">
         <CardTitle className="flex items-center gap-2 capitalize">
           <Clock className="h-5 w-5 text-red-600" />
-          {item.departmentId.split('_').join(' ')} - <span className="uppercase">{item.spaceId}</span>
+        <span className="uppercase mt-1">{item.spaceId}</span>
         </CardTitle>
         <ItemActions type="timetable" id={item.id} onDelete={onDelete} />
       </div>
@@ -245,8 +245,9 @@ export const TimetableCard = ({ item, onDelete }) => (
           <p className="font-medium capitalize">{item.postedBy.name}</p>
         </div>
         <div>
-          <p className="font-medium text-gray-500"></p>
-          <p className="font-medium capitalize">{item.type}</p>
+          <p className="font-medium capitalize">Depatment</p>
+          <p className="font-medium text-gray-500 capitalize"> {item.departmentId.split('_').join(' ')}</p>
+          
         </div>
         <div>
           <p className="font-medium text-gray-500"></p>

@@ -48,7 +48,7 @@ const useAnnouncementStore = create((set) => ({
         });
         updateItem('announcements', { id: editId, ...data });
       } else {
-        res = await axios.post("/api/space-resources/update", {
+        res = await axios.post("/api/space-resources/create", {
           resourceType: "announcements",
           data,
         });

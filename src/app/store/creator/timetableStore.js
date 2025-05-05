@@ -36,6 +36,8 @@ const useTimetableStore = create((set, get) => ({
       ],
     })),
 
+  setTimetable: (data) => set({ timetable: data }),
+
   updateEntry: (id, field, value) =>
     set((state) => ({
       timetable: state.timetable.map((entry) =>
@@ -48,43 +50,69 @@ const useTimetableStore = create((set, get) => ({
       timetable: state.timetable.filter((entry) => entry.id !== id),
     })),
 
-  uploadTimetable: async () => {
+  uploadTimetable: async (editId) => {
     const { timetable } = get();
 
-    // Check if timetable has valid entries before uploading
-    if (timetable.length === 0 || !hasNonEmptyEntries({ timetable })) {
-      alert("No timetable data to upload!");
+    if (!timetable.length || !hasNonEmptyEntries({ timetable })) {
+      toast.error("⚠️ No timetable data to upload!");
       return;
     }
 
     set({ isLoading: true });
+    const loadingToastId = toast.loading(
+      editId ? "Updating Timetable..." : "Uploading Timetable..."
+    );
+
     try {
       const user = useAuthStore.getState().user;
+
       const data = {
-        postedBy: { uid: user.uid, name: user.name },
+        postedBy: {
+          uid: user.uid,
+          name: user.name,
+        },
         spaceId: user.department_space.spaceId,
         departmentId: user.departmentId,
         schoolId: user.schoolId,
         level: user.level,
-        timetable
+        timetable,
       };
 
-      toast.loading("Adding Timetable...");
+      const url = editId
+        ? "/api/space-resources/update"
+        : "/api/space-resources/create";
 
-      const response = await axios.post("/api/space-resources/create", {
-        resourceType: 'timetable',
+      const payload = {
+        resourceType: "timetables",
         data,
-      });
+        ...(editId && { id: editId }),
+      };
 
-      if (![200, 201].includes(response.status)) throw new Error(`Upload failed with status ${response.status}`);
+      const response = await axios.post(url, payload);
 
-      alert("Timetable uploaded successfully!");
+      if (![200, 201].includes(response.status)) {
+        throw new Error(`Upload failed with status ${response.status}`);
+      }
+
+      toast.dismiss(loadingToastId);
+      toast.success(
+        editId
+          ? "📅 Timetable updated successfully!"
+          : "📅 Timetable uploaded successfully!"
+      );
+
+      return response.data;
     } catch (error) {
-      console.error("Upload error:", error);
-      alert("Failed to upload timetable.");
+      toast.dismiss(loadingToastId);
+      const errorMsg =
+        error.response?.data?.message ||
+        (editId
+          ? "Failed to update timetable."
+          : "Failed to upload timetable.");
+
+      toast.error(`❌ ${errorMsg}`);
     } finally {
       set({ isLoading: false });
-      toast.dismiss();
     }
   },
 }));

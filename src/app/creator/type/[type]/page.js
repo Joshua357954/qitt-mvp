@@ -177,7 +177,7 @@ export default function CreatorPage() {
 
         {/* Debug info (optional) */}
         {/* <pre>{JSON.stringify(courses, null, 2)}</pre> */}
-        {loading && "Loading In Progress"}
+        {/* {loading && "Loading In Progress"} */}
         <div className="space-y-4">{renderContent()}</div>
       </section>
     </main>

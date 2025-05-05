@@ -93,7 +93,8 @@ const useDepartmentStore = create((set, get) => ({
     );
 
     if (success) {
-      set({ courses: data });
+      console.log(data.courses)
+      set({ courses: data.courses });
       handleStoreSuccess(set, "Courses fetched successfully!");
     } else {
       handleStoreError(set, error || "Unknown error fetching courses.");
