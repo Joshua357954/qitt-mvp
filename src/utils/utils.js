@@ -7,7 +7,6 @@ import { NextResponse } from "next/server";
 
 import { toast } from "react-hot-toast";
 
-
 export const baseUrl = "https://qitt-1-be.onrender.com";
 
 export function Respond(json, status = 400) {
@@ -58,7 +57,6 @@ export function getSessionInfo(level) {
 //   },
 // ];
 
-
 export function handleStoreError(set, msg, shouldThrow = true) {
   toast.error(msg);
   set({ error: msg });
@@ -69,6 +67,36 @@ export function handleStoreSuccess(set, message) {
   toast.success(message);
 }
 
+import axios from "axios";
+
+// Helper function for API requests
+export const apiFetch = async (url, params, resourceType) => {
+  try {
+    const { data } = await axios.get(url, { params });
+    if (data) {
+      return { success: true, data };
+    } else {
+      throw new Error("Unknown error while fetching data.");
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.error || error.message,
+    };
+  }
+};
+
+// Helper function to check if user data is valid
+export const validateUserData = (userData) => {
+  const { schoolId, departmentId, level } = userData || {};
+  if (!schoolId || !departmentId || !level) {
+    return {
+      valid: false,
+      message: "Missing user data: schoolId, departmentId, or level.",
+    };
+  }
+  return { valid: true };
+};
 
 export const formatCode = (code) =>
   code.replace(/([a-zA-Z]+)([0-9.]+)/, "$1 $2").toUpperCase();

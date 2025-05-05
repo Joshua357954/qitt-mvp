@@ -33,8 +33,16 @@ export default function CreatorPage() {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { fetchCourses, courses, fetchAnnouncements, announcements, deleteItem, loading } =
-    useDepartmentStore();
+  const {
+    fetchCourses,
+    courses,
+    fetchAnnouncements,
+    announcements,
+    fetchTimetable,
+    timetable,
+    deleteItem,
+    loading,
+  } = useDepartmentStore();
 
   // Sync URL with active type
   useEffect(() => {
@@ -55,6 +63,11 @@ export default function CreatorPage() {
           console.log("Fetching Announcement in progress");
           await fetchAnnouncements();
         }
+        if (activeType === "timetable" && timetable.length === 0) {
+          console.log("Fetching Timetable in progress");
+          await fetchTimetable();
+          console.log('Second :',timetable);
+        }
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -67,8 +80,10 @@ export default function CreatorPage() {
     activeType,
     fetchCourses,
     fetchAnnouncements,
+    fetchTimetable,
     courses.length,
     announcements.length,
+    timetable?.length
   ]);
 
   useEffect(() => {
@@ -77,16 +92,21 @@ export default function CreatorPage() {
     } else if (activeType === "announcements") {
       console.log("Found Announcements", announcements);
       setItems(announcements || []);
+    } else if (activeType === "timetable") {
+      console.log("Found Timetable (New)", timetable);
+      setItems(timetable);
     } else {
       setItems([]);
     }
-  }, [activeType, courses, announcements]);
+  }, [activeType, courses, announcements,timetable]);
+
 
   const handleDelete = (type, id) => {
-    if (!confirm("Are you sure you want to delete this item?")) return
+    if (!confirm("Are you sure you want to delete this item?")) return;
     deleteItem(type, id);
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
+
 
   const renderContent = () => {
     if (isLoading) return <LoadingState className="mt-8" />;

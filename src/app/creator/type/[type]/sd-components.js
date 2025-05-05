@@ -225,9 +225,9 @@ export const TimetableCard = ({ item, onDelete }) => (
   <Card className="border-l-4 border-red-500 hover:shadow-md transition-shadow">
     <CardHeader>
       <div className="flex justify-between">
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 capitalize">
           <Clock className="h-5 w-5 text-red-600" />
-          {item.courseCode} - {item.title}
+          {item.departmentId.split('_').join(' ')} - <span className="uppercase">{item.spaceId}</span>
         </CardTitle>
         <ItemActions type="timetable" id={item.id} onDelete={onDelete} />
       </div>
@@ -235,25 +235,25 @@ export const TimetableCard = ({ item, onDelete }) => (
     <CardContent>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
         <div>
-          <p className="font-medium text-gray-500">Date & Time</p>
+          <p className="font-medium text-gray-500">Date Posted</p>
           <p className="font-medium">
-            {new Date(item.date).toLocaleDateString()} {item.time}
+            {new Date(fbTime(item.createdAt)).toLocaleDateString()} 
           </p>
         </div>
         <div>
-          <p className="font-medium text-gray-500">Location</p>
-          <p className="font-medium">{item.location}</p>
+          <p className="font-medium text-gray-500">Posted By</p>
+          <p className="font-medium capitalize">{item.postedBy.name}</p>
         </div>
         <div>
-          <p className="font-medium text-gray-500">Type</p>
+          <p className="font-medium text-gray-500"></p>
           <p className="font-medium capitalize">{item.type}</p>
         </div>
         <div>
-          <p className="font-medium text-gray-500">Instructor</p>
+          <p className="font-medium text-gray-500"></p>
           <p className="font-medium">{item.instructor}</p>
         </div>
       </div>
     </CardContent>
-    <ItemFooter date={item.updatedAt} label="Updated" />
+    <ItemFooter date={fbTime(item.updatedAt)} label="Updated" />
   </Card>
 );

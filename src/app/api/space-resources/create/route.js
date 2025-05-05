@@ -7,6 +7,7 @@ export async function POST(req) {
     const { resourceType, data } = await req.json();
 
     if (!resourceType || !data) {
+      console.log(data)
       return NextResponse.json({ error: "Missing resourceType or data" }, { status: 400 });
     }
 

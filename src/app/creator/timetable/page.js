@@ -40,7 +40,7 @@ export default function CreatorTimetable() {
             className="hidden sm:flex justify-center items-center px-4 py-2 text-white bg-[#0A32F8] gap-3 rounded"
           >
             <Upload size={15} />{" "}
-            {isLoading ? "Uploading..." : "Update Timetable"}
+            {isLoading ? "Uploading..." : "Add Timetable"}
           </button>
         </nav>
 

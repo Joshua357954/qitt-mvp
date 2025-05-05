@@ -79,7 +79,7 @@ export async function GET(req) {
 // Helper function to map resource types to Firestore collection names
 const getCollectionRef = (resourceType) => {
   const collections = {
-    timetable: "timetables",
+    timetables: "timetables",
     resource: "resources",
     assignment: "assignments",
     notes: "notes",

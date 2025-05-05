@@ -1,13 +1,13 @@
 import { create } from "zustand";
-import axios from "axios";
 import toast from "react-hot-toast";
 import useAuthStore from "./authStore";
-import { handleStoreError, handleStoreSuccess } from "@/utils/utils";
+import { apiFetch, validateUserData, handleStoreError, handleStoreSuccess } from "@/utils/utils";
 
 const useDepartmentStore = create((set, get) => ({
   // Resource states
   courses: [],
   announcements: [],
+  timetable: [],
   loading: false,
   error: null,
 
@@ -29,11 +29,9 @@ const useDepartmentStore = create((set, get) => ({
         id,
       });
       if (response.status === 200) {
-        toast.success("Resource Deleted")
-      }
-      else throw new Error("Failed to delete resource");
+        toast.success("Resource Deleted");
+      } else throw new Error("Failed to delete resource");
     } catch (error) {
-      // Handling errors with toast notification
       toast.error(
         `Error: ${
           error.response?.data?.message ||
@@ -76,39 +74,32 @@ const useDepartmentStore = create((set, get) => ({
     const { user } = useAuthStore.getState();
     const { schoolId, departmentId, level, department_space } = user || {};
 
-    if (!schoolId || !departmentId || !level) {
-      return handleStoreError(
-        set,
-        "Missing user data: schoolId, departmentId, or level."
-      );
+    const validation = validateUserData({ schoolId, departmentId, level });
+    if (!validation.valid) {
+      return handleStoreError(set, validation.message);
     }
 
     set({ loading: true, error: null });
 
-    try {
-      const { data } = await axios.get("/api/courses/get", {
-        params: {
-          schoolId,
-          departmentId,
-          level,
-          spaceId: department_space?.spaceId,
-        },
-      });
+    const { success, data, error } = await apiFetch(
+      "/api/courses/get",
+      {
+        schoolId,
+        departmentId,
+        level,
+        spaceId: department_space?.spaceId,
+      },
+      "courses"
+    );
 
-      if (data?.courses) {
-        set({ courses: data.courses });
-        handleStoreSuccess(set, "Courses fetched successfully!");
-      } else {
-        handleStoreError(set, data?.error || "Unknown error fetching courses.");
-      }
-    } catch (err) {
-      handleStoreError(
-        set,
-        err.response?.data?.error || "Network error while fetching courses."
-      );
-    } finally {
-      set({ loading: false });
+    if (success) {
+      set({ courses: data });
+      handleStoreSuccess(set, "Courses fetched successfully!");
+    } else {
+      handleStoreError(set, error || "Unknown error fetching courses.");
     }
+
+    set({ loading: false });
   },
 
   // Fetch announcements based on user info
@@ -117,7 +108,8 @@ const useDepartmentStore = create((set, get) => ({
     const { schoolId, departmentId, level, department_space } = user || {};
     const spaceId = department_space?.spaceId;
 
-    if (!schoolId || !departmentId || !level || !spaceId) {
+    const validation = validateUserData({ schoolId, departmentId, level });
+    if (!validation.valid || !spaceId) {
       return handleStoreError(
         set,
         "Missing user data for fetching announcements."
@@ -126,27 +118,62 @@ const useDepartmentStore = create((set, get) => ({
 
     set({ loading: true, error: null });
 
-    try {
-      const response = await axios.get("/api/space-resources/get", {
-        params: {
-          resourceType: "announcements",
-          spaceId,
-          schoolId,
-          departmentId,
-          level,
-        },
-      });
+    const { success, data, error } = await apiFetch(
+      "/api/space-resources/get",
+      {
+        resourceType: "announcements",
+        spaceId,
+        schoolId,
+        departmentId,
+        level,
+      },
+      "announcements"
+    );
 
-      set({ announcements: response.data });
+    if (success) {
+      set({ announcements: data });
       handleStoreSuccess(set, "Announcements fetched successfully!");
-    } catch (err) {
-      handleStoreError(
-        set,
-        err.response?.data?.error || "Failed to fetch announcements."
-      );
-    } finally {
-      set({ loading: false });
+    } else {
+      handleStoreError(set, error || "Failed to fetch announcements.");
     }
+
+    set({ loading: false });
+  },
+
+  // Fetch timetable based on user info
+  fetchTimetable: async () => {
+    const { user } = useAuthStore.getState();
+    const { schoolId, departmentId, level, department_space } = user || {};
+    const spaceId = department_space?.spaceId;
+
+    const validation = validateUserData({ schoolId, departmentId, level });
+    if (!validation.valid || !spaceId) {
+      return handleStoreError(set, "Missing user data for fetching timetable.");
+    }
+
+    set({ loading: true, error: null });
+
+    const { success, data, error } = await apiFetch(
+      "/api/space-resources/get",
+      {
+        resourceType: "timetables",
+        spaceId,
+        schoolId,
+        departmentId,
+        level,
+      },
+      "timetable"
+    );
+
+    if (success) {
+      console.log(data)
+      set({ timetable: data });
+      handleStoreSuccess(set, "Timetable fetched successfully!");
+    } else {
+      handleStoreError(set, error || "Failed to fetch timetable.");
+    }
+
+    set({ loading: false });
   },
 }));
 
