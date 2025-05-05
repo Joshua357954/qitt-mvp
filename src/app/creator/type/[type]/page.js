@@ -27,11 +27,14 @@ export default function CreatorPage() {
   const urlType = params?.type;
 
   const isValidType = CONTENT_TYPES.some((type) => type.id === urlType);
-  const [activeType, setActiveType] = useState(isValidType ? urlType : "assignments");
+  const [activeType, setActiveType] = useState(
+    isValidType ? urlType : "assignments"
+  );
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { fetchCourses, courses, fetchAnnouncements, announcements,loading  } = useDepartmentStore();
+  const { fetchCourses, courses, fetchAnnouncements, announcements, deleteItem, loading } =
+    useDepartmentStore();
 
   // Sync URL with active type
   useEffect(() => {
@@ -49,7 +52,7 @@ export default function CreatorPage() {
           await fetchCourses();
         }
         if (activeType === "announcements" && announcements.length === 0) {
-          console.log('Fetching Announcement in progress')
+          console.log("Fetching Announcement in progress");
           await fetchAnnouncements();
         }
       } catch (error) {
@@ -58,27 +61,31 @@ export default function CreatorPage() {
         setIsLoading(false);
       }
     };
-  
+
     loadData();
-  }, [activeType, fetchCourses, fetchAnnouncements, courses.length, announcements.length]);
-  
+  }, [
+    activeType,
+    fetchCourses,
+    fetchAnnouncements,
+    courses.length,
+    announcements.length,
+  ]);
 
   useEffect(() => {
     if (activeType === "courses") {
       setItems(courses || []);
     } else if (activeType === "announcements") {
-      console.log('Found Announcements',announcements)
+      console.log("Found Announcements", announcements);
       setItems(announcements || []);
     } else {
       setItems([]);
     }
   }, [activeType, courses, announcements]);
-  
 
-  const handleDelete = (id) => {
-    if (confirm("Are you sure you want to delete this item?")) {
-      setItems((prev) => prev.filter((item) => item.id !== id));
-    }
+  const handleDelete = (type, id) => {
+    if (!confirm("Are you sure you want to delete this item?")) return
+    deleteItem(type, id);
+    setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
   const renderContent = () => {
@@ -97,11 +104,11 @@ export default function CreatorPage() {
 
     const CardComponent = cardComponents[activeType];
 
-    return items?.map((item,idx) => (
+    return items?.map((item) => (
       <CardComponent
-        key={idx}
+        key={item.id}
         item={item}
-        onDelete={() => handleDelete(idx)}
+        onDelete={() => handleDelete(activeType, item.id)}
       />
     ));
   };
@@ -150,7 +157,7 @@ export default function CreatorPage() {
 
         {/* Debug info (optional) */}
         {/* <pre>{JSON.stringify(courses, null, 2)}</pre> */}
-        {loading && 'Loading In Progress'}
+        {loading && "Loading In Progress"}
         <div className="space-y-4">{renderContent()}</div>
       </section>
     </main>

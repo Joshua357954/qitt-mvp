@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useEffect, useState } from "react";
 import CreatorLayout from "@/components/CreatorLayout";
 import { AiOutlineNotification as Announce } from "react-icons/ai";
@@ -17,28 +17,25 @@ export default function Announcement() {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [priority, setPriority] = useState("medium");
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState([]); // Tags for the announcement
   const [newTag, setNewTag] = useState("");
-  const [announcement, setAnnouncement] = useState(null); // Add state for the announcement
+  const [announcement, setAnnouncement] = useState(null); // State for the announcement object
 
-  const {
-    postAnnouncement,
-    isLoading
-  } = useAnnouncementStore();
-
+  const { postAnnouncement, isLoading } = useAnnouncementStore();
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("editId");
   const isEditMode = Boolean(editId);
 
-  const { announcements, fetchAnnouncements, loading } = useDepartmentStore();
+  const { announcements, fetchAnnouncements, getItem, updateItem, loading } =
+    useDepartmentStore();
 
-  // Function to fetch an announcement by ID
+  // Fetch announcement by ID
   async function fetchAnnouncementById(id) {
-    if (announcements.length === 0 ) await fetchAnnouncements()
+    if (announcements.length === 0) await fetchAnnouncements();
     const foundAnnouncement = announcements.find((ann) => ann.id === id);
     if (foundAnnouncement) {
-      setAnnouncement(foundAnnouncement); // Set the fetched announcement to state
+      setAnnouncement(foundAnnouncement); // Set fetched announcement to state
     }
   }
 
@@ -53,10 +50,18 @@ export default function Announcement() {
 
   // Fetch announcement data when in edit mode
   useEffect(() => {
-    if (isEditMode && editId) {
-      fetchAnnouncementById(editId); 
-    }
-  }, [isEditMode, editId, announcements]); 
+    (async () => {
+      if (isEditMode && editId) {
+        try {
+          const newItem = await getItem("announcements", editId);
+          console.log("@Fetch Fk", newItem);
+          setAnnouncement(newItem);
+        } catch (error) {
+          console.error("Error fetching announcement:", error);
+        }
+      }
+    })();
+  }, [isEditMode, editId, announcements]);
 
   // Update form fields when announcement is set
   useEffect(() => {
@@ -66,7 +71,7 @@ export default function Announcement() {
       setPriority(announcement.priority);
       setTags(announcement.tags || []);
     }
-  }, [announcement]); // This effect runs when announcement state changes
+  }, [announcement]); // Runs when announcement state changes
 
   // Handle add/remove tags
   const handleAddTag = () => {
@@ -89,18 +94,36 @@ export default function Announcement() {
       return;
     }
 
-    // Call saveAnnouncement, passing editId if in edit mode
-    await postAnnouncement({
+    const formData = {
       title,
       message,
       priority: priority.toLowerCase(),
       tags,
-      editId, // Pass editId to the function
+    };
+
+    // If in edit mode, check for changes
+    if (isEditMode && announcement) {
+      const hasChanges = Object.keys(formData).some(
+        (key) =>
+          JSON.stringify(formData[key]) !== JSON.stringify(announcement[key])
+      );
+
+      if (!hasChanges) {
+        toast("No changes made. Posting as new announcement instead.");
+        return;
+      }
+    }
+
+    await postAnnouncement({
+      ...formData,
+      editId: isEditMode ? editId : undefined,
     });
 
-    if (isEditMode) router.back();
-    else reset();
-    
+    if (isEditMode) {
+      router.back(); // if updating
+    } else {
+      reset(); // If normal posting
+    }
   };
 
   return (
@@ -150,10 +173,9 @@ export default function Announcement() {
           <div className="space-y-2">
             <Label>Priority</Label>
             <Dropdown
-              label=""
-              dropdownItems={["High", "Medium", "Low"]}
+              dropdownItems={["High", "Medium", "Low"]} // Pass an array of strings
               value={priority}
-              onChange={setPriority}
+              onChange={setPriority} // On change, update priority
             />
           </div>
 
