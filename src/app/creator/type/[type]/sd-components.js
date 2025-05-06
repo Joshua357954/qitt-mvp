@@ -103,7 +103,7 @@ export const AssignmentCard = ({ item, onDelete }) => (
       <div className="flex justify-between">
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-blue-600" />
-          {item.title}
+          {item.course}
         </CardTitle>
         <ItemActions type="assignments" id={item.id} onDelete={onDelete} />
       </div>
@@ -112,10 +112,10 @@ export const AssignmentCard = ({ item, onDelete }) => (
       <p className="text-sm text-gray-600 mb-3">{item.description}</p>
       <div className="flex items-center gap-2 text-sm bg-blue-50 text-blue-800 px-3 py-1.5 rounded-md w-fit">
         <AlertCircle className="h-4 w-4" />
-        Due: {new Date(item.dueDate).toLocaleDateString()}
+        Due: {new Date(fbTime(item?.dueDate)).toLocaleDateString()}
       </div>
     </CardContent>
-    <ItemFooter date={item.createdAt} />
+    <ItemFooter date={fbTime(item?.createdAt)} />
   </Card>
 );
 

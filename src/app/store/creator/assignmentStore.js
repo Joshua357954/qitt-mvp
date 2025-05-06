@@ -1,12 +1,17 @@
 import { create } from "zustand";
+import axios from "axios";
+import toast from "react-hot-toast"; // Using react-hot-toast for notifications
+import useAuthStore from "../authStore";
 
-const useAssignmentStore = create((set) => ({
+const useAssignmentStore = create((set, get) => ({
   course: "",
   description: "",
   dateGiven: "",
   dueDate: "",
   files: [],
   isLoading: false,
+  success: false,
+  error: null,
 
   setCourse: (course) => set({ course }),
   setDescription: (description) => set({ description }),
@@ -22,37 +27,74 @@ const useAssignmentStore = create((set) => ({
   uploadAssignment: async () => {
     set({ isLoading: true });
 
-    try {
-      const { course, description, dateGiven, dueDate, files } =
-        useAssignmentStore.getState();
+    const { course, description, dateGiven, dueDate, files } = get();
 
-      if (!course || !description || !dueDate || files.length === 0) {
-        alert("Please fill all fields and upload at least one file.");
+    try {
+      const user = useAuthStore.getState().user;
+      if (!user || !user.uid) {
+        toast.error("User not authenticated. Please log in.");
         set({ isLoading: false });
         return;
       }
 
-      const formData = new FormData();
-      formData.append("course", course);
-      formData.append("description", description);
-      formData.append("dateGiven", dateGiven);
-      formData.append("dueDate", dueDate);
+      if (!course || !description || !dueDate || files.length === 0) {
+        toast.error("Please fill all fields and upload at least one file.");
+        set({ isLoading: false });
+        return;
+      }
 
+      const toastId = toast.loading("Uploading Assignment...");
+
+      const data = {
+        course,
+        description,
+        dateGiven,
+        dueDate,
+        postedBy: { uid: user.uid, name: user.name },
+        spaceId: user.department_space.spaceId,
+        departmentId: user.departmentId,
+        schoolId: user.schoolId,
+        level: user.level,
+      };
+
+      const formData = new FormData();
+      formData.append("resourceType", "assignments");
+      formData.append("data", JSON.stringify(data));
       files.forEach(({ file }) => {
         formData.append("files", file);
       });
 
-      const response = await fetch("/api/upload-assignment", {
-        method: "POST",
-        body: formData,
+      const response = await axios.post(
+        "/api/space-resources/create",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      toast.dismiss(toastId);
+
+      if (response.status !== 200) {
+        throw new Error("Failed to upload");
+      }
+
+      toast.success("Assignment uploaded successfully!");
+
+      set({
+        success: true,
+        course: "",
+        description: "",
+        dateGiven: "",
+        dueDate: "",
+        files: [],
       });
-
-      if (!response.ok) throw new Error("Failed to upload");
-
-      alert("Assignment uploaded successfully!");
     } catch (error) {
       console.error("Upload failed:", error);
-      alert("Error uploading assignment.");
+      toast.dismiss();
+      toast.error("Error uploading assignment.");
+      set({ error: error.message });
     } finally {
       set({ isLoading: false });
     }

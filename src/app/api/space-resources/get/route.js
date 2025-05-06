@@ -80,8 +80,8 @@ export async function GET(req) {
 const getCollectionRef = (resourceType) => {
   const collections = {
     timetables: "timetables",
-    resource: "resources",
-    assignment: "assignments",
+    resources: "resources",
+    assignments: "assignments",
     notes: "notes",
     courses: "courses",
     announcements: "announcements",

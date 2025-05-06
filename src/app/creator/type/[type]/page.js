@@ -40,6 +40,8 @@ export default function CreatorPage() {
     announcements,
     fetchTimetable,
     timetable,
+    fetchAssignments,
+    assignments,
     deleteItem,
     loading,
   } = useDepartmentStore();
@@ -68,6 +70,9 @@ export default function CreatorPage() {
           await fetchTimetable();
           console.log('Second :',timetable);
         }
+        if (activeType === "assignments" && assignments.length === 0) {
+          await fetchAssignments();
+        }
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -81,9 +86,12 @@ export default function CreatorPage() {
     fetchCourses,
     fetchAnnouncements,
     fetchTimetable,
+    fetchAssignments,
+    assignments.length,
     courses.length,
     announcements.length,
-    timetable?.length
+    timetable?.length,
+
   ]);
 
   useEffect(() => {
@@ -95,10 +103,13 @@ export default function CreatorPage() {
     } else if (activeType === "timetable") {
       console.log("Found Timetable (New)", timetable);
       setItems(timetable);
+    } else if (activeType === "assignments") {
+      console.log("Found Assignments (New)", assignments);
+      setItems(assignments);
     } else {
       setItems([]);
     }
-  }, [activeType, courses, announcements,timetable]);
+  }, [activeType, courses, announcements,timetable, assignments]);
 
 
   const handleDelete = (type, id) => {

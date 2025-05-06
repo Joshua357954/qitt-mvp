@@ -8,6 +8,7 @@ const useDepartmentStore = create((set, get) => ({
   courses: [],
   announcements: [],
   timetable: [],
+  assignments:[],
   loading: false,
   error: null,
 
@@ -176,6 +177,40 @@ const useDepartmentStore = create((set, get) => ({
 
     set({ loading: false });
   },
+  fetchAssignments: async () => {
+    const { user } = useAuthStore.getState();
+    const { schoolId, departmentId, level, department_space } = user || {};
+  
+    const validation = validateUserData({ schoolId, departmentId, level });
+    if (!validation.valid) {
+      return handleStoreError(set, 'Pls fill in the missing fields');
+    }
+  
+    set({ loading: true, error: null });
+  
+    const { success, data, error } = await apiFetch(
+      "/api/space-resources/get",
+      {
+        schoolId,
+        departmentId,
+        level,
+        spaceId: department_space?.spaceId,
+        resourceType:'assignments'
+      },
+      "assignments"
+    );
+  
+    if (success) {
+      console.log('found assignments',data);
+      set({ assignments: data});
+      handleStoreSuccess(set, "Assignments fetched successfully!");
+    } else {
+      handleStoreError(set, error || "Unknown error fetching assignments.");
+    }
+  
+    set({ loading: false });
+  },
+  
 }));
 
 export default useDepartmentStore;
