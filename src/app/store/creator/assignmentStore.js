@@ -9,11 +9,13 @@ const useAssignmentStore = create((set, get) => ({
   dateGiven: "",
   dueDate: "",
   files: [],
+  existingFiles: [],
   isLoading: false,
   success: false,
   error: null,
 
   setCourse: (course) => set({ course }),
+  setExistingFiles: (existingFiles) => set({existingFiles}),
   setDescription: (description) => set({ description }),
   setDateGiven: (dateGiven) => set({ dateGiven }),
   setDueDate: (dueDate) => set({ dueDate }),
@@ -21,8 +23,22 @@ const useAssignmentStore = create((set, get) => ({
   addFiles: (newFiles) =>
     set((state) => ({ files: [...state.files, ...newFiles] })),
 
-  removeFile: (id) =>
-    set((state) => ({ files: state.files.filter((file) => file.id !== id) })),
+  removeFile: (fileToRemove) => {
+    set((state) => {
+      // Check if the file is in existingFiles or files
+      const isExistingFile = state.existingFiles.some(
+        (file) => file.url === fileToRemove.url
+      );
+      // Remove the file from the correct list (existingFiles or files)
+      const updatedFiles = isExistingFile
+        ? state.existingFiles.filter((file) => file.url !== fileToRemove.url)
+        : state.files.filter((file) => file.url !== fileToRemove.url);
+      // Update the respective list in state
+      return isExistingFile
+        ? { existingFiles: updatedFiles }
+        : { files: updatedFiles };
+    });
+  },
 
   uploadAssignment: async () => {
     set({ isLoading: true });

@@ -18,9 +18,9 @@ export function Dropdown({
   return (
     <div className="w-full ">
       <label className="block text-sm text-black font-bold">{label}</label>
-      <Select onValueChange={onChange} defaultValue={value}>
+      <Select onValueChange={onChange} >
         <SelectTrigger className="border border-black px-4 py-3 rounded-md">
-          <SelectValue placeholder={`${label}`} />
+          <SelectValue placeholder={value} />
         </SelectTrigger>
         <SelectContent>
           {dropdownItems.map((item, index) => (

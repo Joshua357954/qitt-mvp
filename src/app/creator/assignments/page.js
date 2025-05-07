@@ -1,20 +1,33 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { PlusCircle, Upload } from "lucide-react";
 import CreatorLayout from "@/components/CreatorLayout";
 import { Dropdown } from "@/components/Dropdown";
 import CreatorFilesPreview from "@/components/CreatorFilesPreview";
-import { Toaster } from "react-hot-toast"; // Ensure to show toasts
+import { Toaster, toast } from "react-hot-toast"; // Added toast
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import useDepartmentStore from "@/app/store/departmentStore";
 import useAssignmentStore from "@/app/store/creator/assignmentStore";
 
 export default function CreatorAssignment() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("editId");
+  const isEditMode = Boolean(editId);
+
+  const [assignment, setAssignment] = useState(null);
+  const [fetching, setFetching] = useState(false);
+
   const {
     course,
     description,
     dateGiven,
     dueDate,
     files,
+    existingFiles,
+    setExistingFiles,
     isLoading,
     success,
     setCourse,
@@ -24,54 +37,108 @@ export default function CreatorAssignment() {
     addFiles,
     removeFile,
     uploadAssignment,
-    // Reset values manually since store doesn’t have a clearAll method
   } = useAssignmentStore();
 
+  const [previewFiles, setPreviewFiles] = useState([]);
+  const { getItem } = useDepartmentStore();
   const fileInputRef = useRef(null);
 
-  // Set default "Date Given" to today
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    setDateGiven(today);
-  }, [setDateGiven]);
-
-  // Reset form when upload is successful
-  useEffect(() => {
-    if (success) {
-      setCourse("");
-      setDescription("");
-      setDateGiven(new Date().toISOString().split("T")[0]);
-      setDueDate("");
-      addFiles([]); // Clear files
+    if (!isEditMode) {
+      const today = new Date().toISOString().split("T")[0];
+      setDateGiven(today);
     }
-  }, [success, setCourse, setDescription, setDateGiven, setDueDate, addFiles]);
+  }, [isEditMode, setDateGiven]);
 
-  // Handle file uploads
+  useEffect(() => {
+    setPreviewFiles((prev) => [...prev, ...files, existingFiles]);
+  }, [existingFiles, files]);
+
+  // Fetch assignment details if in edit mode
+  useEffect(() => {
+    if (isEditMode && editId) {
+      const fetchAssignment = async () => {
+        setFetching(true);
+        try {
+          const fetchedAssignment = await getItem("assignments", editId);
+          setAssignment(fetchedAssignment);
+          setCourse(fetchedAssignment.course ?? "");
+          setDescription(fetchedAssignment.description ?? "");
+          setDateGiven(fetchedAssignment.dateGiven ?? "");
+          setDueDate(fetchedAssignment.dueDate ?? "");
+
+          const prevFiles = event.target.files.map((file) => {
+            return {
+              ...file,
+              existing: true,
+            };
+          });
+
+          setExistingFiles(prevFiles);
+        } catch (error) {
+          toast.error("Error fetching assignment details.");
+        } finally {
+          setFetching(false);
+        }
+      };
+      fetchAssignment();
+    }
+  }, [isEditMode, editId]);
+
+
+  // Handle file addition with size validation
   const addFilesHandler = (event) => {
-    const uploadedFiles = Array.from(event.target.files).map((file, index) => ({
-      id: `${file.name}-${Date.now()}-${index}`,
-      src: URL.createObjectURL(file),
-      link: URL.createObjectURL(file),
-      file,
-    }));
+    const uploadedFiles = Array.from(event.target.files).map((file, index) => {
+      const objectUrl = URL.createObjectURL(file);
 
-    addFiles(uploadedFiles);
+      // Check file size (for example, limit to 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error(`${file.name} is too large. Maximum size is 10MB.`);
+        return null; // Skip this file
+      }
+
+      return {
+        id: `${file.name}-${Date.now()}-${index}`,
+        src: objectUrl,
+        url: objectUrl,
+        file,
+      };
+    }).filter(file => file !== null); // Filter out invalid files
+
+    if (uploadedFiles.length > 0) {
+      setPreviewFiles((prev) => [...prev, ...uploadedFiles]);
+      addFiles(uploadedFiles);
+    }
+  };
+
+  // Cleanup URLs for object URLs to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      previewFiles.forEach((file) => URL.revokeObjectURL(file.src));
+    };
+  }, [previewFiles]);
+
+
+
+  // Handle assignment upload
+  const handleUploadAssignment = async () => {
+    await uploadAssignment();
   };
 
   return (
     <CreatorLayout
-      screenName="Assignment"
+      screenName={`${isEditMode ? "Edit" : ""} Assignment`}
       Button={
         <button
-          onClick={uploadAssignment}
-          disabled={isLoading}
+          onClick={handleUploadAssignment} // Use custom upload function
+          disabled={isLoading || fetching}
           className="hidden sm:flex justify-center items-center px-4 py-2 text-white bg-[#0A32F8] gap-3 rounded disabled:opacity-50"
         >
           {isLoading ? (
             "Uploading..."
           ) : (
             <>
-              <Upload size={15} /> Add Assignment
+              <Upload size={15} /> {isEditMode ? "Update" : "Add"} Assignment
             </>
           )}
         </button>
@@ -79,7 +146,6 @@ export default function CreatorAssignment() {
     >
       <Toaster position="top-center" />
 
-      {/* Course Dropdown */}
       <div>
         <Dropdown
           label="Course"
@@ -89,7 +155,6 @@ export default function CreatorAssignment() {
         />
       </div>
 
-      {/* Description */}
       <div className="flex flex-col">
         <label className="font-bold">Description</label>
         <textarea
@@ -140,20 +205,20 @@ export default function CreatorAssignment() {
         <PlusCircle color="#0A32F8" /> Add Files
       </label>
 
-      {/* File Previews */}
-      <CreatorFilesPreview files={files} removeFile={removeFile} />
+      <CreatorFilesPreview files={previewFiles} removeFile={removeFile} />
 
       {/* Mobile Button */}
       <button
-        onClick={uploadAssignment}
-        disabled={isLoading}
+        onClick={handleUploadAssignment} // Use custom upload function
+        disabled={isLoading || fetching}
         className="flex sm:hidden justify-center items-center px-4 py-3 text-white bg-[#0A32F8] gap-3 rounded w-full mx-auto my-4 disabled:opacity-50"
       >
         {isLoading ? (
           "Uploading..."
         ) : (
           <>
-            <Upload size={15} /> Add Assignment
+            <Upload size={15} />
+            {isEditMode ? "Update" : "Add"} Assignment
           </>
         )}
       </button>
