@@ -39,7 +39,7 @@ export default function CreatorPage() {
     fetchAnnouncements,
     announcements,
     fetchTimetable,
-    timetable,
+    timetables,
     fetchAssignments,
     assignments,
     resources,
@@ -67,10 +67,10 @@ export default function CreatorPage() {
           console.log("Fetching Announcement in progress");
           await fetchAnnouncements();
         }
-        if (activeType === "timetable" && timetable.length === 0) {
+        if (activeType === "timetable" && timetables.length === 0) {
           console.log("Fetching Timetable in progress");
           await fetchTimetable();
-          console.log('Second :',timetable);
+          console.log('Second :',timetables);
         }
         if (activeType === "assignments" && assignments.length === 0) {
           await fetchAssignments();
@@ -96,7 +96,7 @@ export default function CreatorPage() {
     assignments.length,
     courses.length,
     announcements.length,
-    timetable?.length,
+    timetables?.length,
     resources?.length
 
   ]);
@@ -108,8 +108,8 @@ export default function CreatorPage() {
       console.log("Found Announcements", announcements);
       setItems(announcements || []);
     } else if (activeType === "timetable") {
-      console.log("Found Timetable (New)", timetable);
-      setItems(timetable);
+      console.log("Found Timetable (New)", timetables);
+      setItems(timetables);
     } else if (activeType === "assignments") {
       console.log("Found Assignments (New)", assignments);
       setItems(assignments);
@@ -119,7 +119,7 @@ export default function CreatorPage() {
     } else {
       setItems([]);
     }
-  }, [activeType, courses, announcements,timetable, assignments, resources]);
+  }, [activeType, courses, announcements,timetables, assignments, resources]);
 
 
   const handleDelete = (type, id) => {
@@ -153,7 +153,7 @@ export default function CreatorPage() {
       />
     ));
   };
-
+ 
   const currentContentType =
     CONTENT_TYPES.find((type) => type.id === activeType)?.name || "Content";
 

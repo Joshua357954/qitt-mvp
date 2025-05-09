@@ -20,6 +20,12 @@ import {
   AlertCircle,
   ArrowLeft,
   User,
+  User2,
+  Link2,
+  FileSearch,
+  NotebookText,
+  Hammer,
+  FileQuestion,
 } from "lucide-react";
 import Link from "next/link";
 import { CONTENT_TYPES } from "./data";
@@ -168,27 +174,60 @@ export const CourseCard = ({ item, onDelete }) => (
 );
 
  
+const getResourceIcon = (type) => {
+  const lowerType = type?.toLowerCase()?.trim();
+  
+  switch(lowerType) {
+ 
+    case 'past question':
+    case 'past questions':
+      return <FileSearch className="h-4 w-4 text-purple-600" />;
+    case 'note':
+    case 'notes':
+      return <NotebookText className="h-4 w-4 text-purple-600" />;
+    case 'study tool':
+    case 'study tools':
+      return <Hammer className="h-4 w-4 text-purple-600" />;
+    default:
+      return <FileQuestion className="h-4 w-4 text-purple-600" />;
+  }
+};
 
 export const ResourceCard = ({ item, onDelete }) => (
-  <Card className="border-l-4 border-purple-500 hover:shadow-md transition-shadow">
+<Card className="border-l-4 border-purple-500 hover:shadow-md transition-shadow duration-200 group hover:border-purple-700">
     <CardHeader>
-      <div className="flex justify-between">
-        <CardTitle className="flex items-center gap-2">
-          <ExternalLink className="h-5 w-5 text-purple-600" />
-          {item.title}
+      <div className="flex justify-between items-start gap-2">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Link2 className="h-5 w-5 text-purple-600 flex-shrink-0" />
+          <p  className="hover:text-purple-700 transition-colors line-clamp-1" >
+            {item.title}
+          </p>
         </CardTitle>
         <ItemActions type="resources" id={item.id} onDelete={onDelete} />
       </div>
     </CardHeader>
-    <CardContent>   
-      <p className="text-sm text-gray-600 mb-4">Type : {item.type}</p>
-      <p className="text-sm text-gray-600 mb-4">{item.description}</p>
-      <p className="text-xs text-gray-500 mb-4">Posted by: {item.postedBy.name}</p>
+    
+    <CardContent className="space-y-3">
+      <div className="flex items-center gap-4 text-sm text-gray-600">
+        {getResourceIcon(item?.type)}
+        <span><b>Type: </b>{item.type}</span> <span><b>Course: </b>{item.course}</span>
+      </div>
+      
+      {item.description && (
+        <p className="text-sm text-gray-700 line-clamp-2">
+          {item.description}
+        </p>
+      )}
+      
+      <div className="flex items-center gap-2 text-xs text-gray-500">
+        <User2 className="h-3 w-3" />
+        <span>Posted by: {item.postedBy.name}</span>
+      </div>
     </CardContent>
 
     <ItemFooter date={fbTime(item.createdAt)} />
   </Card>
-);
+)
 
 export const NoteCard = ({ item, onDelete }) => (
   <Card className="border-l-4 border-amber-500 hover:shadow-md transition-shadow">

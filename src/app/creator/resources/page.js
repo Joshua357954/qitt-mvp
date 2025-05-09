@@ -69,11 +69,11 @@ export default function CreatorResources() {
 
   const handleSave = async () => {
     if (isEditMode) {
-      await updateResource(editId);
+      await uploadResource(editId);
     } else {
       await uploadResource();
     }
-    // router.back();
+    router.back();
   };
 
   return (

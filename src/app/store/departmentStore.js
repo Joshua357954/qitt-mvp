@@ -13,7 +13,7 @@ const useDepartmentStore = create((set, get) => ({
   // Resource states
   courses: [],
   announcements: [],
-  timetable: [],
+  timetables: [],
   assignments: [],
   resources: [],
   loading: false,
@@ -91,7 +91,7 @@ const useDepartmentStore = create((set, get) => ({
   },
 
   fetchTimetable: async () => {
-    await get().fetchContent("timetable");
+    await get().fetchContent("timetables");
   },
 
   fetchAssignments: async () => {
