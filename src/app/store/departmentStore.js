@@ -1,14 +1,21 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import useAuthStore from "./authStore";
-import { apiFetch, validateUserData, handleStoreError, handleStoreSuccess } from "@/utils/utils";
+import {
+  apiFetch,
+  validateUserData,
+  handleStoreError,
+  handleStoreSuccess,
+} from "@/utils/utils";
+import axios from "axios";
 
 const useDepartmentStore = create((set, get) => ({
   // Resource states
   courses: [],
   announcements: [],
   timetable: [],
-  assignments:[],
+  assignments: [],
+  resources: [],
   loading: false,
   error: null,
 
@@ -22,7 +29,82 @@ const useDepartmentStore = create((set, get) => ({
     timetable: "timetable",
   },
 
-  // Dynamically delete an item by ID
+  /**
+   * Reusable function to fetch content based on type
+   * @param {string} type - The type of content to fetch (e.g., "courses", "announcements", "resources")
+   * @param {object} options - Optional parameters for additional configurations
+   */
+  fetchContent: async (type, options = {}) => {
+    const { user } = useAuthStore.getState();
+    const { schoolId, departmentId, level, department_space } = user || {};
+    const spaceId = department_space?.spaceId;
+
+    // Validate user data before making the request
+    const validation = validateUserData({ schoolId, departmentId, level });
+    if (!validation.valid || (!spaceId && type !== "courses")) {
+      return handleStoreError(
+        set,
+        `Missing required user data for fetching ${type}.`
+      );
+    }
+
+    set({ loading: true, error: null });
+
+    // Dynamically set the resourceType for API request
+    const resourceType = get().resourceTypes[type] || type;
+
+    const { success, data, error } = await apiFetch(
+      "/api/space-resources/get",
+      {
+        resourceType,
+        schoolId,
+        departmentId,
+        level,
+        spaceId,
+        ...options, // Allow additional query params if needed
+      },
+      type
+    );
+
+    if (success) {
+      set({ [type]: data });
+      handleStoreSuccess(
+        set,
+        `${type.charAt(0).toUpperCase() + type.slice(1)} fetched successfully!`
+      );
+    } else {
+      handleStoreError(set, error || `Failed to fetch ${type}.`);
+    }
+
+    set({ loading: false });
+  },
+
+  /**
+   * Fetch Specific Resources
+   */
+  fetchCourses: async () => {
+    await get().fetchContent("courses");
+  },
+
+  fetchAnnouncements: async () => {
+    await get().fetchContent("announcements");
+  },
+
+  fetchTimetable: async () => {
+    await get().fetchContent("timetable");
+  },
+
+  fetchAssignments: async () => {
+    await get().fetchContent("assignments");
+  },
+
+  fetchResources: async () => {
+    await get().fetchContent("resources");
+  },
+
+  /**
+   * Dynamically delete an item by ID
+   */
   deleteItem: async (resourceType, id) => {
     try {
       const response = await axios.post("/api/space-resources/delete", {
@@ -31,6 +113,10 @@ const useDepartmentStore = create((set, get) => ({
       });
       if (response.status === 200) {
         toast.success("Resource Deleted");
+        const updatedList = get()[resourceType].filter(
+          (item) => item.id !== id
+        );
+        set({ [resourceType]: updatedList });
       } else throw new Error("Failed to delete resource");
     } catch (error) {
       toast.error(
@@ -43,21 +129,21 @@ const useDepartmentStore = create((set, get) => ({
     }
   },
 
-  // Dynamically get an item by ID, fetch data if needed
+  /**
+   * Dynamically get an item by ID, fetch data if needed
+   */
   getItem: async (type, id) => {
     const state = get();
     if (!state[type] || state[type].length === 0) {
-      const fetchFnName = `fetch${
-        type.charAt(0).toUpperCase() + type.slice(1)
-      }`;
-      const fetchFn = get()[fetchFnName];
-      if (typeof fetchFn === "function") await fetchFn(); // Fetch resource if empty
+      await get().fetchContent(type); // Fetch resource if empty
     }
     const updatedState = get();
     return updatedState[type]?.find((item) => item.id === id) || null;
   },
 
-  // Replace item in state by ID
+  /**
+   * Replace item in state by ID
+   */
   updateItem: (type, newData) => {
     const state = get();
     if (!state[type]) return;
@@ -69,148 +155,6 @@ const useDepartmentStore = create((set, get) => ({
       `${type.charAt(0).toUpperCase() + type.slice(1)} updated successfully`
     );
   },
-
-  // Fetch courses based on user info
-  fetchCourses: async () => {
-    const { user } = useAuthStore.getState();
-    const { schoolId, departmentId, level, department_space } = user || {};
-
-    const validation = validateUserData({ schoolId, departmentId, level });
-    if (!validation.valid) {
-      return handleStoreError(set, validation.message);
-    }
-
-    set({ loading: true, error: null });
-
-    const { success, data, error } = await apiFetch(
-      "/api/courses/get",
-      {
-        schoolId,
-        departmentId,
-        level,
-        spaceId: department_space?.spaceId,
-      },
-      "courses"
-    );
-
-    if (success) {
-      console.log(data.courses)
-      set({ courses: data.courses });
-      handleStoreSuccess(set, "Courses fetched successfully!");
-    } else {
-      handleStoreError(set, error || "Unknown error fetching courses.");
-    }
-
-    set({ loading: false });
-  },
-
-  // Fetch announcements based on user info
-  fetchAnnouncements: async () => {
-    const { user } = useAuthStore.getState();
-    const { schoolId, departmentId, level, department_space } = user || {};
-    const spaceId = department_space?.spaceId;
-
-    const validation = validateUserData({ schoolId, departmentId, level });
-    if (!validation.valid || !spaceId) {
-      return handleStoreError(
-        set,
-        "Missing user data for fetching announcements."
-      );
-    }
-
-    set({ loading: true, error: null });
-
-    const { success, data, error } = await apiFetch(
-      "/api/space-resources/get",
-      {
-        resourceType: "announcements",
-        spaceId,
-        schoolId,
-        departmentId,
-        level,
-      },
-      "announcements"
-    );
-
-    if (success) {
-      set({ announcements: data });
-      handleStoreSuccess(set, "Announcements fetched successfully!");
-    } else {
-      handleStoreError(set, error || "Failed to fetch announcements.");
-    }
-
-    set({ loading: false });
-  },
-
-  // Fetch timetable based on user info
-  fetchTimetable: async () => {
-    const { user } = useAuthStore.getState();
-    const { schoolId, departmentId, level, department_space } = user || {};
-    const spaceId = department_space?.spaceId;
-
-    const validation = validateUserData({ schoolId, departmentId, level });
-    if (!validation.valid || !spaceId) {
-      return handleStoreError(set, "Missing user data for fetching timetable.");
-    }
-
-    set({ loading: true, error: null });
-
-    const { success, data, error } = await apiFetch(
-      "/api/space-resources/get",
-      {
-        resourceType: "timetables",
-        spaceId,
-        schoolId,
-        departmentId,
-        level,
-      },
-      "timetable"
-    );
-
-    if (success) {
-      console.log(data)
-      set({ timetable: data });
-      handleStoreSuccess(set, "Timetable fetched successfully!");
-    } else {
-      handleStoreError(set, error || "Failed to fetch timetable.");
-    }
-
-    set({ loading: false });
-  },
-  fetchAssignments: async () => {
-    const { user } = useAuthStore.getState();
-    const { schoolId, departmentId, level, department_space } = user || {};
-  
-    const validation = validateUserData({ schoolId, departmentId, level });
-    if (!validation.valid) {
-      return handleStoreError(set, 'Pls fill in the missing fields');
-    }
-  
-    set({ loading: true, error: null });
-  
-    const { success, data, error } = await apiFetch(
-      "/api/space-resources/get",
-      {
-        schoolId,
-        departmentId,
-        level,
-        spaceId: department_space?.spaceId,
-        resourceType:'assignments'
-      },
-      "assignments"
-    );
-  
-    if (success) {
-      console.log('found assignments',data);
-      set({ assignments: data});
-      handleStoreSuccess(set, "Assignments fetched successfully!");
-    } else {
-      handleStoreError(set, error || "Unknown error fetching assignments.");
-    }
-  
-    set({ loading: false });
-  },
-  
 }));
 
 export default useDepartmentStore;

@@ -112,10 +112,10 @@ export const AssignmentCard = ({ item, onDelete }) => (
       <p className="text-sm text-gray-600 mb-3">{item.description}</p>
       <div className="flex items-center gap-2 text-sm bg-blue-50 text-blue-800 px-3 py-1.5 rounded-md w-fit">
         <AlertCircle className="h-4 w-4" />
-        Due: {new Date(fbTime(item?.dueDate)).toLocaleDateString()}
+        Due: {new Date(item?.dueDate).toLocaleDateString()}
       </div>
     </CardContent>
-    <ItemFooter date={fbTime(item?.createdAt)} />
+    <ItemFooter date={fbTime(item?.updatedAt)} />
   </Card>
 );
 
@@ -167,6 +167,8 @@ export const CourseCard = ({ item, onDelete }) => (
   </Card>
 );
 
+ 
+
 export const ResourceCard = ({ item, onDelete }) => (
   <Card className="border-l-4 border-purple-500 hover:shadow-md transition-shadow">
     <CardHeader>
@@ -178,16 +180,13 @@ export const ResourceCard = ({ item, onDelete }) => (
         <ItemActions type="resources" id={item.id} onDelete={onDelete} />
       </div>
     </CardHeader>
-    <CardContent>
+    <CardContent>   
+      <p className="text-sm text-gray-600 mb-4">Type : {item.type}</p>
       <p className="text-sm text-gray-600 mb-4">{item.description}</p>
-      <Button variant="outline" className="w-full" asChild>
-        <a href={item.url} target="_blank" rel="noopener noreferrer">
-          <ExternalLink className="h-4 w-4 mr-2" />
-          View Resource
-        </a>
-      </Button>
+      <p className="text-xs text-gray-500 mb-4">Posted by: {item.postedBy.name}</p>
     </CardContent>
-    <ItemFooter date={item.createdAt} />
+
+    <ItemFooter date={fbTime(item.createdAt)} />
   </Card>
 );
 

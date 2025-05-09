@@ -39,11 +39,7 @@ export const CONTENT_TYPES = [
       icon: <ClipboardList size={25} className="text-red-500" />,
       id: "assignments",
     },
-    {
-      name: "Notes",
-      icon: <LuNotebookText size={25} className="text-purple-500" />,
-      id: "notes",
-    },
+    
     {
       name: "Courses",
       icon: <GraduationCap size={25} className="text-blue-500" />,

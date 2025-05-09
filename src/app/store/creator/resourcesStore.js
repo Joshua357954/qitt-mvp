@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
+import toast from "react-hot-toast";
+import useAuthStore from "../authStore";
 
 const useResourceStore = create((set, get) => ({
   title: "",
@@ -7,55 +9,146 @@ const useResourceStore = create((set, get) => ({
   course: "",
   type: "",
   files: [],
+  existingFiles: [],
   isLoading: false,
+  success: false,
+  error: null,
 
-  setField: (field, value) => set({ [field]: value }),
+  // State Setters
+  setField: (field, value) =>
+    set((state) => ({ [field]: value })),
 
+  setExistingFiles: (existingFiles) => set({ existingFiles }),
+
+  // File Handlers
   addFiles: (newFiles) => {
-    const filesWithPreview = Array.from(newFiles).map((file) => ({
-      id: crypto.randomUUID(),
-      file,
-      src: URL.createObjectURL(file),
+    const uploadedFiles = Array.from(event.target.files)
+    .map((file, index) => {
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error(`${file.name} is too large. Maximum size is 10MB.`);
+        return null;
+      }
+      const objectUrl = URL.createObjectURL(file);
+      return {
+        id: `${file.name}-${Date.now()}-${index}`,
+        src: objectUrl,
+        url: objectUrl,
+        file,
+      };
+    })
+    .filter((file) => file !== null);
+
+    console.log(uploadedFiles)
+    set((state) => ({
+      files: [...state.files, ...uploadedFiles], // Fixed to add files directly to the state
     }));
-    set((state) => ({ files: [...state.files, ...filesWithPreview] }));
   },
 
-  removeFile: (id) => {
+  // Remove a file from the list (supports both existing and new files)
+  removeFile: (fileToRemove) => {
     set((state) => {
-      const updatedFiles = state.files.filter((file) => file.id !== id);
-      return { files: updatedFiles };
+      const listType = state.existingFiles.some(
+        (file) => file.url === fileToRemove.url
+      )
+        ? "existingFiles"
+        : "files";
+      toast(`Removing ${fileToRemove.url}`);
+      return {
+        [listType]: state[listType].filter(
+          (file) => file.url !== fileToRemove.url
+        ),
+      };
     });
   },
 
-  reset: () =>
-    set({ title: "", description: "", course: "", type: "", files: [] }),
+  resetFields: () =>
+    set({
+      title: "",
+      description: "",
+      course: "",
+      type: "",
+      files: [],
+      existingFiles: [],
+      success: false,
+      error: null,
+    }),
 
-  uploadResources: async () => {
-    set({ isLoading: true });
+  // Form Validation
+  isFormValid: () => {
     const { title, description, course, type, files } = get();
-
-    if (!title || !description || !course || !type || files.length === 0) {
-      alert("Please fill all fields and upload at least one file.");
-      set({ isLoading: false });
-      return;
+    
+    if (!title || !description || !course || !type) {
+      toast.error("Please fill all fields.");
+      return false;
     }
+    if (files.length === 0) {
+      const sure = confirm(
+        "Are you sure you want to continue without adding any new files?"
+      );
+      return sure;
+    }
+    return true;
+  },
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("course", course);
-    formData.append("type", type);
-    files.forEach(({ file }) => formData.append("files", file));
+  // Upload Logic
+  uploadResource: async (editId) => {
+    set({ isLoading: true });
 
     try {
-      await axios.post("/api/upload", formData, {
+      // Get current user
+      const user = useAuthStore.getState().user;
+      if (!user || !user.uid) {
+        toast.error("User not authenticated. Please log in.");
+        set({ isLoading: false });
+        return;
+      }
+
+      // Validate form
+      if (!get().isFormValid()) {
+        set({ isLoading: false });
+        return;
+      }
+
+      // Prepare data and form
+      const { title, description, course, type, files,existingFiles } = get();
+      const data = {
+        title,
+        description,
+        course,
+        type,
+        postedBy: { uid: user.uid, name: user.name },
+        spaceId: user.department_space.spaceId,
+        departmentId: user.departmentId,
+        schoolId: user.schoolId,
+        level: user.level,
+        files: existingFiles
+      };
+
+      const formData = new FormData();
+      formData.append("resourceType", "resources");
+      formData.append("data", JSON.stringify(data));
+      files.forEach(({ file }) => formData.append("newFiles", file));
+
+      // API Call
+      const endpoint = editId
+        ? "/api/space-resources/update"
+        : "/api/space-resources/create";
+
+      if (editId) formData.append("id", editId);
+
+      const response = await axios.post(endpoint, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert("Resources uploaded successfully!");
-      get().reset();
+
+      if (!response.status.toString().startsWith("2")) {
+        throw new Error("Upload failed");
+      }
+
+      toast.success("Resource uploaded successfully!");
+      get().resetFields();
     } catch (error) {
-      console.error("Upload failed:", error);
-      alert("Upload failed. Try again.");
+      toast.error("Error uploading resource.");
+      set({ error: error.message });
     } finally {
       set({ isLoading: false });
     }

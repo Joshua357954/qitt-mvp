@@ -40,8 +40,8 @@ export async function POST(req) {
 const getCollectionRef = (resourceType) => {
   const collections = {
     timetable: "timetables",
-    resource: "resources",
-    assignment: "assignments",
+    resources: "resources",
+    assignments: "assignments",
     notes: "notes",
     courses: "courses",
     announcements: "announcements",
