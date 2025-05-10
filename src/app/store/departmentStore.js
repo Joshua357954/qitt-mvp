@@ -68,6 +68,7 @@ const useDepartmentStore = create((set, get) => ({
 
     if (success) {
       set({ [type]: data });
+      console.log(data)
       handleStoreSuccess(
         set,
         `${type.charAt(0).toUpperCase() + type.slice(1)} fetched successfully!`

@@ -1,20 +1,22 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, AlertTriangle, Info, Bell } from "lucide-react";
+import { AlertTriangle, Info, Bell } from "lucide-react";
+import useDepartmentStore from "../store/departmentStore";
+import { useEffect, useState } from "react";
+import { fbTime } from "@/utils/utils";
 
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center h-full w-full">
+    <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
-const AnnouncementMessage = ({ 
-  title, 
-  message, 
-  timestamp, 
-  priority = "normal", 
-  tags = [] 
-}) => {
+const AnnouncementMessage = ({ title, message, updatedAt, priority = "normal", tags = [] }) => {
   const priorityIcons = {
     high: <AlertTriangle className="w-4 h-4 text-red-500" />,
     medium: <Bell className="w-4 h-4 text-yellow-500" />,
-    normal: <Info className="w-4 h-4 text-blue-500" />
+    normal: <Info className="w-4 h-4 text-blue-500" />,
   };
 
   return (
@@ -24,23 +26,16 @@ const AnnouncementMessage = ({
           <h3 className="font-semibold text-lg">{title}</h3>
           <div className="flex items-center gap-2">
             {priorityIcons[priority]}
-            <span className="text-sm text-gray-500 flex items-center gap-1">
-              {/* <Clock className="w-3 h-3" /> */}
-              {new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            <span className="text-sm text-gray-500">
+              {updatedAt ? new Date(fbTime(updatedAt)).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "N/A"}
             </span>
           </div>
         </div>
-        
         <p className="text-gray-700 mb-3">{message}</p>
-        
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {tags.map((tag, index) => (
-              <Badge 
-                key={index} 
-                variant="outline"
-                className="text-xs px-2 py-1"
-              >
+              <Badge key={index} variant="outline" className="text-xs px-2 py-1">
                 {tag}
               </Badge>
             ))}
@@ -51,60 +46,43 @@ const AnnouncementMessage = ({
   );
 };
 
-// Announcement section with dummy data
 const AnnouncementSection = () => {
-  const announcements = [
-    {
-      id: 1,
-      title: "Exam Schedule Update",
-      message: "The final exams for CSC 101 have been rescheduled to next week Monday. Please check the portal for the new timetable.",
-      timestamp: "2023-11-15T09:30:00",
-      priority: "high",
-      tags: ["exam", "important"]
-    },
-    {
-      id: 2,
-      title: "Departmental Meeting",
-      message: "There will be a mandatory meeting for all computer science students on Friday at 2pm in LT3.",
-      timestamp: "2023-11-14T14:15:00",
-      priority: "medium",
-      tags: ["meeting", "department"]
-    },
-    {
-      id: 3,
-      title: "Assignment Submission",
-      message: "The deadline for Data Structures assignment has been extended by 48 hours. Late submissions will still attract penalty.",
-      timestamp: "2023-11-13T16:45:00",
-      tags: ["assignment", "deadline"]
-    },
-    {
-      id: 4,
-      title: "Guest Lecture Announcement",
-      message: "We're hosting a guest lecture on AI in Healthcare by Dr. Ngozi from Google. Venue: Faculty Auditorium, Time: 10am tomorrow.",
-      timestamp: "2023-11-12T11:20:00",
-      priority: "medium",
-      tags: ["lecture", "event"]
-    }
-  ];
+  const { announcements, fetchAnnouncements } = useDepartmentStore();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // 🌟 Enhanced fetch logic with debugging
+  useEffect(() => {
+    (async () => {
+      try {
+        setError(null);
+        console.log("Fetching announcements...");
+        await fetchAnnouncements();
+        console.log("Announcements fetched:", announcements);
+      } catch (err) {
+        console.error("Fetch error:", err);
+        setError("Failed to fetch announcements. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [fetchAnnouncements]);
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="w-full h-full">
-      <h2 className="text-md sm:text-lg font-medium mb-2 flex items-center gap-2">
-        Today
-      </h2>
-      
-      <div className="space-y-4">
-        {announcements.map((announcement) => (
-          <AnnouncementMessage
-            key={announcement.id}
-            title={announcement.title}
-            message={announcement.message}
-            timestamp={announcement.timestamp}
-            priority={announcement.priority}
-            tags={announcement.tags}
-          />
-        ))}
-      </div>
+      <h2 className="text-md sm:text-lg font-medium mb-2">Today</h2>
+      {announcements.length === 0 ? (
+        <p className="text-gray-500">No announcements available.</p>
+      ) : (
+        <div className="space-y-4">
+          {announcements.map((announcement, idx) => (
+            <AnnouncementMessage key={idx} {...announcement} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

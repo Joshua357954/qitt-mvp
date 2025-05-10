@@ -1,152 +1,122 @@
 "use client";
 import { useEffect, useState } from "react";
-import PageNav from "../../components/PageNav.jsx";
 import MainLayout from "../../components/MainLayout.jsx";
-import { BsChevronLeft as Arrow } from "react-icons/bs";
-import {
-  baseUrl,
-  formatCode,
-  formatTime,
-  getCurrentDay,
-} from "../../utils/utils.js";
-import { FaChevronRight as AR, FaChevronLeft as AL } from "react-icons/fa";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image.js";
-import useTimetableStore from "../store/timetableStore.js";
+import { FaChevronRight as ArrowRight, FaChevronLeft as ArrowLeft } from "react-icons/fa";
+import Image from "next/image";
+import useDepartmentStore from "../store/departmentStore.js";
+
+const daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 
 const TimetableScreen = ({ className }) => {
-  const currentDay = getCurrentDay();
-  const [day, setDay] = useState(currentDay);
-  const [isExam, setIsExam] = useState(false);
-  const { timetable, isLoading, fetchTimetable } = useTimetableStore();
-  const [daysClases, setDaysClasses] = useState([]);
+  const currentDay = new Date()
+    .toLocaleString("en-US", { weekday: "long" })
+    .toLowerCase();
+  const [selectedDay, setSelectedDay] = useState(currentDay);
+  const [isLoading, setIsLoading] = useState(true);
+  const [groupedTimetables, setGroupedTimetables] = useState({});
+  const { timetables, fetchTimetable } = useDepartmentStore();
 
-  const examTB = [
-    {
-      monday: [
-        { date: "4th", time: "9am - 12pm", course: "STA 160" },
-        { date: "4th", time: "9am - 12pm", course: "STA 160" },
-      ],
-    },
-    { tuesday: [{ date: "6th", time: "9am - 12pm", course: "GES 102" }] },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        console.log("📡 Fetching timetable data...");
+        await fetchTimetable();
+        
+        if (timetables.length > 0 && timetables[0]?.timetable) {
+          console.log("✅ Timetable data fetched successfully.");
+          const structuredTimetables = daysOfWeek.reduce((accumulator, day) => {
+            accumulator[day] = timetables[0].timetable.filter(
+              (entry) => entry.day.toLowerCase() === day
+            );
+            return accumulator;
+          }, {});
 
-  const courses = [
-    {
-      time: "8:00am - 10:00am",
-      color: "bg-red-300",
-      course: "CHEM 132",
-      venue: "MBA 2",
-    },
-    {
-      time: "1:00pm - 3:00pm ",
-      color: "bg-orange-300",
-      course: "MATH 125",
-      venue: "FOS ",
-    },
-    {
-      time: "3:00pm - 4:00pm",
-      color: "bg-yellow-400",
-      course: "STA 116",
-      venue: "MBA 1",
-    },
-    {
-      time: "4:00pm - 6:00pm",
-      color: "bg-green-400",
-      course: "CSC 132",
-      venue: "NSA",
-    },
-  ];
+          setGroupedTimetables(structuredTimetables); // State update
+        } else {
+          console.warn("⚠️ No timetable data found.");
+        }
+      } catch (error) {
+        console.error("❌ Error fetching timetable data: ", error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+    fetchData();
+  }, [fetchTimetable, timetables.length]);
+
+  const SkeletonLoader = () => (
+    <div className="animate-pulse grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+      {Array(6)
+        .fill(null)
+        .map((_, index) => (
+          <div
+            key={index}
+            className="p-4 border rounded-sm border-gray-300 flex flex-col gap-2"
+          >
+            <div className="w-6 h-6 bg-gray-300 rounded-md"></div>
+            <div className="w-3/4 h-2 bg-gray-300 rounded"></div>
+            <div className="w-1/2 h-2 bg-gray-300 rounded"></div>
+            <div className="w-full h-2 bg-gray-300 rounded"></div>
+          </div>
+        ))}
+    </div>
+  );
 
   return (
     <MainLayout route="Timetable">
       <div className="w-full h-[96%] flex flex-col justify-center">
-        {/*
-			<div onClick={() => setIsExam(!isExam)} className="bg-white text-sm md:text-md font-bold px-2 py-3 flex items-center gap-2 rounded-md text-black">
-			{isExam ? <AL className="font-extrabold"/> : "" } {!isExam ? 'Exam' : 'Lecture'} {!isExam ? <AR className="font-extrabold"/>: ""} 
-			</div>
-			*/}
-
-        <div className="w-full transition-all ease-in-out h-full flex flex-col items-center pt-5">
-          {isExam && (
-            <div className="mx-auto flex items-center gap-4 text-sm mb-4 bg-black text-white p-2 rounded font-bold">
-              <p className="bg-white text-black px-2 py-1">Week 1</p>
-              <p>Week 2</p>
-            </div>
-          )}
-
-          <div className="w-full justify-start sm:justify-center border rounded-sm border-gray-500 flex overflow-x-auto h-20 sm:gap-20 gap-2 mb-5 p-2 py-3 sm:p-3">
-            {days.map((item, idx) => (
+        <div className="w-full flex flex-col items-center pt-5 px-6">
+          <div className="w-full border rounded-sm border-gray-500 flex justify-between overflow-x-auto h-20 gap-2 mb-5 p-2 py-3">
+            {daysOfWeek.map((day, index) => (
               <div
-                key={idx}
-                onClick={() => setDay(item)}
-                className={`capitalize flex text-gray-500 select-none justify-center px-4 font-bold text-sm items-center ${
-                  item === day
-                    ? "bg-[#5773FF]   text-white border-[0px] border-black"
-                    : "bg-blue-5"
-                } rounded `}
+                key={index}
+                onClick={() => setSelectedDay(day)}
+                className={`capitalize flex justify-center px-4 font-bold text-sm items-center ${
+                  day === selectedDay
+                    ? "bg-[#5773FF] text-white"
+                    : "bg-gray-200 text-gray-500"
+                } rounded cursor-pointer transition duration-300`}
               >
-                {item}
+                {day}
               </div>
             ))}
           </div>
 
           <div className="px-2 flex flex-wrap justify-center gap-5 items-center w-full">
-            {timetable && timetable.length > 0 ? (
-              timetable.map((dayItem, dayIdx) => {
-                const currentDay = Object.keys(dayItem)[0];
-                const dayClasses = Object.values(dayItem);
-
-                if (currentDay.toLowerCase() === day.toLowerCase()) {
-                  return dayClasses.map((classItem, classIdx) =>
-                    classItem.map((item, idx) => (
-                      //   <div
-                      //     key={idx}
-                      //     className="flex w-full sm:w-[70%] mt-2 justify-between bg-gray-100 py-1 px-2"
-                      //   >
-                      //     <p className="w-[24%]">{formatTime(item.time)}</p>
-                      //     <span
-                      //       className={`bg-slate-700 rounded h-22 w-[5px]`}
-                      //     ></span>
-                      //     <div className="flex flex-col w-[40%]">
-                      //       <p className="font-bold">{formatCode(item.course)}</p>
-                      //       <p className="font-light truncate">{item.venue}</p>
-                      //     </div>
-                      //   </div>
-                      <div
-                        className="p-4 border items-center rounded-sm sm:min-w-40 min-w-36 border-gray-300 flex flex-col gap-1"
-                        key={idx}
-                      >
-                        <Image
-                          src="/t-book.png"
-                          alt="book-icon"
-                          width={25}
-                          height={25}
-                          unoptimized
-                        />
-                        <p className="font-bold">{formatCode(item.course)}</p>
-                        <p className="text-[#5773FF] text-sm font-semibold">
-                          {formatTime(item.time)}
-                        </p>
-                        <p>{item.venue}</p>
-                      </div>
-                    ))
-                  );
-                }
-                return null;
-              })
+            {isLoading ? (
+              <SkeletonLoader />
+            ) : groupedTimetables[selectedDay] &&
+              groupedTimetables[selectedDay].length > 0 ? (
+              groupedTimetables[selectedDay].map((classInfo, index) => (
+                <div
+                  className="p-4 border items-center rounded-sm sm:min-w-40 min-w-36 border-gray-300 flex flex-col gap-1 transition hover:shadow-lg"
+                  key={index}
+                >
+                  <Image
+                    src="/t-book.png"
+                    alt="book-icon"
+                    width={25}
+                    height={25}
+                    unoptimized
+                  />
+                  <p className="font-bold">{classInfo.course}</p>
+                  <p className="text-[#5773FF] text-sm font-semibold">
+                    {classInfo.start} - {classInfo.end}
+                  </p>
+                  <p>{classInfo.venue}</p>
+                </div>
+              ))
             ) : (
               <div className="w-full text-center mt-4 text-gray-600">
-                📅 No timetable entries found. Feel free to let us know <br />
+                📅 No classes scheduled for {selectedDay}.<br />
                 <a
                   href="https://api.whatsapp.com/send?phone=+2349034954069&text=Hi,%20please,%20I%20want%20to%20add/update%20my%20timetable."
                   target="_blank"
                   className="text-blue-500"
                 >
-                  Click here to for a quick chat
+                  Click here for a quick chat
                 </a>
               </div>
             )}
@@ -156,25 +126,5 @@ const TimetableScreen = ({ className }) => {
     </MainLayout>
   );
 };
-
-// const carousel = document.querySelector('.carousel');
-// const container = document.querySelector('.carousel-container');
-// const slides = document.querySelectorAll('.carousel-slide');
-
-// let startX, isDragging = false, currentIndex = 0, translateX = 0;
-
-// carousel.addEventListener('touchstart', (e) => (isDragging = true, startX = e.touches[0].clientX));
-// carousel.addEventListener('touchmove', (e) => isDragging && (translateX += e.touches[0].clientX - startX, container.style.transform = `translateX(${translateX}px)`, startX = e.touches[0].clientX));
-// carousel.addEventListener('touchend', () => {
-//     if (!isDragging) return;
-//     isDragging = false;
-//     const threshold = 100, slideWidth = slides[0].offsetWidth;
-//     currentIndex += (translateX / slideWidth > 0.5) ? -1 : (translateX / slideWidth < -0.5) ? 1 : 0;
-//     currentIndex = Math.min(Math.max(currentIndex, 0), slides.length - 1);
-//     translateX = -currentIndex * slideWidth;
-//     container.style.transform = `translateX(${translateX}px)`;
-// });
-
-// window.addEventListener('resize', () => (translateX = -currentIndex * slides[0].offsetWidth, container.style.transform = `translateX(${translateX}px)`));
 
 export default TimetableScreen;
