@@ -79,6 +79,7 @@ const handleRequestBody = async (req, contentType) => {
     const formData = await req.formData();
     resourceType = formData.get("resourceType");
     id = formData.get("id");
+    newFiles = formData.getAll("newFiles");
 
     try {
       data = JSON.parse(formData.get("data"));
@@ -87,7 +88,7 @@ const handleRequestBody = async (req, contentType) => {
       throw new Error("Invalid JSON format for 'data'");
     }
 
-    newFiles = formData.getAll("newFiles");
+    
   }
 
   return { resourceType, id, data, newFiles };
