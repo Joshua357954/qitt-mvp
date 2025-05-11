@@ -4,68 +4,69 @@ import { useSearchParams } from "next/navigation.js";
 import { Suspense, useState, useEffect } from "react";
 import FileGrid from "@/components/FileGrid";
 import useDepartmentStore from "@/app/store/departmentStore";
+import { fbTime } from "@/utils/utils";
 
-const AssignmentDetails = () => {
+const ResourceDetails = () => {
   const searchParams = useSearchParams();
-  const assignmentId = searchParams.get("id") || "No assignment ID provided";
+  const resourceId = searchParams.get("id") || "No resource ID provided";
 
-  const [assignment, setAssignment] = useState({});
+  const [resource, setResource] = useState({});
   const [loading, setLoading] = useState(true);
   const { getItem } = useDepartmentStore();
 
   useEffect(() => {
     const findOne = async () => {
       setLoading(true);
-      const found = await getItem("assignments", assignmentId);
-      setAssignment(found);
+      const found = await getItem("resources", resourceId);
+      setResource(found);
       setLoading(false);
       console.log("Found : ", found);
     };
-    if (assignmentId) {
+    if (resourceId) {
       findOne();
     }
-  }, [assignmentId]);
+  }, [resourceId]);
 
   if (loading) {
-    return <div>Loading...</div>; // You can replace this with a spinner or skeleton loader
+    return <div>Loading...</div>;
   }
 
   return (
-    <MainLayout route={assignment?.course}>
+    <MainLayout route={resource?.course}>
       <div className="flex justify-center w-full flex-col h-[91%] sm:h-[87%] py-4">
         <div className="w-full sm:w-[60%] h-full px-2">
           <div className="flex items-center gap-x-2 pt-3">
-            <p className="font-light text-black"> Course : </p>
+            <p className="font-light text-black"> Title : </p>
             <h2 className="text-lg font-semibold text-gray-800">
-              {assignment?.course}
+              {resource?.title}
             </h2>
           </div>
 
           <div className="flex items-center gap-x-2 pt-3">
-            <p className="font-light text-black"> Date Given : </p>
+            <p className="font-light text-black"> Author : </p>
             <h2 className="text-lg font-semibold text-gray-800">
-              {assignment?.dateGiven}
+              {resource?.postedBy.name}
             </h2>
           </div>
 
           <div className="flex items-center gap-x-2 pt-3">
-            <p className="font-light text-black"> Submission Date : </p>
+            <p className="font-light text-black"> Updated : </p>
             <h2 className="text-lg font-semibold text-gray-800">
-              {assignment?.dueDate}
+              {new Date(fbTime(resource?.updatedAt)).toLocaleDateString()}
             </h2>
           </div>
         </div>
 
         <div className="w-[98.5%] mx-auto my-5 bg-gray-300 h-[3px]"></div>
         <h1 className="text-[#0A32F8] ml-2 font-medium">Description :</h1>
-        <p className="px-2 text-semibold mt-3">{assignment?.description}</p>
+        <p className="px-2 text-semibold mt-3">{resource?.description}</p>
         <div className="ml-2 w-2/3 sm:w-1/2">
-          {/* Photo Grid */}
-          <FileGrid files={assignment.files} />
+          {/* File Grid */}
+          <FileGrid files={resource.files} />
         </div>
       </div>
     </MainLayout>
   );
 };
 
-export default AssignmentDetails;
+export default ResourceDetails;

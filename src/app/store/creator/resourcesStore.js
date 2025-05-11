@@ -22,8 +22,7 @@ const useResourceStore = create((set, get) => ({
 
   // File Handlers
   addFiles: (newFiles) => {
-    const uploadedFiles = Array.from(event.target.files)
-    .map((file, index) => {
+    const uploadedFiles = Array.from(newFiles).map((file, index) => {
       if (file.size > 10 * 1024 * 1024) {
         toast.error(`${file.name} is too large. Maximum size is 10MB.`);
         return null;
@@ -35,14 +34,12 @@ const useResourceStore = create((set, get) => ({
         url: objectUrl,
         file,
       };
-    })
-    .filter((file) => file !== null);
-
-    console.log(uploadedFiles)
+    }).filter((file) => file !== null);
+  
     set((state) => ({
-      files: [...state.files, ...uploadedFiles], // Fixed to add files directly to the state
+      files: [...state.files, ...uploadedFiles],
     }));
-  },
+  }, 
 
   // Remove a file from the list (supports both existing and new files)
   removeFile: (fileToRemove) => {

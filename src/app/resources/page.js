@@ -47,7 +47,7 @@ const ResourcesCard = ({ resource }) => {
     <Card className="hover:shadow-md transition-shadow h-full flex flex-col border border-gray-200 rounded-lg">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start gap-2">
-          <CardTitle className="text-lg line-clamp-1 font-medium">
+          <CardTitle className="text-lg line-clamp-1 font-medium capitalize">
             {resource.title}
           </CardTitle>
           <Badge
@@ -77,8 +77,7 @@ const ResourcesCard = ({ resource }) => {
       <CardFooter className="flex justify-end pt-2">
         <Button variant="outline" size="sm" asChild className="h-8">
           <a 
-            href={fileUrl} 
-            target="_blank" 
+            href={`/resources/details?id=${resource?.id}`} 
             rel="noopener noreferrer" 
             className="flex items-center gap-1 text-sm"
           >
@@ -93,7 +92,7 @@ const ResourcesCard = ({ resource }) => {
 
 const LoadingCard = () => {
   return (
-    <div className="border border-gray-200 rounded-lg p-4 h-full flex flex-col animate-pulse">
+    <div className="border border-gray-200 rounded-lg p-4 h-full flex flex-col animate-pulse w-full">
       <div className="flex justify-between items-start gap-2 mb-3">
         <div className="h-6 bg-gray-200 rounded w-3/4"></div>
         <div className="h-5 bg-gray-200 rounded w-16"></div>
@@ -142,7 +141,7 @@ const Resources = () => {
 
   return (
     <MainLayout route="Resources">
-      <div className="px-4 sm:px-6 py-4 mx-auto">
+      <div className="px-4 sm:px-6 py-4 ">
         {/* Category Filters */}
         <div className="mb-4 overflow-x-auto pb-2">
           <div className="flex gap-2 w-max">
@@ -198,7 +197,7 @@ const Resources = () => {
         </div>
 
         {/* Resources Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
           {loading ? (
             Array.from({ length: 8 }).map((_, index) => (
               <LoadingCard key={index} />
