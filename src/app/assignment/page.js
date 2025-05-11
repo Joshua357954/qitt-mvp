@@ -53,7 +53,7 @@ const AssignmentCardSkeleton = () => {
 const SkeletonLoader = () => (
   <div className="space-y-4 p-4">
     {[1, 2, 3].map((_, idx) => (
-      <AssignmentCardSkeleton />
+      <AssignmentCardSkeleton key={idx}/>
     ))}
   </div>
 );
