@@ -1,160 +1,231 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  PiEye,
+  PiCalendar,
+  PiUser,
+} from "react-icons/pi";
 import {
   Card,
   CardHeader,
   CardTitle,
+  CardDescription,
   CardContent,
+  CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import useDepartmentStore from "@/app/store/departmentStore.js";
 import MainLayout from "@/components/MainLayout.jsx";
+import { fbTime, fDate } from "@/utils/utils";
 
-const ResourceTypesLoadingSkeleton = () => {
+const typeColors = {
+  note: "bg-green-500",
+  "past question": "bg-blue-500",
+  'study guide': "bg-purple-500",
+  other: "bg-gray-500",
+};
+
+const formatDate = (dateString) => {
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  return new Date(dateString).toLocaleDateString("en-US", options);
+};
+
+const ResourcesCard = ({ resource }) => {
+  const fileUrl =
+    typeof resource.files[0] === "string"
+      ? resource.files[0]
+      : resource.files[0]?.url ?? "#";
+
   return (
-    <MainLayout route="Resource Types">
-      <div className="px-4 sm:px-6 py-4 mx-auto">
-        {/* Header Loading */}
-        <div className="mb-6 animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+    <Card className="hover:shadow-md transition-shadow h-full flex flex-col border border-gray-200 rounded-lg">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-start gap-2">
+          <CardTitle className="text-lg line-clamp-1 font-medium">
+            {resource.title}
+          </CardTitle>
+          <Badge
+            className={`${
+              typeColors[resource?.type] || "bg-gray-500"
+            } text-white shrink-0 text-xs`}
+          >
+            {resource.type}
+          </Badge>
         </div>
-
-        {/* Type Filters Loading */}
-        <div className="mb-6 overflow-x-auto pb-2 animate-pulse">
-          <div className="flex gap-2 w-max">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="h-8 bg-gray-200 rounded w-24"></div>
-            ))}
+        <CardDescription className="mt-1 line-clamp-2 text-sm text-gray-600">
+          {resource.description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex-grow">
+        <div className="flex flex-col gap-2 text-xs">
+          <div className="flex items-center gap-2 text-gray-600">
+            <PiUser className="h-3 w-3" />
+            <span>{resource?.postedBy.name}</span>
+          </div>
+          <div className="flex items-center gap-2 text-gray-600">
+            <PiCalendar className="h-3 w-3" />
+            <span>{new Date(fbTime(resource?.updatedAt)).toLocaleDateString()}</span>
           </div>
         </div>
-
-        {/* Resource Type Cards Loading */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((item) => (
-            <div key={item} className="border border-gray-200 rounded-lg p-4 h-full animate-pulse">
-              <div className="flex justify-between items-center mb-3">
-                <div className="h-6 bg-gray-200 rounded w-16"></div>
-                <div className="h-5 bg-gray-200 rounded w-8"></div>
-              </div>
-              <div className="space-y-2">
-                <div className="h-4 bg-gray-200 rounded w-full"></div>
-                <div className="h-4 bg-gray-200 rounded w-4/5"></div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Resources List Loading */}
-        <div className="mt-8 animate-pulse">
-          <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="bg-gray-50 rounded-lg p-8">
-            <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
-          </div>
-        </div>
-      </div>
-    </MainLayout>
+      </CardContent>
+      <CardFooter className="flex justify-end pt-2">
+        <Button variant="outline" size="sm" asChild className="h-8">
+          <a 
+            href={fileUrl} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="flex items-center gap-1 text-sm"
+          >
+            <PiEye className="h-3 w-3" />
+            <span>View</span>
+          </a>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 
-const ResourceTypesSkeleton = () => {
-  const [activeType, setActiveType] = useState("all");
-  
-  // Mock data for resource types
-  const resourceTypes = [
-    { type: "note", count: 124, description: "Lecture notes and summaries" },
-    { type: "past question", count: 89, description: "Previous exam questions" },
-    { type: "study guide", count: 42, description: "Study materials and guides" },
-    { type: "other", count: 15, description: "Miscellaneous resources" },
-  ];
+const LoadingCard = () => {
+  return (
+    <div className="border border-gray-200 rounded-lg p-4 h-full flex flex-col animate-pulse">
+      <div className="flex justify-between items-start gap-2 mb-3">
+        <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+        <div className="h-5 bg-gray-200 rounded w-16"></div>
+      </div>
+      <div className="space-y-2 mb-4">
+        <div className="h-4 bg-gray-200 rounded w-full"></div>
+        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+      </div>
+      <div className="mt-auto space-y-2">
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 bg-gray-200 rounded-full"></div>
+          <div className="h-3 bg-gray-200 rounded w-20"></div>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 bg-gray-200 rounded-full"></div>
+          <div className="h-3 bg-gray-200 rounded w-24"></div>
+        </div>
+      </div>
+      <div className="flex justify-end mt-4">
+        <div className="h-8 bg-gray-200 rounded w-16"></div>
+      </div>
+    </div>
+  );
+};
 
-  const typeColors = {
-    note: "bg-green-500",
-    "past question": "bg-blue-500",
-    'study guide': "bg-purple-500",
-    other: "bg-gray-500",
-  };
+const Resources = () => {
+  const { resources, loading, fetchResources } = useDepartmentStore();
+  const [resourceName, setResource] = useState("all");
+  const [selectedCourse, setSelectedCourse] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await fetchResources();
+      } catch (error) {
+        console.error("❌ Error fetching resources: ", error);
+      }
+    };
+
+    fetchData();
+  }, [fetchResources]);
+
+  // Extract categories and courses for filtering
+  const categories = Array.from(new Set(resources?.map((r) => r.type) || []));
+  const courses = Array.from(new Set(resources?.map((r) => r.course) || []));
 
   return (
-    <MainLayout route="Resource Types">
+    <MainLayout route="Resources">
       <div className="px-4 sm:px-6 py-4 mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Resource Types</h1>
-          <p className="text-gray-600 mt-2">
-            Browse resources by category and access relevant materials
-          </p>
-        </div>
-
-        {/* Type Filters */}
-        <div className="mb-6 overflow-x-auto pb-2">
+        {/* Category Filters */}
+        <div className="mb-4 overflow-x-auto pb-2">
           <div className="flex gap-2 w-max">
             <Button
-              variant={activeType === "all" ? "default" : "outline"}
-              onClick={() => setActiveType("all")}
+              variant={resourceName === "all" ? "default" : "outline"}
+              onClick={() => setResource("all")}
               className="whitespace-nowrap text-sm px-3 py-1 h-8"
             >
-              All Resources
+              All
             </Button>
-            {resourceTypes.map(({ type, count }) => (
+            {categories.map((category) => (
               <Button
-                key={type}
-                variant={activeType === type ? "default" : "outline"}
-                onClick={() => setActiveType(type)}
+                key={category}
+                variant={resourceName === category ? "default" : "outline"}
+                onClick={() => setResource(category)}
                 className="whitespace-nowrap text-sm px-3 py-1 h-8"
               >
-                {type} ({count})
+                {category}
               </Button>
             ))}
           </div>
         </div>
 
-        {/* Resource Type Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {resourceTypes.map(({ type, count, description }) => (
-            <Card 
-              key={type} 
-              className={`cursor-pointer transition-all hover:shadow-md ${
-                activeType === type ? "ring-2 ring-primary" : ""
-              }`}
-              onClick={() => setActiveType(type)}
-            >
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-lg capitalize">
-                    {type}
-                  </CardTitle>
-                  <Badge
-                    className={`${
-                      typeColors[type] || "bg-gray-500"
-                    } text-white`}
-                  >
-                    {count}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600">{description}</p>
-              </CardContent>
-            </Card>
-          ))}
+        {/* Course Dropdown */}
+        <div className="mb-6">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full sm:w-48 h-9 text-sm"
+              >
+                {selectedCourse || "Filter by Course"}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 max-h-60 overflow-y-auto">
+              <DropdownMenuItem 
+                onClick={() => setSelectedCourse("")}
+                className="text-sm"
+              >
+                All Courses
+              </DropdownMenuItem>
+              {courses?.map((course) => (
+                <DropdownMenuItem
+                  key={course}
+                  onClick={() => setSelectedCourse(course)}
+                  className="text-sm"
+                >
+                  {course}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
-        {/* Resources List (would be filtered by activeType) */}
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">
-            {activeType === "all" ? "All Resources" : `${activeType}s`}
-          </h2>
-          {/* You would render filtered resources here */}
-          <div className="bg-gray-50 rounded-lg p-8 text-center">
-            <p className="text-gray-500">
-              Resources of type "{activeType}" would appear here
-            </p>
-          </div>
+        {/* Resources Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {loading ? (
+            Array.from({ length: 8 }).map((_, index) => (
+              <LoadingCard key={index} />
+            ))
+          ) : resources?.filter(
+              (resource) =>
+                (resourceName === "all" || resource.type === resourceName) &&
+                (selectedCourse === "" || resource.course === selectedCourse)
+            ).length > 0 ? (
+            resources
+              .filter(
+                (resource) =>
+                  (resourceName === "all" || resource.type === resourceName) &&
+                  (selectedCourse === "" || resource.course === selectedCourse)
+              )
+              .map((resource) => (
+                <ResourcesCard key={resource._id || resource.title} resource={resource} />
+              ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-500">No resources found matching your filters</p>
+            </div>
+          )}
         </div>
       </div>
     </MainLayout>
   );
 };
 
-export default ResourceTypesSkeleton;
+export default Resources;
