@@ -110,14 +110,7 @@ const TimetableScreen = ({ className }) => {
               ))
             ) : (
               <div className="w-full text-center mt-4 text-gray-600">
-                📅 No classes scheduled for {selectedDay}.<br />
-                <a
-                  href="https://api.whatsapp.com/send?phone=+2349034954069&text=Hi,%20please,%20I%20want%20to%20add/update%20my%20timetable."
-                  target="_blank"
-                  className="text-blue-500"
-                >
-                  Click here for a quick chat
-                </a>
+                📅 No classes scheduled for {selectedDay}.
               </div>
             )}
           </div>

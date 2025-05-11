@@ -187,7 +187,7 @@ export default function CreatorPage() {
         </div>
 
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold capitalize">{activeType}</h2>
+          <h2 className="text-2xl font-bold capitalize">{activeType.toLowerCase() === 'announcements'? 'Notice': activeType}</h2>
           <Button asChild className="bg-blue-800">
             <Link href={`/creator/${activeType}/`}>
               <Plus className="h-4 w-4 mr-2" />
