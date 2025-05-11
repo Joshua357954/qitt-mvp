@@ -24,7 +24,8 @@ const useResourceStore = create((set, get) => ({
   addFiles: (newFiles) => {
     const uploadedFiles = Array.from(newFiles).map((file, index) => {
       if (file.size > 10 * 1024 * 1024) {
-        toast.error(`${file.name} is too large. Maximum size is 10MB.`);
+        toast.error(`${file.name} is too large. Maximum size is 10MB 
+          `);
         return null;
       }
       const objectUrl = URL.createObjectURL(file);
