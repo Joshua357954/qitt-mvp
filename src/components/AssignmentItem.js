@@ -47,7 +47,7 @@ const AssignmentCard = ({ idx, item, courseCategory }) => {
               return (
                 <Link
                   key={id}
-                  href={`/assignment/details?course=${courseCategory}&dateGiven=${dateGiven}&deadline=${formattedDeadline}&content=${miniItem?.content}`}
+                  href={`/assignment/details?id=${miniItem.id}`}
                   className={`text-gray-700 hover:text-gray-800 text-sm sm:text-md px-2 py-1 gap-x-1 mt-[2px] ${
                     isDateInPast(formattedDeadline)
                       ? "bg-red-400 hover:bg-red-500"
