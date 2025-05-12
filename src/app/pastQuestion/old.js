@@ -124,6 +124,3 @@ const PastQuestion = ({ className }) => {
 };
 
 export default PastQuestion;
-
-
-

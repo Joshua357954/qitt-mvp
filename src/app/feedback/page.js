@@ -1,26 +1,32 @@
 "use client";
 import React, { useState } from "react";
-import { BsSend as Chat } from "react-icons/bs";
 import PageNav from "../../components/PageNav.jsx";
-import axios from "axios";
 import { BsFillEmojiSmileFill as Smile } from "react-icons/bs";
 import { BsFillEmojiNeutralFill as Neutral } from "react-icons/bs";
 import { BsFillEmojiFrownFill as Sad } from "react-icons/bs";
-import { useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
+import useAuthStore from "../store/authStore.js";
 
 const FeedbackScreen = () => {
+  // Minimum length for feedback text
   const minLength = 12;
+
+  // State variables
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState(null);
-  const userData = useSelector((state) => state.user);
 
+  // Destructure user data from the store
+  const { user: userData } = useAuthStore();
+
+  // Function to handle emoji selection
   const handleEmojiClick = (emoji) => {
     setSelectedEmoji(emoji);
   };
 
+  // Function to send feedback to Sheety API
   const sendFeedback = async () => {
+    // Input validation
     if (!text.trim()) {
       return toast.error("Please Write A Review", {
         icon: "⚠️",
@@ -33,37 +39,65 @@ const FeedbackScreen = () => {
       });
     }
 
-    const url =
-      "https://api.sheety.co/155adde26f27dac3cd7ad0a9ca54cbd7/qittApp/feedback";
+    // Data structure for the feedback
     const feedbackData = {
-      emoji: selectedEmoji || "No Emoji Selected",
+      experience: selectedEmoji || "No Emoji Selected",
       feedback: text.trim(),
-      username: userData.name || "QITT",
-      email: userData.email || "1",
-      department: userData.department || "KIT",
+      name: userData?.name || "QITT",
+      email: userData?.email,
+      department: userData?.department || "KIT",
     };
 
+    // API endpoint for Sheety
+    const url =
+      "https://api.sheety.co/8b35da8ed66eeb5e24fa4b4c111ade84/qittAppFeedbacks/sheet1";
+
+    // Set loading to true before API call
     setLoading(true);
+
     try {
-      await axios.post(url, { feedback: feedbackData });
-      setText("");
-      setSelectedEmoji(null);
-      toast.success("Feedback Sent 💌");
+      // Sending data to Sheety
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sheet1: feedbackData,
+        }),
+      });
+
+      // Handling API response
+      if (response.ok) {
+        const json = await response.json();
+        console.log("Feedback Response:", json.sheet1);
+        toast.success("Feedback Sent 💌");
+        // Clear the form after successful submission
+        setText("");
+        setSelectedEmoji(null);
+      } else {
+        throw new Error("Failed to send feedback. Please try again.");
+      }
     } catch (error) {
       console.error("Error:", error.message);
       toast.error("Error sending feedback 🚫");
+    } finally {
+      // Set loading back to false
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
     <div className="w-full h-full">
       <PageNav url="Feedback" />
+
       <div className="bg-blue-20 w-full sm:w-1/3 px-9 sm:px-0 h-full bg-gray-5000 mx-auto gap-10 flex-col justify-around flex pt-5">
         <div>
           <h1 className="text-lg font-semibold mb-4">
             How Satisfied Are You With Qitt?
           </h1>
+
+          {/* Emoji Selection */}
           <div className="flex justify-around w-full">
             <Sad
               size={35}
@@ -92,12 +126,16 @@ const FeedbackScreen = () => {
             />
           </div>
         </div>
+
+        {/* Textarea for feedback */}
         <textarea
           className="w-full p-2 text-md border h-32 border-black resize-none rounded-sm"
           placeholder="Tell us more!"
           value={text}
           onChange={(e) => setText(e.target.value)}
         ></textarea>
+
+        {/* Submit button */}
         <button
           className="bg-blue-700 text-white py-3 flex font-bold justify-center items-center rounded-sm"
           onClick={sendFeedback}
@@ -105,6 +143,7 @@ const FeedbackScreen = () => {
         >
           {loading ? "Sending..." : "Share Feedback"}
         </button>
+
         <Toaster />
       </div>
     </div>
