@@ -92,7 +92,7 @@ const ResourcesCard = ({ resource }) => {
 
 const LoadingCard = () => {
   return (
-    <div className="border border-gray-200 rounded-lg p-4 h-full flex flex-col animate-pulse w-full">
+    <div className="border border-gray-200 rounded-lg p-4 h-full flex flex-col animate-pulse w-full mx-auto">
       <div className="flex justify-between items-start gap-2 mb-3">
         <div className="h-6 bg-gray-200 rounded w-3/4"></div>
         <div className="h-5 bg-gray-200 rounded w-16"></div>
