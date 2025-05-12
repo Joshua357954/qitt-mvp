@@ -70,10 +70,15 @@ export default function CreatorResources() {
   const handleSave = async () => {
     if (isEditMode) {
       await uploadResource(editId);
+      router.back()
     } else {
       await uploadResource();
+      setField('');
+      setField('');
+      setField('');
+      setField('');
+      setExistingFiles([]);
     }
-    router.back();
   };
 
   return (

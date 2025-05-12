@@ -133,6 +133,7 @@ export default function CreatorCourses() {
       if (isEditMode) {
         await uploadCourses(editId);
         toast.success("Course updated successfully");
+        router.back()
       } else {
         await uploadCourses();
         toast.success("Course created successfully");

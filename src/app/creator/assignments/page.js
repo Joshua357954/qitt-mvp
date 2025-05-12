@@ -13,7 +13,7 @@ import useAssignmentStore from "@/app/store/creator/assignmentStore";
 export default function CreatorAssignment() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const editId = searchParams.get("editId");
+  const editId = searchParams.get("editId") || '';
   const isEditMode = Boolean(editId);
 
   const [assignment, setAssignment] = useState(null);
@@ -126,8 +126,20 @@ export default function CreatorAssignment() {
 
   // Handle assignment upload
   const handleUploadAssignment = async () => {
-    await uploadAssignment(editId);
-    router.back()
+    try {
+      await uploadAssignment(editId);
+      if (isEditMode) {
+        router.back(); // if updating
+      } else {
+        setCourse("");
+        setDescription("");
+        setDateGiven("");
+        setDueDate("");
+        setPreviewFiles([])
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -166,7 +178,7 @@ export default function CreatorAssignment() {
           onChange={(e) => setDescription(e.target.value)}
         />
       </div>
-    
+
       <div className="flex justify-between w-full">
         <input
           type="date"

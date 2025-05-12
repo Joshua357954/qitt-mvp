@@ -54,6 +54,15 @@ export default function CreatorTimetable() {
 
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 
+  const postData = async () => {
+    uploadTimetable(editId);
+    if (isEditMode) {
+      router.back(); // if updating
+    } else {
+      // If normal posting
+    }
+  };
+
   return (
     <main className="min-w-screen font-aeonik">
       {/* Top Navigation */}
@@ -75,7 +84,7 @@ export default function CreatorTimetable() {
             {isEditMode ? "Edit Timetable" : "Create Timetable"}
           </h2>
           <button
-            onClick={() => uploadTimetable(editId && editId)}
+            onClick={postData}
             className="hidden sm:flex justify-center items-center px-4 py-2 text-white bg-[#0A32F8] gap-3 rounded"
           >
             <Upload size={15} />
@@ -127,7 +136,7 @@ export default function CreatorTimetable() {
 
         {/* Mobile Upload Button */}
         <button
-          onClick={uploadTimetable}
+          onClick={postData}
           className="flex sm:hidden justify-center items-center px-4 py-3 text-white bg-[#0A32F8] gap-3 rounded w-full mx-auto my-4"
         >
           <Upload size={15} />

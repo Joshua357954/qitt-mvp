@@ -5,7 +5,7 @@ import useDepartmentStore from "@/app/store/departmentStore.js";
 const currentDateTime = new Date();
 const currentTime =
   currentDateTime.getHours() * 100 + currentDateTime.getMinutes();
-const currentDay ='friday' ||currentDateTime
+const currentDay =currentDateTime
   .toLocaleString("en-US", { weekday: "long" })
   .toLowerCase();
 
