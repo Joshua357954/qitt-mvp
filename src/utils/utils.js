@@ -223,8 +223,12 @@ export const levels = [
 ];
 
 export const schoolNames = [
-  { value: "university_of_portharcourt", label: "University Of Portharcourt" },
-  { value: "rivers_state_university", label: "Rivers State University" },
+  { value: "university_of_portharcourt", label: "University of Port Harcourt", abbr: "UNIPORT" },
+  { value: "rivers_state_university", label: "Rivers State University", abbr: "RSU" },
+  { value: "ignatius_ajuru_university", label: "Ignatius Ajuru University", abbr: "IAUE" },
+  { value: "captain_elechi_amadi_polytechnic", label: "Captain Elechi Amadi Polytechnic", abbr: "CEAPOLY" },
+  { value: "kenule_beeson_saro_wiwa_polytechnic", label: "Ken Saro-Wiwa Polytechnic", abbr: "KENPOLY" },
+  { value: "rivers_state_college_of_health_science_and_technology", label: "Rivers State College of Health", abbr: "RSCHST" },
 ];
 
 export function getCurrentDay() {
