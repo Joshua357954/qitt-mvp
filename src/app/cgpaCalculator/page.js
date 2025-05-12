@@ -49,14 +49,14 @@ const GPAApp = () => {
 
   return (
     <MainLayout route={'CGPA Calculator'}>
-      <div className=" mx-auto p-6 bg-white rounded-lg shadow-md">
+      <div className="w-full sm:max-w-[80%] mx-auto p-6 bg-white rounded-lg shadow-md">
         <p className="text-gray-600 mb-6">
           Calculate your Grade Point Average by adding your courses, selecting grades, and entering credit Units.
         </p>
 
         <div className="space-y-4 mb-6">
           {courses.map((course, index) => (
-            <div key={index} className="flex gap-3 items-center">
+            <div key={index} className="flex flex-wrap gap-3 items-center">
               <input
                 type="text"
                 placeholder="Course Name"
