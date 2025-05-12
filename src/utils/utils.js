@@ -224,6 +224,7 @@ export const levels = [
 
 export const schoolNames = [
   { value: "university_of_portharcourt", label: "University Of Portharcourt" },
+  { value: "rivers_state_university", label: "Rivers State University" },
 ];
 
 export function getCurrentDay() {
