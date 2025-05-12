@@ -143,30 +143,7 @@ const ClassTab = () => {
           </AlertDescription>
         </Alert>
       )}
-
-      <Card className="mt-6 p-5 bg-blue-50 border-blue-100 shadow-xs">
-        <div className="space-y-3">
-          <h3 className="font-medium text-gray-800">Invite classmates</h3>
-          <div className="flex gap-2 pt-1">
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-blue-200 text-blue-800 hover:bg-blue-100"
-            >
-              <Copy className="h-4 w-4 mr-2" />
-              Copy Link
-            </Button>
-            <Button
-              variant="default"
-              size="sm"
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <Share2 className="h-4 w-4 mr-2" />
-              WhatsApp
-            </Button>
-          </div>
-        </div>
-      </Card>
+ 
     </div>
   );
 };

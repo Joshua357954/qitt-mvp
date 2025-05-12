@@ -8,17 +8,17 @@ const MorePage = () => {
   const features = [
     {
       name: "Privacy Policy",
-      icon: <ShieldCheck className="h-5 w-5 text-blue-500" />,
+      icon: <ShieldCheck className="h-8 w-8 text-blue-500" />,
       link: "/more/privacy-policy",
     },
-    {
-      name: "Apply for Creator",
-      icon: <NotebookPen className="h-5 w-5 text-purple-500" />,
-      link: "/creator/apply",
-    },
+    // {
+    //   name: "Apply for Creator",
+    //   icon: <NotebookPen className="h-5 w-5 text-purple-500" />,
+    //   link: "/creator/apply",
+    // },
     {
       name: "Help Center",
-      icon: <MessageSquare className="h-5 w-5 text-green-500" />,
+      icon: <MessageSquare className="h-8 w-8 text-green-500" />,
       link: "/more/help",
     },
   ];
@@ -34,7 +34,7 @@ const MorePage = () => {
             <Button
               key={index}
               variant="outline"
-              className="h-14 justify-start gap-4 px-6 py-4 hover:bg-gray-100/50 transition-colors"
+              className="h-16 justify-start gap-4 px-6 py-4 hover:bg-gray-100/50 transition-colors"
               asChild
             >
               <a href={feature.link}>

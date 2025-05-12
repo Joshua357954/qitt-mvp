@@ -64,7 +64,7 @@ export function handleStoreError(set, msg, shouldThrow = true) {
 }
 
 export function handleStoreSuccess(set, message) {
-  toast.success(message);
+  // toast.success(message);
 }
 
 import axios from "axios";
