@@ -223,6 +223,7 @@ export const levels = [
 ];
 
 export const schoolNames = [
+  { value: "federal_university_of_technology_owerri", label: "Fedederal University Of Technology Owerri", abbr: "FUTO" },
   { value: "university_of_portharcourt", label: "University of Port Harcourt", abbr: "UNIPORT" },
   { value: "rivers_state_university", label: "Rivers State University", abbr: "RSU" },
   { value: "ignatius_ajuru_university", label: "Ignatius Ajuru University", abbr: "IAUE" },
