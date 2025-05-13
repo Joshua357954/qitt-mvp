@@ -42,7 +42,7 @@ const HomeScreen = () => {
     },
     {
       title: "Cgpa Calc.",
-      icon: "/practice-2.png",
+      icon: "/calculator.svg",
       image: "/q-green-2.png",
       link: "/cgpaCalculator",
       color: "bg-[#46D28F]",
