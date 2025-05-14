@@ -9,6 +9,7 @@ import { Toaster, toast } from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import useDepartmentStore from "@/app/store/departmentStore";
 import useAssignmentStore from "@/app/store/creator/assignmentStore";
+import SelectCourse from "@/components/SelectCourse";
 
 export default function CreatorAssignment() {
   const router = useRouter();
@@ -163,13 +164,14 @@ export default function CreatorAssignment() {
     >
       <Toaster position="top-center" />
 
-      <Dropdown
+      {/* <Dropdown
         label="Course"
         dropdownItems={["CSC 240", "MTH 101", "PHY 112"]}
         value={course}
         onChange={setCourse}
-      />
-
+      /> */}
+      <SelectCourse value={course} handler={setCourse}/>
+      
       <div className="flex flex-col">
         <label className="font-bold">Description</label>
         <textarea

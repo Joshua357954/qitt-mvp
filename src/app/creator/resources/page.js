@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import CreatorFilesPreview from "@/components/CreatorFilesPreview";
 import useDepartmentStore from "@/app/store/departmentStore";
 import { Dropdown } from "@/components/Dropdown";
+import SelectCourse from "@/components/SelectCourse";
 
 export default function CreatorResources() {
   const router = useRouter();
@@ -81,6 +82,10 @@ export default function CreatorResources() {
     }
   };
 
+  function setCourse (value) {
+   setField("course", value)
+  }
+
   return (
     <CreatorLayout
       screenName={`${isEditMode ? "Edit" : ""} Resources`}
@@ -120,12 +125,14 @@ export default function CreatorResources() {
       </div>
 
       <div className="flex gap-4 mb-4">
-        <Dropdown
+        {/* <Dropdown
           label="Course"
           dropdownItems={["CSC 240", "MTH 101", "PHY 112"]}
           value={course}
           onChange={(value) => setField("course", value)}
-        />
+        /> */}
+        <SelectCourse value={course} handler={setCourse}/>
+              
         <Dropdown
           label="Type"
           dropdownItems={["Note", "Past Question", "Study Tool"]}

@@ -53,6 +53,8 @@ const useDepartmentStore = create((set, get) => ({
     // Dynamically set the resourceType for API request
     const resourceType = get().resourceTypes[type] || type;
 
+    // if (get()[type] !==0) return 
+
     const { success, data, error } = await apiFetch(
       "/api/space-resources/get",
       {

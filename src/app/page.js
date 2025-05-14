@@ -8,6 +8,7 @@ import TimetableList from "@/components/MiniTimetable.js";
 import Image from "next/image.js";
 import useAuthStore from "./store/authStore.js";
 import { listenToUserDepartmentSpace } from "@/libs/listener.js";
+import SelectCourse from "@/components/SelectCourse.js";
 
 const HomeScreen = () => {
   const { user: userData } = useAuthStore();
@@ -17,6 +18,7 @@ const HomeScreen = () => {
     listenToUserDepartmentSpace(userData?.uid);
   }, []);
 
+  const [course, setCourse] = useState();
 
   const adData = [
     { image: "/ad2.jpg", link: "/" },
@@ -134,7 +136,7 @@ const HomeScreen = () => {
             </div>
           </div>
 
-
+          {/* <SelectCourse handler={setCourse} /> */}
           {/* Timetable List */}
           <TimetableList />
         </div>
