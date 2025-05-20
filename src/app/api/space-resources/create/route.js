@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { firestore } from "@/firebase";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadToCloudinary } from "@/utils/cloudinary"
+import { addNotification } from "@/libs/notification/addNotification";
 
 export async function POST(req) {
   try {
@@ -58,6 +59,21 @@ export async function POST(req) {
 
     // Add data to Firestore
     const docRef = await addDoc(collectionRef, resourceData);
+
+    // Send Notification To Department 
+    addNotification({
+        userId:undefined,
+        spaceId:data.spaceId,
+        type:'DEPARTMENT',
+        resourceType,
+        data: {},
+        announcement: resourceType === 'announcements' ? data.message : false,
+        course: data.course,
+        resourcesContentType: resourceType === 'resources' ? data.type : false,
+        action:'CREATE',
+        sentVia:['in-app','push']
+      });
+    
 
     // Success response
     return NextResponse.json({

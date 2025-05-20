@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   addItem,
   departments,
@@ -16,9 +16,10 @@ import { Select } from "@/components/Select";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { app } from "../../../firebase";
 import useAuthStore from "@/app/store/authStore";
+import OneSignalService from "@/hooks/useOneSignal";
 
 const Register = () => {
-  const {setUser} = useAuthStore()
+  const { setUser } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const navigate = useRouter();
   const [formData, setFormData] = useState({
@@ -34,6 +35,15 @@ const Register = () => {
     uid: "",
   });
 
+  const [playerId, setPlayerId] = useState(null);
+
+
+  // useEffect(() => {
+  //   // Initialize OneSignal on Component Mount
+  //   OneSignalService
+  // }, []);
+
+
   const handleChange = (name, value) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
@@ -48,16 +58,30 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
+    // if (!playerId) {
+    //   toast.info("Requesting Notification Permission...");
+    //   await OneSignalService.requestPermission();
+    //   const id = await OneSignalService.getPlayerId();
+
+    //   if (!id) {
+    //     toast.error("You must enable notifications to register.");
+    //     setLoading(false);
+    //     return;
+    //   } else {
+    //     setPlayerId(id);
+    //   }
+    // }
+
     try {
       const auth = getAuth(app);
       const googleProvider = new GoogleAuthProvider();
       googleProvider.setCustomParameters({ prompt: "select_account" });
-  
+
       toast.info("Signing in with Google...");
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-  
+
       // Merge existing formData with Google sign-in data
       const formPayload = {
         ...formData, // Preserve existing form data
@@ -65,10 +89,11 @@ const Register = () => {
         imageURL: user?.photoURL,
         name: user?.displayName,
         uid: user?.uid,
+        playerId
       };
-  
+
       console.log("The Form Payload: ", formPayload);
-  
+
       const { data } = await Axios.post(`/api/auth/register`, formPayload);
       toast.success(data.message);
       completeRegister(data.user);
@@ -79,7 +104,7 @@ const Register = () => {
       setLoading(false);
     }
   };
-  
+
   return (
     <AuthLayout choose={0}>
       <div className="w-full h-full font-aeonik mx-auto bg-white py-8 sm:px-16 px-6 overflow-auto">
@@ -88,15 +113,6 @@ const Register = () => {
         <p className="text-gray-700 mb-8">
           Welcome to Qitt, Let's get you signed up
         </p>
-
-        {/* Google Sign-In Button */}
-        {/* <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 w-full rounded flex items-center justify-center mb-6"
-          onClick={signInWithGoogle}
-          type="button"
-        >
-          Sign in with Google
-        </button> */}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

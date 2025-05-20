@@ -23,6 +23,7 @@ export async function POST(request) {
       phone,
       imageURL,
       uid,
+      playerId
     } = body;
 
     // Validate required fields
@@ -36,7 +37,8 @@ export async function POST(request) {
       !pin ||
       !phone ||
       !imageURL||
-      !uid
+      !uid ||
+      !playerId
     ) {
       console.log("🚨 Missing required fields");
       return NextResponse.json(
@@ -77,6 +79,7 @@ export async function POST(request) {
       pin: hashedPin, // Store the hashed pin
       phone,
       imageURL,
+      playerId,
       createdAt: serverTimestamp(), // Firestore-generated 
     };
 
