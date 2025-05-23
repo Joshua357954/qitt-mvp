@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus } from "lucide-react";
@@ -26,10 +26,7 @@ export default function CreatorPage() {
   const params = useParams();
   const urlType = params?.type;
 
-  const isValidType = CONTENT_TYPES.some((type) => type.id === urlType);
-  const [activeType, setActiveType] = useState(
-    isValidType ? urlType : "assignments"
-  );
+  const [activeType, setActiveType] = useState("assignments");
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,40 +39,33 @@ export default function CreatorPage() {
     timetables,
     fetchAssignments,
     assignments,
-    resources,
     fetchResources,
+    resources,
     deleteItem,
-    loading,
   } = useDepartmentStore();
 
-  // Sync URL with active type
   useEffect(() => {
-    if (activeType && activeType !== urlType) {
-      router.push(`/creator/type/${activeType}`);
+    if (urlType && CONTENT_TYPES.some((type) => type.id === urlType)) {
+      setActiveType(urlType);
     }
-  }, [activeType, router, urlType]);
+  }, [urlType]);
 
-  // Fetch data based on active type
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
       try {
         if (activeType === "courses" && courses.length === 0) {
           await fetchCourses();
-        }
-        if (activeType === "announcements" && announcements.length === 0) {
-          console.log("Fetching Announcement in progress");
+        } else if (
+          activeType === "announcements" &&
+          announcements.length === 0
+        ) {
           await fetchAnnouncements();
-        }
-        if (activeType === "timetable" && timetables.length === 0) {
-          console.log("Fetching Timetable in progress");
+        } else if (activeType === "timetable" && timetables.length === 0) {
           await fetchTimetable();
-          console.log('Second :',timetables);
-        }
-        if (activeType === "assignments" && assignments.length === 0) {
+        } else if (activeType === "assignments" && assignments.length === 0) {
           await fetchAssignments();
-        }
-        if (activeType === "resources" && resources.length === 0) {
+        } else if (activeType === "resources" && resources.length === 0) {
           await fetchResources();
         }
       } catch (error) {
@@ -93,34 +83,34 @@ export default function CreatorPage() {
     fetchTimetable,
     fetchAssignments,
     fetchResources,
-    assignments.length,
     courses.length,
     announcements.length,
-    timetables?.length,
-    resources?.length
-
+    timetables.length,
+    assignments.length,
+    resources.length,
   ]);
 
   useEffect(() => {
-    if (activeType === "courses") {
-      setItems(courses || []);
-    } else if (activeType === "announcements") {
-      console.log("Found Announcements", announcements);
-      setItems(announcements || []);
-    } else if (activeType === "timetable") {
-      console.log("Found Timetable (New)", timetables);
-      setItems(timetables);
-    } else if (activeType === "assignments") {
-      console.log("Found Assignments (New)", assignments);
-      setItems(assignments);
-    } else if (activeType === "resources") {
-      console.log("Found Resources (New)", resources);
-      setItems(resources);
-    } else {
-      setItems([]);
+    switch (activeType) {
+      case "courses":
+        setItems(courses);
+        break;
+      case "announcements":
+        setItems(announcements);
+        break;
+      case "timetable":
+        setItems(timetables);
+        break;
+      case "assignments":
+        setItems(assignments);
+        break;
+      case "resources":
+        setItems(resources);
+        break;
+      default:
+        setItems([]);
     }
-  }, [activeType, courses, announcements,timetables, assignments, resources]);
-
+  }, [activeType, courses, announcements, timetables, assignments, resources]);
 
   const handleDelete = (type, id) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
@@ -128,10 +118,9 @@ export default function CreatorPage() {
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-
   const renderContent = () => {
     if (isLoading) return <LoadingState className="mt-8" />;
-    if (items?.length === 0)
+    if (items.length === 0)
       return <EmptyState activeType={activeType} className="mt-8 mx-auto" />;
 
     const cardComponents = {
@@ -144,8 +133,7 @@ export default function CreatorPage() {
     };
 
     const CardComponent = cardComponents[activeType];
-
-    return items?.map((item) => (
+    return items.map((item) => (
       <CardComponent
         key={item.id}
         item={item}
@@ -153,31 +141,40 @@ export default function CreatorPage() {
       />
     ));
   };
- 
-  const currentContentType =
-    CONTENT_TYPES.find((type) => type.id === activeType)?.name || "Content";
+
+  const buttonRefs = useRef({});
+
+  const handleClick = (id) => {
+    router.push(`/creator/type/${id}`);
+    if (buttonRefs.current[id]) {
+      buttonRefs.current[id].scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+    }
+  };
 
   return (
     <main className="w-full font-aeonik">
-      {/* Nav 1 */}
       <div className="flex gap-5 items-center p-5 border-b border-gray-500 bg-blue-900">
         <Link href="/">
-          <ArrowLeft size={20} color={"white"} />
+          <ArrowLeft size={20} color="white" />
         </Link>
-        <p className=" text-2xl font-bold text-white">Creator Dashboard</p>
+        <p className="text-2xl font-bold text-white">Creator Dashboard</p>
       </div>
 
-      {/* Main Section */}
       <section className="w-full px-8 sm:px-0 sm:w-3/4 mx-auto pt-7 pb-4">
-        <div className="flex overflow-x-auto gap-2 mb-6">
+        <div className="flex overflow-x-auto gap-2 mb-6 no-scrollbar whitespace-nowrap">
           {CONTENT_TYPES.map((type) => (
             <Button
               key={type.id}
-              onClick={() => setActiveType(type.id)}
-              className={`flex items-center gap-2  ${
+              ref={(el) => (buttonRefs.current[type.id] = el)}
+              onClick={() => handleClick(type.id)}
+              className={`flex items-center gap-2 whitespace-nowrap ${
                 activeType === type.id
-                  ? "bg-blue-800 text-white hover:bg-blue-800 "
-                  : "bg-white text-black hover:bg-blue-800 hover:text-white"
+                  ? "bg-blue-800 text-white hover:bg-blue-200 hover:text-black"
+                  : "bg-white text-black hover:bg-blue-200 hover:text-black"
               }`}
             >
               {type.icon}
@@ -187,18 +184,21 @@ export default function CreatorPage() {
         </div>
 
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold capitalize">{activeType.toLowerCase() === 'announcements'? 'Notice': activeType}</h2>
-          <Button asChild className="bg-blue-800">
-            <Link href={`/creator/${activeType}/`}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add New
-            </Link>
-          </Button>
+          <h2 className="text-2xl font-bold capitalize">
+            {activeType.toLowerCase() === "announcements"
+              ? "Notice"
+              : activeType}
+          </h2>
+          {(activeType !== "timetable" || timetables.length === 0) && (
+            <Button asChild className="bg-blue-800">
+              <Link href={`/creator/${activeType}/`}>
+                <Plus className="h-4 w-4 mr-2" />
+                Add New
+              </Link>
+            </Button>
+          )}
         </div>
 
-        {/* Debug info (optional) */}
-        {/* <pre>{JSON.stringify(courses, null, 2)}</pre> */}
-        {/* {loading && "Loading In Progress"} */}
         <div className="space-y-4">{renderContent()}</div>
       </section>
     </main>
