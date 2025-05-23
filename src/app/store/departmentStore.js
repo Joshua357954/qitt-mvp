@@ -26,7 +26,7 @@ const useDepartmentStore = create((set, get) => ({
     notes: "notes",
     courses: "courses",
     resources: "resources",
-    timetable: "timetable",
+    timetables: "timetables",
   },
 
   /**
@@ -52,9 +52,7 @@ const useDepartmentStore = create((set, get) => ({
 
     // Dynamically set the resourceType for API request
     const resourceType = get().resourceTypes[type] || type;
-
-    // if (get()[type] !==0) return 
-
+ 
     const { success, data, error } = await apiFetch(
       "/api/space-resources/get",
       {
@@ -104,7 +102,6 @@ const useDepartmentStore = create((set, get) => ({
   fetchResources: async () => {
     await get().fetchContent("resources");
   },
-
   /**
    * Dynamically delete an item by ID
    */

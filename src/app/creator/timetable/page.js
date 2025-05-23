@@ -1,14 +1,24 @@
 "use client";
 
-import { ArrowLeft, Upload, PlusCircle, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Upload,
+  PlusCircle,
+  Trash2,
+  MapPinIcon,
+} from "lucide-react";
 import Link from "next/link";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { Dropdown } from "@/components/Dropdown";
 import useTimetableStore from "@/app/store/creator/timetableStore";
 import useDepartmentStore from "@/app/store/departmentStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import SelectCourse from "@/components/SelectCourse";
+import AddVenue from "./addVenue";
+import { Button } from "@/components/ui/button";
+import useVenues from "@/hooks/useVenues";
 
 export default function CreatorTimetable() {
   const searchParams = useSearchParams();
@@ -28,6 +38,7 @@ export default function CreatorTimetable() {
   } = useTimetableStore();
 
   const { getItem } = useDepartmentStore();
+  const [venues, setVenues] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -35,7 +46,7 @@ export default function CreatorTimetable() {
     (async () => {
       if (isEditMode && editId) {
         try {
-          const fetched = await getItem("timetable", editId);
+          const fetched = await getItem("timetables", editId);
           if (isMounted && fetched?.timetable) {
             setTimetable(fetched.timetable);
           }
@@ -66,14 +77,22 @@ export default function CreatorTimetable() {
   return (
     <main className="min-w-screen font-aeonik">
       {/* Top Navigation */}
-      <div className="flex gap-5 items-center p-5 border-b border-gray-500 bg-black">
-        <ArrowLeft
-          size={20}
-          color={"white"}
-          onClick={() => window.history.back()}
-        />
-
-        <p className="text-2xl font-bold text-white">Timetable</p>
+      <div className="flex  items-center justify-between p-5 border-b border-gray-500 bg-black">
+        <div className="flex gap-5 items-center ">
+          <ArrowLeft
+            size={20}
+            color={"white"}
+            onClick={() => window.history.back()}
+          />
+          <p className="text-2xl font-bold text-white">Timetable</p>
+        </div>
+        <Button
+          className="bg-blue-500 text-white p-3 rounded-lg flex items-center hover:bg-blue-600 transition-all duration-300"
+          onClick={() => setVenues(true)}
+        >
+          <MapPinIcon size={20} color="white" />
+          <span>Venues</span>
+        </Button>
       </div>
 
       <section className="min-w-screen sm:w-3/4 mx-auto px-2">
@@ -149,28 +168,32 @@ export default function CreatorTimetable() {
             : "Create Timetable"}
         </button>
       </section>
+      <AddVenue isOpen={venues} onClose={() => setVenues(false)} />
     </main>
   );
 }
 
 function CTItem({ data, updateEntry, removeEntry }) {
+  function setCourse(value) {
+    updateEntry(data.id, "course", value)
+  }
+
+  const {venues} = useVenues()
+
+  const dropdownItems = venues ? venues.map(venue => venue.name) : ["Loading"];
+
   return (
     <div className="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-5 mx-auto items-center border p-2 rounded">
       <p className="font-bold hidden sm:flex">{data.id}</p>
-
+    
       <Dropdown
         label="Venue"
-        dropdownItems={["Mba 1", "Ps Hall", "College Hall"]}
+        dropdownItems={dropdownItems}
         value={data.venue}
         onChange={(value) => updateEntry(data.id, "venue", value)}
       />
 
-      <Dropdown
-        label="Course"
-        dropdownItems={["Math 101", "Physics 202", "CS 303"]}
-        value={data.course}
-        onChange={(value) => updateEntry(data.id, "course", value)}
-      />
+      <SelectCourse value={data.course} handler={setCourse} />
 
       <div className="flex items-center gap-2">
         {["start", "end"].map((field) => (
