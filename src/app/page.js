@@ -9,10 +9,11 @@ import Image from "next/image.js";
 import useAuthStore from "./store/authStore.js";
 import { listenToUserDepartmentSpace } from "@/libs/listener.js";
 import SelectCourse from "@/components/SelectCourse.js";
+import { useNotificationsSSE } from "@/hooks/useNotificationSSE.js";
 
 const HomeScreen = () => {
   const { user: userData } = useAuthStore();
-
+  useNotificationsSSE();
   // UseEffect To Fetch Timetable
   useEffect(() => {
     listenToUserDepartmentSpace(userData?.uid);

@@ -5,76 +5,61 @@ import { collection, query, where, orderBy, onSnapshot } from "firebase/firestor
 export async function GET(request) {
   const url = new URL(request.url);
   const userId = url.searchParams.get("userId");
-  const departmentId = url.searchParams.get("departmentId");
+  const spaceUID = url.searchParams.get("spaceUID");
 
-  if (!userId && !departmentId) {
-    return NextResponse.json({ error: "userId or departmentId required" }, { status: 400 });
+  if (!userId || !spaceUID) {
+    return NextResponse.json(
+      { error: "Both userId and spaceUID are required" },
+      { status: 400 }
+    );
   }
 
-  // Create a ReadableStream for SSE
   const stream = new ReadableStream({
     start(controller) {
-      // Helper to send SSE formatted messages
-      function sendEvent(data) {
-        const formatted = `data: ${JSON.stringify(data)}\n\n`;
-        controller.enqueue(new TextEncoder().encode(formatted));
-      }
+      const encoder = new TextEncoder();
+      const send = (data) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
 
-      // Firestore unsubscribe functions
       let unsubUser = () => {};
-      let unsubDept = () => {};
+      let unsubSpace = () => {};
 
-      // Setup listeners on Firestore (async)
       (async () => {
-        if (userId) {
-          const userNotifsQuery = query(
+        // Listen to user notifications
+        try {
+          const userQuery = query(
             collection(firestore, "notifications"),
             where("userId", "==", userId),
             orderBy("createdAt", "desc")
           );
-
-          unsubUser = onSnapshot(userNotifsQuery, (snapshot) => {
-            const newNotifications = [];
-            snapshot.docChanges().forEach(change => {
-              if (change.type === "added") {
-                newNotifications.push({ id: change.doc.id, ...change.doc.data(), source: "user" });
-              }
-            });
-
-            if (newNotifications.length > 0) {
-              sendEvent({ type: "userNotifications", notifications: newNotifications });
-            }
+          unsubUser = onSnapshot(userQuery, snapshot => {
+            const added = snapshot.docChanges().filter(c => c.type === "added").map(c => ({ ...c.doc.data(), source: "user" }));
+            if (added.length) send({ ...added });
           });
+        } catch (e) {
+          console.error("User notifications listener failed:", e);
         }
 
-        if (departmentId) {
-          const deptNotifsQuery = query(
-            collection(firestore, "department-space", departmentId, "departmentNotifications"),
+        // Listen to space notifications
+        try {
+          const spaceQuery = query(
+            collection(firestore, "department-space", spaceUID, "departmentNotifications"),
             orderBy("createdAt", "desc")
           );
-
-          unsubDept = onSnapshot(deptNotifsQuery, (snapshot) => {
-            const newNotifications = [];
-            snapshot.docChanges().forEach(change => {
-              if (change.type === "added") {
-                newNotifications.push({ id: change.doc.id, ...change.doc.data(), source: "department" });
-              }
-            });
-
-            if (newNotifications.length > 0) {
-              sendEvent({ type: "departmentNotifications", notifications: newNotifications });
-            }
+          unsubSpace = onSnapshot(spaceQuery, snapshot => {
+            const added = snapshot.docChanges().filter(c => c.type === "added").map(c => ({...c.doc.data(), source: "space" }));
+            if (added.length) send({ ...added });
           });
+        } catch (e) {
+          console.error("Space notifications listener failed:", e);
         }
       })();
 
-      // Cleanup on stream cancel
+      // Cleanup on client disconnect
       controller.signal.addEventListener("abort", () => {
         unsubUser();
-        unsubDept();
+        unsubSpace();
         controller.close();
       });
-    }
+    },
   });
 
   return new Response(stream, {
